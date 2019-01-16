@@ -13,7 +13,7 @@ namespace HeProject.Model
         }
 
         public int Step { get; set; }
-        //-1失败,0成功,>0 行数
+        //-1失败,-2成功,>0 行数
         public int Row { get; set; }
         public string ErrorMessage { get; set; }
     }

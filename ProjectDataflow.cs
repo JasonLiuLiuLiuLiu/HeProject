@@ -15,6 +15,7 @@ namespace HeProject
         private ProcessContext _processContext;
         private int _totalRow;
         private ITargetBlock<string> _startBlock;
+        private object _lock = new object();
 
         public ProjectDataFlow()
         {
@@ -40,24 +41,28 @@ namespace HeProject
                 currentBlock.LinkTo(block, new DataflowLinkOptions() { PropagateCompletion = true });
                 currentBlock = block;
             }
-            return currentBlock.Completion;
+            var finallyBlock=new ActionBlock<int>(x=> Console.WriteLine($"第{x}行处理完成!"));
+            currentBlock.LinkTo(finallyBlock, new DataflowLinkOptions() {PropagateCompletion = true});
+            return finallyBlock.Completion;
         }
 
         private void PrintState(ProgressState state)
         {
-            Console.SetCursorPosition(0,state.Step);
-            if (state.Row == -1)
-            {
-                Console.WriteLine($"第{state.Step}步执行失败:{state.ErrorMessage}");
-            }
-            else if (state.Row == 0)
-            {
-                Console.WriteLine($"第{state.Step}步执行成功");
-            }
-            else
-            {
-              //  Console.WriteLine($"第{state.Step}完成{100 * ((double)state.Row / (double)_totalRow)}%");
-            }
+            //Task.Run(() =>
+            //{
+            //    lock (_lock)
+            //    {
+            //        Console.SetCursorPosition(0, state.Step);
+            //        if (state.Row == -1)
+            //        {
+            //            Console.WriteLine($"第{state.Step}步执行失败:{state.ErrorMessage}!");
+            //        }
+            //        else if (state.Row == -2)
+            //        {
+            //            Console.WriteLine($"第{state.Step}步执行成功!");
+            //        }
+            //    }
+            //});
         }
 
         private IPropagatorBlock<int, int> CreateReadFileBlock(IPropagatorBlock<int, int> p2Block)
@@ -65,43 +70,51 @@ namespace HeProject
 
             _startBlock = new ActionBlock<string>(x =>
                 {
-                    if (x == null)
+                    try
                     {
-                        PrintState(new ProgressState(1, -1) { ErrorMessage = "路径不允许为空" });
-                        return;
-                    }
-
-                    if (!File.Exists(x))
-                    {
-                        PrintState(new ProgressState(1, -1) { ErrorMessage = "文件不存在" });
-                        return;
-                    }
-                    XSSFWorkbook hssfwb;
-                    using (FileStream file = new FileStream(x, FileMode.Open, FileAccess.Read))
-                    {
-                        hssfwb = new XSSFWorkbook(file);
-                    }
-                    ISheet sheet = hssfwb.GetSheetAt(0);
-                    _totalRow = sheet.LastRowNum;
-                    _processContext = new ProcessContext(sheet.LastRowNum);
-                    for (int row = 0; row < sheet.LastRowNum; row++)
-                    {
-                        if (sheet.GetRow(row) != null) //null is when the row only contains empty cells 
+                        if (x == null)
                         {
-                            for (int column = 0; column < 6; column++)
+                            PrintState(new ProgressState(1, -1) { ErrorMessage = "路径不允许为空" });
+                            return;
+                        }
+
+                        if (!File.Exists(x))
+                        {
+                            PrintState(new ProgressState(1, -1) { ErrorMessage = "文件不存在" });
+                            return;
+                        }
+                        XSSFWorkbook hssfwb;
+                        using (FileStream file = new FileStream(x, FileMode.Open, FileAccess.Read))
+                        {
+                            hssfwb = new XSSFWorkbook(file);
+                        }
+                        ISheet sheet = hssfwb.GetSheetAt(0);
+                        _totalRow = sheet.LastRowNum;
+                        _processContext = new ProcessContext(sheet.LastRowNum + 1);
+                        for (int row = 0; row <= sheet.LastRowNum; row++)
+                        {
+                            if (sheet.GetRow(row) != null) //null is when the row only contains empty cells 
                             {
-                                _processContext.InputData[row, column] = (int)sheet.GetRow(row).GetCell(column).NumericCellValue;
+                                for (int column = 0; column < 6; column++)
+                                {
+                                    _processContext.InputData[row, column] = (int)sheet.GetRow(row).GetCell(column).NumericCellValue;
+                                }
+                                p2Block.Post(row);
                             }
-                            p2Block.Post(row);
-                            PrintState(new ProgressState(1, row));
                         }
                     }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        throw;
+                    }
+                
 
 
                 }, _executionDataflowBlockOptions);
             _startBlock.Completion.ContinueWith(x =>
             {
-                PrintState(new ProgressState(1, 0));
+                PrintState(new ProgressState(1, -2));
                 p2Block.Complete();
             });
             return p2Block;
@@ -111,18 +124,21 @@ namespace HeProject
         {
             var progressBlock = new TransformBlock<int, int>(x =>
             {
-                var handler = (IProgressHandler)Activator.CreateInstance(Type.GetType($"HeProject.P{step}Handler") ?? throw new InvalidOperationException());
-                var result = handler.Hnalder(x, _processContext);
-                if (result != null)
-                    PrintState(new ProgressState(step, -1) { ErrorMessage = result });
-                else
+                try
                 {
-                    PrintState(new ProgressState(step, x));
+                    var handler = (IProgressHandler)Activator.CreateInstance(Type.GetType($"HeProject.P{step}Handler") ?? throw new InvalidOperationException());
+                    var result = handler.Hnalder(x, _processContext);
+                    if (result != null)
+                        PrintState(new ProgressState(step, -1) { ErrorMessage = result });
+                    return x;
                 }
-             
-                return x;
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
             }, _executionDataflowBlockOptions);
-            progressBlock.Completion.ContinueWith(t => { PrintState(new ProgressState(step, 0)); });
+            progressBlock.Completion.ContinueWith(t => { PrintState(new ProgressState(step, -2)); });
             return progressBlock;
         }
     }
