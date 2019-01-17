@@ -28,6 +28,7 @@ namespace HeProject
                 SetP1Value(row, i);
                 SetP2Value(row, i);
                 SetP3Value(row, i);
+                SetP4Value(row, i);
             }
 
             FileStream sw = File.Create("test.xlsx");
@@ -58,6 +59,17 @@ namespace HeProject
             for (int i = beforeColumn; i < StepLength.P3 + beforeColumn; i++)
             {
                 row.CreateCell(i).SetCellValue(_context.GetValue<int>(3, rowIndex, i - beforeColumn));
+            }
+        }
+
+        private void SetP4Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3;
+            for (int i = beforeColumn; i < StepLength.P4 + beforeColumn; i++)
+            {
+                var value = _context.GetValue<bool>(4, rowIndex, i - beforeColumn);
+                if (value)
+                    row.CreateCell(i).SetCellValue(i-beforeColumn);
             }
         }
     }

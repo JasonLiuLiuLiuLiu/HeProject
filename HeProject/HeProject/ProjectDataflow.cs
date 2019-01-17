@@ -41,28 +41,28 @@ namespace HeProject
                 currentBlock.LinkTo(block, new DataflowLinkOptions() { PropagateCompletion = true });
                 currentBlock = block;
             }
-            var finallyBlock = new ActionBlock<int>(x => Console.WriteLine($"第{x}行处理完成!"));
+            var finallyBlock = new ActionBlock<int>(x => /*Console.WriteLine($"第{x}行处理完成!")*/x.GetType());
             currentBlock.LinkTo(finallyBlock, new DataflowLinkOptions() { PropagateCompletion = true });
             return finallyBlock.Completion;
         }
 
         private void PrintState(ProgressState state)
         {
-            Task.Run(() =>
-            {
-                lock (_lock)
-                {
-                    Console.SetCursorPosition(0, state.Step);
-                    if (state.Row == -1)
-                    {
-                        Console.WriteLine($"第{state.Step}步执行失败:{state.ErrorMessage}!");
-                    }
-                    //else if (state.Row == -2)
-                    //{
-                    //    Console.WriteLine($"第{state.Step}步执行成功!");
-                    //}
-                }
-            });
+            //Task.Run(() =>
+            //{
+            //    lock (_lock)
+            //    {
+            //        Console.SetCursorPosition(0, state.Step);
+            //        if (state.Row == -1)
+            //        {
+            //            Console.WriteLine($"第{state.Step}步执行失败:{state.ErrorMessage}!");
+            //        }
+            //        //else if (state.Row == -2)
+            //        //{
+            //        //    Console.WriteLine($"第{state.Step}步执行成功!");
+            //        //}
+            //    }
+            //});
         }
 
         private IPropagatorBlock<int, int> CreateReadFileBlock(IPropagatorBlock<int, int> p2Block)

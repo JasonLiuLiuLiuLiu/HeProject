@@ -14,7 +14,6 @@ namespace HeBoss
             WriteToExcel writer = new WriteToExcel(dataflow._processContext);
             writer.Write();
             Console.WriteLine("处理完成");
-            Console.ReadKey();
         }
     }
 }
