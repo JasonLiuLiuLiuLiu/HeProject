@@ -22,7 +22,7 @@ namespace HeProject
                             valueLength++;
                         else
                         {
-                            continue;
+                            break;
                         }
                     }
                     else
@@ -41,10 +41,11 @@ namespace HeProject
                 }
                 distance.Add(i, new KeyValuePair<int, int>(distanceLength, valueLength));
             }
-            var result = distance.OrderByDescending(u => u.Value.Key).ThenBy(u => u.Value.Value).Select(u => u.Key).ToArray();
+            var afterOder= distance.OrderBy(u => u.Value.Key).ThenByDescending(u => u.Value.Value).ThenBy(u=>u.Key).ToList();
+           
             for (int i = 0; i < StepLength.P3; i++)
             {
-                context.SetValue(3, row, i, result[i]);
+                context.SetValue(3, row, i, afterOder.IndexOf(afterOder.FirstOrDefault(u=>u.Key==i)));
             }
             return null;
         }

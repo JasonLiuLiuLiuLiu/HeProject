@@ -8,11 +8,11 @@ namespace HeProject.Model
 {
     public class ProcessContext
     {
-      
+
         private bool[,] _stepState;
 
         private Dictionary<int, Dictionary<int, Dictionary<int, object>>> valueMap;
-        private readonly int _capacity;
+        public readonly int Capacity;
         private const int stepCont = 9;
 
         public void SetValue(int step, int row, int column, object value)
@@ -21,7 +21,7 @@ namespace HeProject.Model
                 valueMap.Add(step, new Dictionary<int, Dictionary<int, object>>(stepCont));
             var stepValueMap = valueMap[step];
             if (!stepValueMap.ContainsKey(row))
-                stepValueMap.Add(row, new Dictionary<int, object>(_capacity));
+                stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
             var rowValueMap = stepValueMap[row];
             if (!rowValueMap.ContainsKey(column))
                 rowValueMap.Add(column, null);
@@ -32,7 +32,7 @@ namespace HeProject.Model
         public T GetValue<T>(int step, int row, int column)
         {
             int loop = 0;
-            while (!_stepState[step-1, row])
+            while (!_stepState[step - 1, row])
             {
                 if (loop > 100)
                     return default(T);
@@ -42,21 +42,21 @@ namespace HeProject.Model
                 valueMap.Add(step, new Dictionary<int, Dictionary<int, object>>(stepCont));
             var stepValueMap = valueMap[step];
             if (!stepValueMap.ContainsKey(row))
-                stepValueMap.Add(row, new Dictionary<int, object>(_capacity));
+                stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
             var rowValueMap = stepValueMap[row];
             if (!rowValueMap.ContainsKey(column))
                 rowValueMap.Add(column, default(T));
             return (T)rowValueMap[column];
         }
 
-        public void SetStepState(int step, int row,bool value)
+        public void SetStepState(int step, int row, bool value)
         {
             _stepState[step - 1, row] = value;
         }
 
         public ProcessContext(int capacity)
         {
-            _capacity = capacity;
+            Capacity = capacity;
             _stepState = new bool[stepCont, capacity];
             valueMap = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
         }

@@ -11,6 +11,8 @@ namespace HeBoss
             var pipeline = dataflow.CreatePipeLine();
             dataflow.Process("input.xlsx");
             pipeline.Wait();
+            WriteToExcel writer = new WriteToExcel(dataflow._processContext);
+            writer.Write();
             Console.WriteLine("处理完成");
             Console.ReadKey();
         }
