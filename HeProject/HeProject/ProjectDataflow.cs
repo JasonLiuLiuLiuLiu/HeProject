@@ -12,7 +12,7 @@ namespace HeProject
     public class ProjectDataFlow
     {
         private readonly ExecutionDataflowBlockOptions _executionDataflowBlockOptions;
-        private ProcessContext _processContext;
+        public ProcessContext _processContext;
         private int _totalRow;
         private ITargetBlock<string> _startBlock;
         private object _lock = new object();
@@ -41,28 +41,28 @@ namespace HeProject
                 currentBlock.LinkTo(block, new DataflowLinkOptions() { PropagateCompletion = true });
                 currentBlock = block;
             }
-            var finallyBlock=new ActionBlock<int>(x=> Console.WriteLine($"第{x}行处理完成!"));
-            currentBlock.LinkTo(finallyBlock, new DataflowLinkOptions() {PropagateCompletion = true});
+            var finallyBlock = new ActionBlock<int>(x => Console.WriteLine($"第{x}行处理完成!"));
+            currentBlock.LinkTo(finallyBlock, new DataflowLinkOptions() { PropagateCompletion = true });
             return finallyBlock.Completion;
         }
 
         private void PrintState(ProgressState state)
         {
-            //Task.Run(() =>
-            //{
-            //    lock (_lock)
-            //    {
-            //        Console.SetCursorPosition(0, state.Step);
-            //        if (state.Row == -1)
-            //        {
-            //            Console.WriteLine($"第{state.Step}步执行失败:{state.ErrorMessage}!");
-            //        }
-            //        else if (state.Row == -2)
-            //        {
-            //            Console.WriteLine($"第{state.Step}步执行成功!");
-            //        }
-            //    }
-            //});
+            Task.Run(() =>
+            {
+                lock (_lock)
+                {
+                    Console.SetCursorPosition(0, state.Step);
+                    if (state.Row == -1)
+                    {
+                        Console.WriteLine($"第{state.Step}步执行失败:{state.ErrorMessage}!");
+                    }
+                    //else if (state.Row == -2)
+                    //{
+                    //    Console.WriteLine($"第{state.Step}步执行成功!");
+                    //}
+                }
+            });
         }
 
         private IPropagatorBlock<int, int> CreateReadFileBlock(IPropagatorBlock<int, int> p2Block)
@@ -74,13 +74,13 @@ namespace HeProject
                     {
                         if (x == null)
                         {
-                            PrintState(new ProgressState(1, -1) { ErrorMessage = "路径不允许为空" });
+                            PrintState(new ProgressState(1, -1) { ErrorMessage = "路径不允许为空!" });
                             return;
                         }
 
                         if (!File.Exists(x))
                         {
-                            PrintState(new ProgressState(1, -1) { ErrorMessage = "文件不存在" });
+                            PrintState(new ProgressState(1, -1) { ErrorMessage = "文件不存在!" });
                             return;
                         }
                         XSSFWorkbook hssfwb;
@@ -95,10 +95,11 @@ namespace HeProject
                         {
                             if (sheet.GetRow(row) != null) //null is when the row only contains empty cells 
                             {
-                                for (int column = 0; column < 6; column++)
+                                for (int column = 0; column < StepLength.P1; column++)
                                 {
-                                    _processContext.InputData[row, column] = (int)sheet.GetRow(row).GetCell(column).NumericCellValue;
+                                    _processContext.SetValue(1, row, column, (int)sheet.GetRow(row).GetCell(column).NumericCellValue);
                                 }
+                                _processContext.SetStepState(1, row, true);
                                 p2Block.Post(row);
                             }
                         }
@@ -106,9 +107,8 @@ namespace HeProject
                     catch (Exception e)
                     {
                         Console.WriteLine(e);
-                        throw;
                     }
-                
+
 
 
                 }, _executionDataflowBlockOptions);
@@ -130,13 +130,13 @@ namespace HeProject
                     var result = handler.Hnalder(x, _processContext);
                     if (result != null)
                         PrintState(new ProgressState(step, -1) { ErrorMessage = result });
-                    return x;
+                    _processContext.SetStepState(step, x, true);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
-                    throw;
                 }
+                return x;
             }, _executionDataflowBlockOptions);
             progressBlock.Completion.ContinueWith(t => { PrintState(new ProgressState(step, -2)); });
             return progressBlock;
