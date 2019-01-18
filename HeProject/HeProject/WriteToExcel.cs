@@ -50,7 +50,7 @@ namespace HeProject
             {
                 var value = _context.GetValue<bool>(2, rowIndex, i - beforeColumn);
                 if (value)
-                    row.CreateCell(i).SetCellValue(value);
+                    row.CreateCell(i).SetCellValue("🔺");
             }
         }
         private void SetP3Value(IRow row, int rowIndex)
