@@ -29,6 +29,10 @@ namespace HeProject
                 SetP2Value(row, i);
                 SetP3Value(row, i);
                 SetP4Value(row, i);
+                SetP5Value(row, i);
+                SetP6Value(row, i);
+                SetP7Value(row, i);
+                SetP8Value(row, i);
             }
 
             FileStream sw = File.Create("test.xlsx");
@@ -69,7 +73,44 @@ namespace HeProject
             {
                 var value = _context.GetValue<bool>(4, rowIndex, i - beforeColumn);
                 if (value)
-                    row.CreateCell(i).SetCellValue(i-beforeColumn);
+                    row.CreateCell(i).SetCellValue(i - beforeColumn);
+            }
+        }
+
+        private void SetP5Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4;
+            for (int i = beforeColumn; i < StepLength.P5 + beforeColumn; i++)
+            {
+                row.CreateCell(i).SetCellValue(_context.GetValue<int>(5, rowIndex, i - beforeColumn));
+            }
+        }
+
+        private void SetP6Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5;
+            for (int i = beforeColumn; i < StepLength.P6 + beforeColumn; i++)
+            {
+                var value = _context.GetValue<bool>(6, rowIndex, i - beforeColumn);
+                if (value)
+                    row.CreateCell(i).SetCellValue(i - beforeColumn);
+            }
+        }
+
+        private void SetP7Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6;
+            for (int i = beforeColumn; i < StepLength.P7 + beforeColumn; i++)
+            {
+                row.CreateCell(i).SetCellValue(_context.GetValue<int>(7, rowIndex, i - beforeColumn));
+            }
+        }
+        private void SetP8Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6 + StepLength.P7;
+            for (int i = beforeColumn; i < StepLength.P8 + beforeColumn; i++)
+            {
+                row.CreateCell(i).SetCellValue(_context.GetValue<int>(8, rowIndex, i - beforeColumn));
             }
         }
     }
