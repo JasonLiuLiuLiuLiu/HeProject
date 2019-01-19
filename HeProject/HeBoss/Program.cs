@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using HeProject;
 
 namespace HeBoss
@@ -17,15 +18,16 @@ namespace HeBoss
             }
             Console.WriteLine("当前软件为试用版,将会在2019年1月31日过期.");
             Console.WriteLine("请勿关闭此窗口,正在处理中...");
-
+            Thread.Sleep(40000);
             var dataflow = new ProjectDataFlow();
             var pipeline = dataflow.CreatePipeLine();
-            dataflow.Process("Input.xlsx");
+            dataflow.Process("_Input.xlsx");
             pipeline.Wait();
             WriteToExcel writer = new WriteToExcel(dataflow._processContext);
             writer.Write();
             Console.WriteLine("处理完成!");
-            Console.WriteLine($"输出结果保存在{Directory.GetCurrentDirectory()}\\Output.xlsx");
+            Console.WriteLine($"输出结果保存在{Directory.GetCurrentDirectory()}\\_Output.xlsx");
+            Console.ReadKey();
         }
     }
 }

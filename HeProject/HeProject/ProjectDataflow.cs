@@ -42,7 +42,7 @@ namespace HeProject
                 currentBlock.LinkTo(block, new DataflowLinkOptions() { PropagateCompletion = true });
                 currentBlock = block;
             }
-            var finallyBlock = new ActionBlock<int>(x => Thread.Sleep(3000));
+            var finallyBlock = new ActionBlock<int>(x => Console.WriteLine($"第{x}行处理完成!"));
             currentBlock.LinkTo(finallyBlock, new DataflowLinkOptions() { PropagateCompletion = true });
             return finallyBlock.Completion;
         }
