@@ -1,4 +1,5 @@
-﻿using NPOI.SS.UserModel;
+﻿using System;
+using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System.IO;
 using HeProject.Model;
@@ -19,28 +20,39 @@ namespace HeProject
 
         public void Write()
         {
-            IWorkbook workbook = new XSSFWorkbook();
-            _headerStyle = workbook.CreateCellStyle();
-            ISheet sheet1 = workbook.CreateSheet("Sheet1");
-            sheet1.CreateRow(0).CreateCell(0).SetCellValue("This is a Sample");
-            SetHeader(sheet1, 0);
-            for (int i = _firstRow; i < _context.Capacity + _firstRow; i++)
+            try
             {
-                IRow row = sheet1.CreateRow(i);
-                var index = i - _firstRow;
-                SetP1Value(row, index);
-                SetP2Value(row, index);
-                SetP3Value(row, index);
-                SetP4Value(row, index);
-                SetP5Value(row, index);
-                SetP6Value(row, index);
-                SetP7Value(row, index);
-                SetP8Value(row, index);
-                SetP9Value(row, index);
+                IWorkbook workbook = new XSSFWorkbook();
+                _headerStyle = workbook.CreateCellStyle();
+                ISheet sheet1 = workbook.CreateSheet("Sheet1");
+                sheet1.CreateRow(0).CreateCell(0).SetCellValue("This is a Sample");
+                SetHeader(sheet1, 0);
+                for (int i = _firstRow; i < _context.Capacity + _firstRow; i++)
+                {
+                    IRow row = sheet1.CreateRow(i);
+                    var index = i - _firstRow;
+                    SetP1Value(row, index);
+                    SetP2Value(row, index);
+                    SetP3Value(row, index);
+                    SetP4Value(row, index);
+                    SetP5Value(row, index);
+                    SetP6Value(row, index);
+                    SetP7Value(row, index);
+                    SetP8Value(row, index);
+                    SetP9Value(row, index);
+                }
+
+                FileStream sw = File.Create("test.xlsx");
+                workbook.Write(sw);
+                sw.Close();
             }
-            FileStream sw = File.Create("test.xlsx");
-            workbook.Write(sw);
-            sw.Close();
+            catch (Exception ex)
+            {
+                Console.WriteLine("处理失败!");
+                Console.WriteLine(ex.Message);
+            }
+
+
         }
 
         private void SetHeader(ISheet sheet, int headerIndex)

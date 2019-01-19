@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using HeProject.Model;
@@ -41,7 +42,7 @@ namespace HeProject
                 currentBlock.LinkTo(block, new DataflowLinkOptions() { PropagateCompletion = true });
                 currentBlock = block;
             }
-            var finallyBlock = new ActionBlock<int>(x => /*Console.WriteLine($"第{x}行处理完成!")*/x.GetType());
+            var finallyBlock = new ActionBlock<int>(x => Thread.Sleep(3000));
             currentBlock.LinkTo(finallyBlock, new DataflowLinkOptions() { PropagateCompletion = true });
             return finallyBlock.Completion;
         }
