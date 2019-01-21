@@ -10,7 +10,8 @@ namespace HeProject.ProgressHandler.P2
     {
         public string Hnalder(int row, ProcessContext context)
         {
-            throw new NotImplementedException();
+            Console.WriteLine(row);
+            return null;
         }
     }
 }

@@ -63,20 +63,20 @@ namespace HeProject
               }, _executionDataflowBlockOptions);
             p1S2Block.LinkTo(p1BroadcastBlock, new DataflowLinkOptions() { PropagateCompletion = true });
             p1BroadcastBlock.LinkTo(p1S3Block, new DataflowLinkOptions() { PropagateCompletion = true });
-            //   p1BroadcastBlock.LinkTo(p2S2Block, new DataflowLinkOptions() {PropagateCompletion = true});
+            p1BroadcastBlock.LinkTo(p2S2Block, new DataflowLinkOptions() { PropagateCompletion = true });
 
 
             var finallyP1Block = new ActionBlock<int>(x =>
             {
                 Console.WriteLine($"第一部分{x}行处理完成!");
-               // Thread.Sleep(2000);
+                // Thread.Sleep(2000);
             });
             currentP1Block.LinkTo(finallyP1Block, new DataflowLinkOptions() { PropagateCompletion = true });
 
             var finallyP2Block = new ActionBlock<int>(x =>
             {
                 Console.WriteLine($"第二部分{x}行处理完成!");
-              //  Thread.Sleep(2000);
+                //  Thread.Sleep(2000);
             });
             currentP2Block.LinkTo(finallyP2Block, new DataflowLinkOptions() { PropagateCompletion = true });
 

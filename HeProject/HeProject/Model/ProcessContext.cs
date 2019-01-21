@@ -198,6 +198,7 @@ namespace HeProject.Model
         {
             Capacity = capacity;
             _stepP1State = new bool[stepCont, capacity];
+            _stepP2State = new bool[stepCont, capacity];
             valueP1Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
             valueP2Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
             valueP3Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
