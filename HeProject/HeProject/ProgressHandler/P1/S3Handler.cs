@@ -5,7 +5,7 @@ using NPOI.HSSF.Record;
 
 namespace HeProject
 {
-    public class P3Handler : IProgressHandler
+    public class S3Handler : IP1Handler
     {
         public string Hnalder(int row, ProcessContext context)
         {
@@ -27,7 +27,7 @@ namespace HeProject
          
             for (int i = 0; i < StepLength.P3; i++)
             {
-                context.SetValue(3, row, order[i], i);
+                context.SetP1Value(3, row, order[i], i);
             }
             return null;
         }
@@ -89,7 +89,7 @@ namespace HeProject
                 {
                     if (inValue)
                     {
-                        if (context.GetValue<bool>(2, j, i))
+                        if (context.GetP1Value<bool>(2, j, i))
                             valueLength++;
                         else
                         {
@@ -98,7 +98,7 @@ namespace HeProject
                     }
                     else
                     {
-                        if (context.GetValue<bool>(2, j, i))
+                        if (context.GetP1Value<bool>(2, j, i))
                             inValue = true;
                         else
                         {
@@ -116,7 +116,7 @@ namespace HeProject
 
             //for (int i = 0; i < StepLength.P3; i++)
             //{
-            //    context.SetValue(3, row, i, afterOder.IndexOf(afterOder.FirstOrDefault(u => u.Key == i)));
+            //    context.SetP1Value(3, row, i, afterOder.IndexOf(afterOder.FirstOrDefault(u => u.Key == i)));
             //}
             //return null;
         }

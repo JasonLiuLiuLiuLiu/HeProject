@@ -10,20 +10,20 @@ namespace HeProject.Model
     {
 
         private bool[,] _stepState;
-        private Dictionary<int, Dictionary<int, Dictionary<int, object>>> valueMap;
+        private Dictionary<int, Dictionary<int, Dictionary<int, object>>> valueP1Map;
         public readonly int Capacity;
         private const int stepCont = 9;
         private object _lock=new object();
 
-        public void SetValue(int step, int row, int column, object value)
+        public void SetP1Value(int step, int row, int column, object value)
         {
             try
             {
                 lock (_lock)
                 {
-                    if (!valueMap.ContainsKey(step))
-                        valueMap.Add(step, new Dictionary<int, Dictionary<int, object>>(stepCont));
-                    var stepValueMap = valueMap[step];
+                    if (!valueP1Map.ContainsKey(step))
+                        valueP1Map.Add(step, new Dictionary<int, Dictionary<int, object>>(stepCont));
+                    var stepValueMap = valueP1Map[step];
                     if (!stepValueMap.ContainsKey(row))
                         stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
                     var rowValueMap = stepValueMap[row];
@@ -41,7 +41,7 @@ namespace HeProject.Model
           
         }
 
-        public T GetValue<T>(int step, int row, int column)
+        public T GetP1Value<T>(int step, int row, int column)
         {
             try
             {
@@ -54,9 +54,9 @@ namespace HeProject.Model
                             return default(T);
                         Thread.Sleep(50);
                     }
-                    if (!valueMap.ContainsKey(step))
-                        valueMap.Add(step, new Dictionary<int, Dictionary<int, object>>(stepCont));
-                    var stepValueMap = valueMap[step];
+                    if (!valueP1Map.ContainsKey(step))
+                        valueP1Map.Add(step, new Dictionary<int, Dictionary<int, object>>(stepCont));
+                    var stepValueMap = valueP1Map[step];
                     if (!stepValueMap.ContainsKey(row))
                         stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
                     var rowValueMap = stepValueMap[row];
@@ -73,7 +73,7 @@ namespace HeProject.Model
           
         }
 
-        public Dictionary<int, object> GetRowResult(int step, int row)
+        public Dictionary<int, object> GetP1RowResult(int step, int row)
         {
             int loop = 0;
             while (!_stepState[step - 1, row])
@@ -82,15 +82,15 @@ namespace HeProject.Model
                     return new Dictionary<int, object>(Capacity);
                 Thread.Sleep(50);
             }
-            if (!valueMap.ContainsKey(step))
-                valueMap.Add(step, new Dictionary<int, Dictionary<int, object>>(stepCont));
-            var stepValueMap = valueMap[step];
+            if (!valueP1Map.ContainsKey(step))
+                valueP1Map.Add(step, new Dictionary<int, Dictionary<int, object>>(stepCont));
+            var stepValueMap = valueP1Map[step];
             if (!stepValueMap.ContainsKey(row))
                 stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
             return stepValueMap[row];
         }
 
-        public void SetStepState(int step, int row, bool value)
+        public void SetP1StepState(int step, int row, bool value)
         {
             _stepState[step - 1, row] = value;
         }
@@ -99,7 +99,7 @@ namespace HeProject.Model
         {
             Capacity = capacity;
             _stepState = new bool[stepCont, capacity];
-            valueMap = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
+            valueP1Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
         }
     }
 }

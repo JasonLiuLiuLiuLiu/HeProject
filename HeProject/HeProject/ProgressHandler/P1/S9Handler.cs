@@ -2,7 +2,7 @@
 
 namespace HeProject
 {
-    public class P9Handler : IProgressHandler
+    public class S9Handler : IP1Handler
     {
         public string Hnalder(int row, ProcessContext context)
         {
@@ -14,13 +14,13 @@ namespace HeProject
 
             for (int i = 0; i < StepLength.P2; i++)
             {
-                if(!context.GetValue<bool>(2,row,i))
+                if(!context.GetP1Value<bool>(2,row,i))
                     continue;
                 int distance = 0;
                 for (int j = row-1; (j > row - 4) && j >= 0; j--)
                 {
                     distance++;
-                    if (context.GetValue<bool>(2, j, i))
+                    if (context.GetP1Value<bool>(2, j, i))
                     {
                         break;
                     }
@@ -39,9 +39,9 @@ namespace HeProject
                         break;
                 }
             }
-            context.SetValue(9, row, 0, c1);
-            context.SetValue(9, row, 1, c2);
-            context.SetValue(9, row, 2, c3);
+            context.SetP1Value(9, row, 0, c1);
+            context.SetP1Value(9, row, 1, c2);
+            context.SetP1Value(9, row, 2, c3);
             return null;
         }
     }

@@ -97,14 +97,14 @@ namespace HeProject
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6 + StepLength.P7 + StepLength.P8, StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6 + StepLength.P7 + StepLength.P8 + StepLength.P9 - 1));
         }
 
-        #region SetValue
+        #region SetP1Value
 
 
         private void SetP1Value(IRow row, int rowIndex)
         {
             for (int i = 0; i < StepLength.P1; i++)
             {
-                row.CreateCell(i).SetCellValue(_context.GetValue<int>(1, rowIndex, i));
+                row.CreateCell(i).SetCellValue(_context.GetP1Value<int>(1, rowIndex, i));
             }
         }
         private void SetP2Value(IRow row, int rowIndex)
@@ -112,7 +112,7 @@ namespace HeProject
             int beforeColumn = StepLength.P1;
             for (int i = beforeColumn; i < StepLength.P2 + beforeColumn; i++)
             {
-                var value = _context.GetValue<bool>(2, rowIndex, i - beforeColumn);
+                var value = _context.GetP1Value<bool>(2, rowIndex, i - beforeColumn);
                 if (value)
                     row.CreateCell(i).SetCellValue("🔺");
             }
@@ -122,7 +122,7 @@ namespace HeProject
             int beforeColumn = StepLength.P1 + StepLength.P2;
             for (int i = beforeColumn; i < StepLength.P3 + beforeColumn; i++)
             {
-                row.CreateCell(i).SetCellValue(_context.GetValue<int>(3, rowIndex, i - beforeColumn));
+                row.CreateCell(i).SetCellValue(_context.GetP1Value<int>(3, rowIndex, i - beforeColumn));
             }
         }
 
@@ -131,7 +131,7 @@ namespace HeProject
             int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3;
             for (int i = beforeColumn; i < StepLength.P4 + beforeColumn; i++)
             {
-                var value = _context.GetValue<bool>(4, rowIndex, i - beforeColumn);
+                var value = _context.GetP1Value<bool>(4, rowIndex, i - beforeColumn);
                 if (value)
                     row.CreateCell(i).SetCellValue(i - beforeColumn);
             }
@@ -142,7 +142,7 @@ namespace HeProject
             int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4;
             for (int i = beforeColumn; i < StepLength.P5 + beforeColumn; i++)
             {
-                row.CreateCell(i).SetCellValue(_context.GetValue<int>(5, rowIndex, i - beforeColumn));
+                row.CreateCell(i).SetCellValue(_context.GetP1Value<int>(5, rowIndex, i - beforeColumn));
             }
         }
 
@@ -151,7 +151,7 @@ namespace HeProject
             int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5;
             for (int i = beforeColumn; i < StepLength.P6 + beforeColumn; i++)
             {
-                var value = _context.GetValue<bool>(6, rowIndex, i - beforeColumn);
+                var value = _context.GetP1Value<bool>(6, rowIndex, i - beforeColumn);
                 if (value)
                     row.CreateCell(i).SetCellValue(i - beforeColumn);
             }
@@ -162,7 +162,7 @@ namespace HeProject
             int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6;
             for (int i = beforeColumn; i < StepLength.P7 + beforeColumn; i++)
             {
-                row.CreateCell(i).SetCellValue(_context.GetValue<int>(7, rowIndex, i - beforeColumn));
+                row.CreateCell(i).SetCellValue(_context.GetP1Value<int>(7, rowIndex, i - beforeColumn));
             }
         }
         private void SetP8Value(IRow row, int rowIndex)
@@ -170,7 +170,7 @@ namespace HeProject
             int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6 + StepLength.P7;
             for (int i = beforeColumn; i < StepLength.P8 + beforeColumn; i++)
             {
-                row.CreateCell(i).SetCellValue(_context.GetValue<int>(8, rowIndex, i - beforeColumn));
+                row.CreateCell(i).SetCellValue(_context.GetP1Value<int>(8, rowIndex, i - beforeColumn));
             }
         }
         private void SetP9Value(IRow row, int rowIndex)
@@ -178,7 +178,7 @@ namespace HeProject
             int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6 + StepLength.P7 + StepLength.P8;
             for (int i = beforeColumn; i < StepLength.P9 + beforeColumn; i++)
             {
-                row.CreateCell(i).SetCellValue(_context.GetValue<int>(9, rowIndex, i - beforeColumn));
+                row.CreateCell(i).SetCellValue(_context.GetP1Value<int>(9, rowIndex, i - beforeColumn));
             }
         }
 

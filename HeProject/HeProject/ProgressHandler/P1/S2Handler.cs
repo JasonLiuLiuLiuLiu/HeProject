@@ -3,7 +3,7 @@ using NPOI.SS.Formula.Functions;
 
 namespace HeProject
 {
-    public class P2Handler : IProgressHandler
+    public class S2Handler : IP1Handler
     {
         public string Hnalder(int row, ProcessContext context)
         {
@@ -12,14 +12,14 @@ namespace HeProject
             var buffer = new int[2, StepLength.P2];
             for (int i = 0; i < StepLength.P2; i++)
             {
-                buffer[0, i] = context.GetValue<int>(1, row - 1, i);
-                buffer[1, i] = context.GetValue<int>(1, row, i);
+                buffer[0, i] = context.GetP1Value<int>(1, row - 1, i);
+                buffer[1, i] = context.GetP1Value<int>(1, row, i);
             }
 
             for (int i = 0; i < StepLength.P2; i++)
             {
                 if (isBig(buffer[0, i]) == isBig(buffer[1, i]))
-                    context.SetValue(2, row, i, true);
+                    context.SetP1Value(2, row, i, true);
             }
 
             return null;

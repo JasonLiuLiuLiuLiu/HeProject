@@ -2,7 +2,7 @@
 
 namespace HeProject
 {
-    public interface IProgressHandler
+    public interface IP1Handler
     {
         string Hnalder(int row, ProcessContext context);
     }

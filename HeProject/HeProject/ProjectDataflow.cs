@@ -109,9 +109,9 @@ namespace HeProject
 
                                 for (int column = 0; column < StepLength.P1; column++)
                                 {
-                                    _processContext.SetValue(1, row, column, (int)sheet.GetRow(row).GetCell(column).NumericCellValue);
+                                    _processContext.SetP1Value(1, row, column, (int)sheet.GetRow(row).GetCell(column).NumericCellValue);
                                 }
-                                _processContext.SetStepState(1, row, true);
+                                _processContext.SetP1StepState(1, row, true);
                                 p2Block.Post(row);
                             }
                         }
@@ -162,11 +162,11 @@ namespace HeProject
             {
                 try
                 {
-                    var handler = (IProgressHandler)Activator.CreateInstance(Type.GetType($"HeProject.P{step}Handler") ?? throw new InvalidOperationException());
+                    var handler = (IP1Handler)Activator.CreateInstance(Type.GetType($"HeProject.P{step}Handler") ?? throw new InvalidOperationException());
                     var result = handler.Hnalder(x, _processContext);
                     if (result != null)
                         PrintState(new ProgressState(step, -1) { ErrorMessage = result });
-                    _processContext.SetStepState(step, x, true);
+                    _processContext.SetP1StepState(step, x, true);
                 }
                 catch (Exception e)
                 {

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace HeProject
 {
-    public class P5Handler : IProgressHandler
+    public class S5Handler : IP1Handler
     {
         public string Hnalder(int row, ProcessContext context)
         {
@@ -26,7 +26,7 @@ namespace HeProject
 
             for (int i = 0; i < StepLength.P3; i++)
             {
-                context.SetValue(5, row, order[i], i);
+                context.SetP1Value(5, row, order[i], i);
             }
             return null;
         }
@@ -88,7 +88,7 @@ namespace HeProject
                 {
                     if (inValue)
                     {
-                        if (context.GetValue<bool>(4, j, i))
+                        if (context.GetP1Value<bool>(4, j, i))
                             valueLength++;
                         else
                         {
@@ -97,7 +97,7 @@ namespace HeProject
                     }
                     else
                     {
-                        if (context.GetValue<bool>(4, j, i))
+                        if (context.GetP1Value<bool>(4, j, i))
                             inValue = true;
                         else
                         {
@@ -115,7 +115,7 @@ namespace HeProject
 
             //for (int i = 0; i < StepLength.P3; i++)
             //{
-            //    context.SetValue(3, row, i, afterOder.IndexOf(afterOder.FirstOrDefault(u => u.Key == i)));
+            //    context.SetP1Value(3, row, i, afterOder.IndexOf(afterOder.FirstOrDefault(u => u.Key == i)));
             //}
             //return null;
         }
