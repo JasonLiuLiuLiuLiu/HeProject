@@ -6,7 +6,7 @@ using HeProject.Part2;
 
 namespace HeProject.ProgressHandler.P2
 {
-    class S2P2Handler : IP2Handler
+    class S6P2Handler : IP2Handler
     {
         public string Hnalder(int row, ProcessContext context)
         {

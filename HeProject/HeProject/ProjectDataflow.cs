@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using HeProject.Model;
+using HeProject.Part2;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -35,21 +36,51 @@ namespace HeProject
 
         public Task CreatePipeLine()
         {
-            var currentBlock = CreateReadFileBlock(CreateProcessBlock(2));
-            for (int i = 3; i < 10; i++)
+            var p1S2Block = CreateReadFileBlock(CreateP1Block(2));
+
+            var p1S3Block = CreateP1Block(3);
+            var currentP1Block = p1S3Block;
+            for (int i = 4; i < 10; i++)
             {
-                var block = CreateProcessBlock(i);
-                currentBlock.LinkTo(block, new DataflowLinkOptions() { PropagateCompletion = true });
-                currentBlock = block;
+                var block = CreateP1Block(i);
+                currentP1Block.LinkTo(block, new DataflowLinkOptions() { PropagateCompletion = true });
+                currentP1Block = block;
             }
 
-            var finallyBlock = new ActionBlock<int>(x =>
+            IPropagatorBlock<int, int> p2S2Block = CreateP2Block(2);
+            var currentP2Block = p2S2Block;
+            for (int i = 3; i < 10; i++)
             {
-                Console.WriteLine($"第{x}行处理完成!");
-                Thread.Sleep(2000);
+                var block = CreateP2Block(i);
+                currentP2Block.LinkTo(block, new DataflowLinkOptions() { PropagateCompletion = true });
+                currentP2Block = block;
+            }
+
+            var p1BroadcastBlock = new BroadcastBlock<int>(i =>
+              {
+                  //Console.WriteLine($"第一,二部分第{i}行开始处理;");
+                  return i;
+              }, _executionDataflowBlockOptions);
+            p1S2Block.LinkTo(p1BroadcastBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            p1BroadcastBlock.LinkTo(p1S3Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            //   p1BroadcastBlock.LinkTo(p2S2Block, new DataflowLinkOptions() {PropagateCompletion = true});
+
+
+            var finallyP1Block = new ActionBlock<int>(x =>
+            {
+                Console.WriteLine($"第一部分{x}行处理完成!");
+               // Thread.Sleep(2000);
             });
-            currentBlock.LinkTo(finallyBlock, new DataflowLinkOptions() { PropagateCompletion = true });
-            return finallyBlock.Completion;
+            currentP1Block.LinkTo(finallyP1Block, new DataflowLinkOptions() { PropagateCompletion = true });
+
+            var finallyP2Block = new ActionBlock<int>(x =>
+            {
+                Console.WriteLine($"第二部分{x}行处理完成!");
+              //  Thread.Sleep(2000);
+            });
+            currentP2Block.LinkTo(finallyP2Block, new DataflowLinkOptions() { PropagateCompletion = true });
+
+            return Task.WhenAll(new Task[] { finallyP1Block.Completion, finallyP2Block.Completion });
         }
 
         private void PrintState(ProgressState state)
@@ -148,25 +179,47 @@ namespace HeProject
                         return false;
                 }
             }
-            catch 
+            catch
             {
                 return false;
             }
-           
+
             return true;
         }
 
-        private IPropagatorBlock<int, int> CreateProcessBlock(int step)
+        private IPropagatorBlock<int, int> CreateP1Block(int step)
         {
             var progressBlock = new TransformBlock<int, int>(x =>
             {
                 try
                 {
-                    var handler = (IP1Handler)Activator.CreateInstance(Type.GetType($"HeProject.P{step}Handler") ?? throw new InvalidOperationException());
+                    var handler = (IP1Handler)Activator.CreateInstance(Type.GetType($"HeProject.S{step}Handler") ?? throw new InvalidOperationException());
                     var result = handler.Hnalder(x, _processContext);
                     if (result != null)
                         PrintState(new ProgressState(step, -1) { ErrorMessage = result });
                     _processContext.SetP1StepState(step, x, true);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                return x;
+            }, _executionDataflowBlockOptions);
+            progressBlock.Completion.ContinueWith(t => { PrintState(new ProgressState(step, -2)); });
+            return progressBlock;
+        }
+
+        private IPropagatorBlock<int, int> CreateP2Block(int step)
+        {
+            var progressBlock = new TransformBlock<int, int>(x =>
+            {
+                try
+                {
+                    var handler = (IP2Handler)Activator.CreateInstance(Type.GetType($"HeProject.ProgressHandler.P2.S{step}P2Handler") ?? throw new InvalidOperationException());
+                    var result = handler.Hnalder(x, _processContext);
+                    if (result != null)
+                        PrintState(new ProgressState(step, -1) { ErrorMessage = result });
+                    _processContext.SetP2StepState(step, x, true);
                 }
                 catch (Exception e)
                 {
