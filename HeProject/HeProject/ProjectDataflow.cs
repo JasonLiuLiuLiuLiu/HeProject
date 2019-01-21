@@ -42,7 +42,12 @@ namespace HeProject
                 currentBlock.LinkTo(block, new DataflowLinkOptions() { PropagateCompletion = true });
                 currentBlock = block;
             }
-            var finallyBlock = new ActionBlock<int>(x => Console.WriteLine($"第{x}行处理完成!"));
+
+            var finallyBlock = new ActionBlock<int>(x =>
+            {
+                Console.WriteLine($"第{x}行处理完成!");
+                Thread.Sleep(2000);
+            });
             currentBlock.LinkTo(finallyBlock, new DataflowLinkOptions() { PropagateCompletion = true });
             return finallyBlock.Completion;
         }
@@ -96,6 +101,12 @@ namespace HeProject
                         {
                             if (sheet.GetRow(row) != null) //null is when the row only contains empty cells 
                             {
+                                if (!CheckSourceData(sheet.GetRow(row)))
+                                {
+                                    Console.WriteLine($"检查到第{row}行数据格式有误,请关闭此程序并检查导入数据或清空表格重新导入!");
+                                    return;
+                                }
+
                                 for (int column = 0; column < StepLength.P1; column++)
                                 {
                                     _processContext.SetValue(1, row, column, (int)sheet.GetRow(row).GetCell(column).NumericCellValue);
@@ -119,6 +130,30 @@ namespace HeProject
                 p2Block.Complete();
             });
             return p2Block;
+        }
+
+        private bool CheckSourceData(IRow row)
+        {
+            try
+            {
+                int countOfZero = 0;
+                for (int j = 0; j < StepLength.P1; j++)
+                {
+                    var cellData = row.GetCell(j).ToString();
+                    if (string.IsNullOrEmpty(cellData))
+                        return false;
+                    if (int.Parse(cellData) == 0)
+                        countOfZero++;
+                    if (countOfZero > 6)
+                        return false;
+                }
+            }
+            catch 
+            {
+                return false;
+            }
+           
+            return true;
         }
 
         private IPropagatorBlock<int, int> CreateProcessBlock(int step)
