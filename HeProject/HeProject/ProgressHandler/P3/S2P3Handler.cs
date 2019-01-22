@@ -13,8 +13,8 @@ namespace HeProject.ProgressHandler.P3
             var buffer = new int[2, StepLength.P2];
             for (int i = 0; i < StepLength.P2; i++)
             {
-                buffer[0, i] = context.GetP3Value<int>(1, row - 1, i);
-                buffer[1, i] = context.GetP3Value<int>(1, row, i);
+                buffer[0, i] = context.GetP1Value<int>(1, row - 1, i);
+                buffer[1, i] = context.GetP1Value<int>(1, row, i);
             }
 
             for (int i = 0; i < StepLength.P2; i++)

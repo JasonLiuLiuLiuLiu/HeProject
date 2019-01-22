@@ -13,15 +13,34 @@ namespace HeProject
         private readonly int _p1FirstRow;
         private readonly int _p2FirstRow;
         private ICellStyle _headerStyle;
-        private ICellStyle _s1Style;
-        private ICellStyle _s2Style;
-        private ICellStyle _s3Style;
-        private ICellStyle _s4Style;
-        private ICellStyle _s5Style;
-        private ICellStyle _s6Style;
-        private ICellStyle _s7Style;
-        private ICellStyle _s8Style;
-        private ICellStyle _s9Style;
+
+        private ICellStyle _s2P1Style;
+        private ICellStyle _s4P1Style;
+        private ICellStyle _s6P1Style;
+        private ICellStyle _s7P1Style;
+        private ICellStyle _s8P1Style;
+        private ICellStyle _s9P1Style;
+
+        private ICellStyle _s2P2Style;
+        private ICellStyle _s4P2Style;
+        private ICellStyle _s6P2Style;
+        private ICellStyle _s7P2Style;
+        private ICellStyle _s8P2Style;
+        private ICellStyle _s9P2Style;
+
+        private ICellStyle _s2P3Style;
+        private ICellStyle _s4P3Style;
+        private ICellStyle _s6P3Style;
+        private ICellStyle _s7P3Style;
+        private ICellStyle _s8P3Style;
+        private ICellStyle _s9P3Style;
+
+        private ICellStyle _s2P4Style;
+        private ICellStyle _s4P4Style;
+        private ICellStyle _s6P4Style;
+        private ICellStyle _s7P4Style;
+        private ICellStyle _s8P4Style;
+        private ICellStyle _s9P4Style;
         public WriteToExcel(ProcessContext context)
         {
             _p1FirstRow = 1;
@@ -38,104 +57,151 @@ namespace HeProject
 
                 #region SetStyle
 
-                _s1Style = workbook.CreateCellStyle();
-                _s2Style = workbook.CreateCellStyle();
-                _s3Style = workbook.CreateCellStyle();
-                _s4Style = workbook.CreateCellStyle();
-                _s5Style = workbook.CreateCellStyle();
-                _s6Style = workbook.CreateCellStyle();
-                _s7Style = workbook.CreateCellStyle();
-                _s8Style = workbook.CreateCellStyle();
-                _s9Style = workbook.CreateCellStyle();
-                _s1Style.BottomBorderColor = IndexedColors.Black.Index;
-                _s1Style.LeftBorderColor = IndexedColors.Black.Index;
-                _s1Style.RightBorderColor = IndexedColors.Black.Index;
-                _s1Style.LeftBorderColor = IndexedColors.Black.Index;
+                _s2P1Style = workbook.CreateCellStyle();
+                _s4P1Style = workbook.CreateCellStyle();
+                _s6P1Style = workbook.CreateCellStyle();
+                _s7P1Style = workbook.CreateCellStyle();
+                _s8P1Style = workbook.CreateCellStyle();
+                _s9P1Style = workbook.CreateCellStyle();
 
-                _s2Style.BottomBorderColor = IndexedColors.Black.Index;
-                _s2Style.LeftBorderColor = IndexedColors.Black.Index;
-                _s2Style.RightBorderColor = IndexedColors.Black.Index;
-                _s2Style.LeftBorderColor = IndexedColors.Black.Index;
+                _s2P2Style = workbook.CreateCellStyle();
+                _s4P2Style = workbook.CreateCellStyle();
+                _s6P2Style = workbook.CreateCellStyle();
+                _s7P2Style = workbook.CreateCellStyle();
+                _s8P2Style = workbook.CreateCellStyle();
+                _s9P2Style = workbook.CreateCellStyle();
 
-                _s3Style.BottomBorderColor = IndexedColors.Black.Index;
-                _s3Style.LeftBorderColor = IndexedColors.Black.Index;
-                _s3Style.RightBorderColor = IndexedColors.Black.Index;
-                _s3Style.LeftBorderColor = IndexedColors.Black.Index;
+                _s2P3Style = workbook.CreateCellStyle();
+                _s4P3Style = workbook.CreateCellStyle();
+                _s6P3Style = workbook.CreateCellStyle();
+                _s7P3Style = workbook.CreateCellStyle();
+                _s8P3Style = workbook.CreateCellStyle();
+                _s9P3Style = workbook.CreateCellStyle();
 
-                _s4Style.BottomBorderColor = IndexedColors.Black.Index;
-                _s4Style.LeftBorderColor = IndexedColors.Black.Index;
-                _s4Style.RightBorderColor = IndexedColors.Black.Index;
-                _s4Style.LeftBorderColor = IndexedColors.Black.Index;
+                _s2P4Style = workbook.CreateCellStyle();
+                _s4P4Style = workbook.CreateCellStyle();
+                _s6P4Style = workbook.CreateCellStyle();
+                _s7P4Style = workbook.CreateCellStyle();
+                _s8P4Style = workbook.CreateCellStyle();
+                _s9P4Style = workbook.CreateCellStyle();
 
-                _s5Style.BottomBorderColor = IndexedColors.Black.Index;
-                _s5Style.LeftBorderColor = IndexedColors.Black.Index;
-                _s5Style.RightBorderColor = IndexedColors.Black.Index;
-                _s5Style.LeftBorderColor = IndexedColors.Black.Index;
+                //https://www.cnblogs.com/love-zf/p/4874098.html
+                _s2P1Style.FillForegroundColor = 13;
+                _s4P1Style.FillForegroundColor = 22;
+                _s6P1Style.FillForegroundColor = 45;
+                _s7P1Style.FillForegroundColor = 22;
+                _s8P1Style.FillForegroundColor = 45;
 
-                _s6Style.BottomBorderColor = IndexedColors.Black.Index;
-                _s6Style.LeftBorderColor = IndexedColors.Black.Index;
-                _s6Style.RightBorderColor = IndexedColors.Black.Index;
-                _s6Style.LeftBorderColor = IndexedColors.Black.Index;
+                _s2P2Style.FillForegroundColor = 40;
+                _s4P2Style.FillForegroundColor = 55;
+                _s6P2Style.FillForegroundColor = 61;
+                _s7P2Style.FillForegroundColor = 55;
+                _s8P2Style.FillForegroundColor = 61;
 
-                _s7Style.BottomBorderColor = IndexedColors.Black.Index;
-                _s7Style.LeftBorderColor = IndexedColors.Black.Index;
-                _s7Style.RightBorderColor = IndexedColors.Black.Index;
-                _s7Style.LeftBorderColor = IndexedColors.Black.Index;
+                _s2P3Style.FillForegroundColor = 13;
+                _s4P3Style.FillForegroundColor = 22;
+                _s6P3Style.FillForegroundColor = 45;
+                _s7P3Style.FillForegroundColor = 22;
+                _s8P3Style.FillForegroundColor = 45;
 
-                _s8Style.BottomBorderColor = IndexedColors.Black.Index;
-                _s8Style.LeftBorderColor = IndexedColors.Black.Index;
-                _s8Style.RightBorderColor = IndexedColors.Black.Index;
-                _s8Style.LeftBorderColor = IndexedColors.Black.Index;
+                _s2P4Style.FillForegroundColor = 40;
+                _s4P4Style.FillForegroundColor = 55;
+                _s6P4Style.FillForegroundColor = 61;
+                _s7P4Style.FillForegroundColor = 55;
+                _s8P4Style.FillForegroundColor = 61;
 
-                _s9Style.BottomBorderColor = IndexedColors.Black.Index;
-                _s9Style.LeftBorderColor = IndexedColors.Black.Index;
-                _s9Style.RightBorderColor = IndexedColors.Black.Index;
-                _s9Style.LeftBorderColor = IndexedColors.Black.Index;
 
-                _s1Style.FillBackgroundColor = IndexedColors.Aqua.Index;
-                _s2Style.FillBackgroundColor = IndexedColors.Blue.Index;
-                _s3Style.FillBackgroundColor = IndexedColors.BlueGrey.Index;
-                _s4Style.FillBackgroundColor = IndexedColors.Brown.Index;
-                _s5Style.FillBackgroundColor = IndexedColors.CornflowerBlue.Index;
-                _s6Style.FillBackgroundColor = IndexedColors.Coral.Index;
-                _s7Style.FillBackgroundColor = IndexedColors.DarkGreen.Index;
-                _s8Style.FillBackgroundColor = IndexedColors.Yellow.Index;
-                _s9Style.FillBackgroundColor = IndexedColors.Violet.Index;
+                _s2P1Style.FillPattern = FillPattern.SolidForeground;
+                _s4P1Style.FillPattern = FillPattern.SolidForeground;
+                _s6P1Style.FillPattern = FillPattern.SolidForeground;
+                _s7P1Style.FillPattern = FillPattern.SolidForeground;
+                _s8P1Style.FillPattern = FillPattern.SolidForeground;
+
+                _s2P2Style.FillPattern = FillPattern.SolidForeground;
+                _s4P2Style.FillPattern = FillPattern.SolidForeground;
+                _s6P2Style.FillPattern = FillPattern.SolidForeground;
+                _s7P2Style.FillPattern = FillPattern.SolidForeground;
+                _s8P2Style.FillPattern = FillPattern.SolidForeground;
+
+                _s2P3Style.FillPattern = FillPattern.SolidForeground;
+                _s4P3Style.FillPattern = FillPattern.SolidForeground;
+                _s6P3Style.FillPattern = FillPattern.SolidForeground;
+                _s7P3Style.FillPattern = FillPattern.SolidForeground;
+                _s8P3Style.FillPattern = FillPattern.SolidForeground;
+
+                _s2P4Style.FillPattern = FillPattern.SolidForeground;
+                _s4P4Style.FillPattern = FillPattern.SolidForeground;
+                _s6P4Style.FillPattern = FillPattern.SolidForeground;
+                _s7P4Style.FillPattern = FillPattern.SolidForeground;
+                _s8P4Style.FillPattern = FillPattern.SolidForeground;
 
                 #endregion
 
 
                 ISheet sheet1 = workbook.CreateSheet("Sheet1");
+                sheet1.DefaultColumnWidth = 1;
                 sheet1.CreateRow(0).CreateCell(0).SetCellValue("This is a Sample");
                 SetHeader(sheet1, 0);
                 for (int i = _p1FirstRow; i < _context.Capacity + _p1FirstRow; i++)
                 {
                     IRow row = sheet1.CreateRow(i);
                     var index = i - _p1FirstRow;
-                    SetP1Value(row, index);
+                    //   SetP1Value(row, index);
+
+                    #region P1
+
                     SetP2Value(row, index);
-                    SetP3Value(row, index);
+                    //  SetP3Value(row, index);
                     SetP4Value(row, index);
-                    SetP5Value(row, index);
+                    //  SetP5Value(row, index);
                     SetP6Value(row, index);
                     SetP7Value(row, index);
                     SetP8Value(row, index);
                     SetP9Value(row, index);
-                }
 
-                for (int i = _p2FirstRow; i < _context.Capacity + _p2FirstRow; i++)
-                {
-                    IRow row = sheet1.CreateRow(i);
-                    var index = i - _p2FirstRow;
-                    SetP1Value(row, index);
+                    #endregion
+
+                    #region P2
+
                     Set2P2Value(row, index);
-                    Set2P3Value(row, index);
+                    //  Set2P3Value(row, index);
                     Set2P4Value(row, index);
-                    Set2P5Value(row, index);
+                    //   Set2P5Value(row, index);
                     Set2P6Value(row, index);
                     Set2P7Value(row, index);
                     Set2P8Value(row, index);
                     Set2P9Value(row, index);
+
+                    #endregion
+
+                    #region P3
+
+                    Set3P2Value(row, index);
+                    //  Set3P3Value(row, index);
+                    Set3P4Value(row, index);
+                    //   Set3P5Value(row, index);
+                    Set3P6Value(row, index);
+                    Set3P7Value(row, index);
+                    Set3P8Value(row, index);
+                    Set3P9Value(row, index);
+
+                    #endregion
+
+                    #region P4
+
+                    Set4P2Value(row, index);
+                    //  Set4P3Value(row, index);
+                    Set4P4Value(row, index);
+                    // Set4P5Value(row, index);
+                    Set4P6Value(row, index);
+                    Set4P7Value(row, index);
+                    Set4P8Value(row, index);
+                    Set4P9Value(row, index);
+
+                    #endregion
+
+
+
                 }
 
                 FileStream sw = File.Create("_Output.xlsx");
@@ -155,42 +221,118 @@ namespace HeProject
         {
             var row = sheet.GetRow(headerIndex);
             _headerStyle.Alignment = HorizontalAlignment.Center;
-            var cellHeader1 = row.CreateCell(0, CellType.String);
-            cellHeader1.SetCellValue("第一步");
-            var cellHeader2 = row.CreateCell(StepLength.P1, CellType.String);
-            cellHeader2.SetCellValue("第二步");
-            var cellHeader3 = row.CreateCell(StepLength.P1 + StepLength.P2, CellType.String);
-            cellHeader3.SetCellValue("第三步");
-            var cellHeader4 = row.CreateCell(StepLength.P1 + StepLength.P2 + StepLength.P3, CellType.String);
-            cellHeader4.SetCellValue("第四步");
-            var cellHeader5 = row.CreateCell(StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4, CellType.String);
-            cellHeader5.SetCellValue("第五步");
-            var cellHeader6 = row.CreateCell(StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5, CellType.String);
-            cellHeader6.SetCellValue("第六步");
-            var cellHeader7 = row.CreateCell(StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6, CellType.String);
-            cellHeader7.SetCellValue("第七步");
-            var cellHeader8 = row.CreateCell(StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6 + StepLength.P7, CellType.String);
-            cellHeader8.SetCellValue("第八步");
-            var cellHeader9 = row.CreateCell(StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6 + StepLength.P7 + StepLength.P8, CellType.String);
-            cellHeader9.SetCellValue("第九步");
-            cellHeader1.CellStyle = _headerStyle;
-            cellHeader2.CellStyle = _headerStyle;
-            cellHeader3.CellStyle = _headerStyle;
-            cellHeader4.CellStyle = _headerStyle;
-            cellHeader5.CellStyle = _headerStyle;
-            cellHeader6.CellStyle = _headerStyle;
-            cellHeader7.CellStyle = _headerStyle;
-            cellHeader8.CellStyle = _headerStyle;
-            cellHeader9.CellStyle = _headerStyle;
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 0, StepLength.P1 - 1));
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.P1, StepLength.P1 + StepLength.P2 - 1));
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.P1 + StepLength.P2, StepLength.P1 + StepLength.P2 + StepLength.P3 - 1));
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.P1 + StepLength.P2 + StepLength.P3, StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 - 1));
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4, StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 - 1));
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5, StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6 - 1));
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6, StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6 + StepLength.P7 - 1));
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6 + StepLength.P7, StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6 + StepLength.P7 + StepLength.P8 - 1));
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6 + StepLength.P7 + StepLength.P8, StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6 + StepLength.P7 + StepLength.P8 + StepLength.P9 - 1));
+
+            var s2p1 = row.CreateCell(0);
+            var s4p1 = row.CreateCell(StepLength.P2);
+            var s6p1 = row.CreateCell(StepLength.P2 + StepLength.P4);
+            var s7p1 = row.CreateCell(StepLength.P2 + StepLength.P4 + StepLength.P6);
+            var s8p1 = row.CreateCell(StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7);
+            var s9p1 = row.CreateCell(StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8);
+
+            s2p1.SetCellValue("一(2)");
+            s4p1.SetCellValue("一(4)");
+            s6p1.SetCellValue("一(6)");
+            s7p1.SetCellValue("一(7)");
+            s8p1.SetCellValue("一(8)");
+            s9p1.SetCellValue("一(9)");
+
+            s2p1.CellStyle = _headerStyle;
+            s4p1.CellStyle = _headerStyle;
+            s6p1.CellStyle = _headerStyle;
+            s7p1.CellStyle = _headerStyle;
+            s8p1.CellStyle = _headerStyle;
+            s9p1.CellStyle = _headerStyle;
+
+            var s2p2 = row.CreateCell(StepLength.DisplayTotal + 0);
+            var s4p2 = row.CreateCell(StepLength.DisplayTotal + StepLength.P2);
+            var s6p2 = row.CreateCell(StepLength.DisplayTotal + StepLength.P2 + StepLength.P4);
+            var s7p2 = row.CreateCell(StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6);
+            var s8p2 = row.CreateCell(StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7);
+            var s9p2 = row.CreateCell(StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8);
+
+            s2p2.SetCellValue("二(2)");
+            s4p2.SetCellValue("二(4)");
+            s6p2.SetCellValue("二(6)");
+            s7p2.SetCellValue("二(7)");
+            s8p2.SetCellValue("二(8)");
+            s9p2.SetCellValue("二(9)");
+
+            s2p2.CellStyle = _headerStyle;
+            s4p2.CellStyle = _headerStyle;
+            s6p2.CellStyle = _headerStyle;
+            s7p2.CellStyle = _headerStyle;
+            s8p2.CellStyle = _headerStyle;
+            s9p2.CellStyle = _headerStyle;
+
+            var s2p3 = row.CreateCell(2 * StepLength.DisplayTotal + 0);
+            var s4p3 = row.CreateCell(2 * StepLength.DisplayTotal + StepLength.P2);
+            var s6p3 = row.CreateCell(2 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4);
+            var s7p3 = row.CreateCell(2 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6);
+            var s8p3 = row.CreateCell(2 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7);
+            var s9p3 = row.CreateCell(2 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8);
+
+            s2p3.SetCellValue("三(2)");
+            s4p3.SetCellValue("三(4)");
+            s6p3.SetCellValue("三(6)");
+            s7p3.SetCellValue("三(7)");
+            s8p3.SetCellValue("三(8)");
+            s9p3.SetCellValue("三(9)");
+
+            s2p3.CellStyle = _headerStyle;
+            s4p3.CellStyle = _headerStyle;
+            s6p3.CellStyle = _headerStyle;
+            s7p3.CellStyle = _headerStyle;
+            s8p3.CellStyle = _headerStyle;
+            s9p3.CellStyle = _headerStyle;
+
+            var s2p4 = row.CreateCell(3 * StepLength.DisplayTotal + 0);
+            var s4p4 = row.CreateCell(3 * StepLength.DisplayTotal + StepLength.P2);
+            var s6p4 = row.CreateCell(3 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4);
+            var s7p4 = row.CreateCell(3 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6);
+            var s8p4 = row.CreateCell(3 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7);
+            var s9p4 = row.CreateCell(3 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8);
+
+            s2p4.SetCellValue("四(2)");
+            s4p4.SetCellValue("四(4)");
+            s6p4.SetCellValue("四(6)");
+            s7p4.SetCellValue("四(7)");
+            s8p4.SetCellValue("四(8)");
+            s9p4.SetCellValue("四(9)");
+
+            s2p4.CellStyle = _headerStyle;
+            s4p4.CellStyle = _headerStyle;
+            s6p4.CellStyle = _headerStyle;
+            s7p4.CellStyle = _headerStyle;
+            s8p4.CellStyle = _headerStyle;
+            s9p4.CellStyle = _headerStyle;
+
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 0, StepLength.P2 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.P2, StepLength.P2 + StepLength.P4 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.P2 + StepLength.P4, StepLength.P2 + StepLength.P4 + StepLength.P6 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.P2 + StepLength.P4 + StepLength.P6, StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7, StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8, StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8 + StepLength.P9 - 1));
+
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.DisplayTotal + 0, StepLength.DisplayTotal + StepLength.P2 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.DisplayTotal + StepLength.P2, StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.DisplayTotal + StepLength.P2 + StepLength.P4, StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6, StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7, StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8, StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8 + StepLength.P9 - 1));
+
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 2 * StepLength.DisplayTotal + 0, 2 * StepLength.DisplayTotal + StepLength.P2 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 2 * StepLength.DisplayTotal + StepLength.P2, 2 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 2 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4, 2 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 2 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6, 2 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 2 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7, 2 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 2 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8, 2 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8 + StepLength.P9 - 1));
+
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 * StepLength.DisplayTotal + 0, 3 * StepLength.DisplayTotal + StepLength.P2 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 * StepLength.DisplayTotal + StepLength.P2, 3 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4, 3 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6, 3 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7, 3 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8, 3 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8 + StepLength.P9 - 1));
         }
 
         #region SetP1Value
@@ -201,18 +343,17 @@ namespace HeProject
             for (int i = 0; i < StepLength.P1; i++)
             {
                 var cell = row.CreateCell(i);
-                cell.CellStyle = _s1Style;
                 cell.SetCellValue(_context.GetP1Value<int>(1, rowIndex, i));
             }
         }
         private void SetP2Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.P1;
+            int beforeColumn = 0;
             for (int i = beforeColumn; i < StepLength.P2 + beforeColumn; i++)
             {
                 var value = _context.GetP1Value<bool>(2, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
-                cell.CellStyle = _s2Style;
+                cell.CellStyle = _s2P1Style;
                 if (value)
                     cell.SetCellValue("🔺");
             }
@@ -224,18 +365,17 @@ namespace HeProject
             {
                 var cell = row.CreateCell(i);
                 cell.SetCellValue(_context.GetP1Value<int>(3, rowIndex, i - beforeColumn));
-                cell.CellStyle = _s3Style;
             }
         }
 
         private void SetP4Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3;
+            int beforeColumn = StepLength.P2;
             for (int i = beforeColumn; i < StepLength.P4 + beforeColumn; i++)
             {
                 var value = _context.GetP1Value<bool>(4, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
-                cell.CellStyle = _s4Style;
+                cell.CellStyle = _s4P1Style;
                 if (value)
                     cell.SetCellValue(i - beforeColumn);
             }
@@ -248,18 +388,17 @@ namespace HeProject
             {
                 var cell = row.CreateCell(i);
                 cell.SetCellValue(_context.GetP1Value<int>(5, rowIndex, i - beforeColumn));
-                cell.CellStyle = _s5Style;
             }
         }
 
         private void SetP6Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5;
+            int beforeColumn = StepLength.P2 + StepLength.P4;
             for (int i = beforeColumn; i < StepLength.P6 + beforeColumn; i++)
             {
                 var value = _context.GetP1Value<bool>(6, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
-                cell.CellStyle = _s6Style;
+                cell.CellStyle = _s6P1Style;
                 if (value)
                     cell.SetCellValue(i - beforeColumn);
             }
@@ -267,32 +406,32 @@ namespace HeProject
 
         private void SetP7Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6;
+            int beforeColumn = StepLength.P2 + StepLength.P4 + StepLength.P6;
             for (int i = beforeColumn; i < StepLength.P7 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
                 cell.SetCellValue(_context.GetP1Value<int>(7, rowIndex, i - beforeColumn));
-                cell.CellStyle = _s7Style;
+                cell.CellStyle = _s7P1Style;
             }
         }
         private void SetP8Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6 + StepLength.P7;
+            int beforeColumn = StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7;
             for (int i = beforeColumn; i < StepLength.P8 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
-                cell.CellStyle = _s8Style;
+                cell.CellStyle = _s8P1Style;
                 cell.SetCellValue(_context.GetP1Value<int>(8, rowIndex, i - beforeColumn));
             }
         }
         private void SetP9Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6 + StepLength.P7 + StepLength.P8;
+            int beforeColumn = StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8;
             for (int i = beforeColumn; i < StepLength.P9 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
                 cell.SetCellValue(_context.GetP1Value<int>(9, rowIndex, i - beforeColumn));
-                cell.CellStyle = _s9Style;
+                cell.CellStyle = _s9P1Style;
             }
         }
 
@@ -300,15 +439,15 @@ namespace HeProject
 
         #region SetP2Value
 
-       
+
         private void Set2P2Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.P1;
+            int beforeColumn = StepLength.DisplayTotal;
             for (int i = beforeColumn; i < StepLength.P2 + beforeColumn; i++)
             {
                 var value = _context.GetP2Value<bool>(2, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
-                cell.CellStyle = _s2Style;
+                cell.CellStyle = _s2P2Style;
                 if (value)
                     cell.SetCellValue("⭕");
             }
@@ -320,18 +459,17 @@ namespace HeProject
             {
                 var cell = row.CreateCell(i);
                 cell.SetCellValue(_context.GetP2Value<int>(3, rowIndex, i - beforeColumn));
-                cell.CellStyle = _s3Style;
             }
         }
 
         private void Set2P4Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3;
+            int beforeColumn = StepLength.DisplayTotal + StepLength.P2;
             for (int i = beforeColumn; i < StepLength.P4 + beforeColumn; i++)
             {
                 var value = _context.GetP2Value<bool>(4, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
-                cell.CellStyle = _s4Style;
+                cell.CellStyle = _s4P2Style;
                 if (value)
                     cell.SetCellValue(i - beforeColumn);
             }
@@ -344,18 +482,17 @@ namespace HeProject
             {
                 var cell = row.CreateCell(i);
                 cell.SetCellValue(_context.GetP2Value<int>(5, rowIndex, i - beforeColumn));
-                cell.CellStyle = _s5Style;
             }
         }
 
         private void Set2P6Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5;
+            int beforeColumn = StepLength.DisplayTotal + StepLength.P2 + StepLength.P4;
             for (int i = beforeColumn; i < StepLength.P6 + beforeColumn; i++)
             {
                 var value = _context.GetP2Value<bool>(6, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
-                cell.CellStyle = _s6Style;
+                cell.CellStyle = _s6P2Style;
                 if (value)
                     cell.SetCellValue(i - beforeColumn);
             }
@@ -363,32 +500,218 @@ namespace HeProject
 
         private void Set2P7Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6;
+            int beforeColumn = StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6;
             for (int i = beforeColumn; i < StepLength.P7 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
                 cell.SetCellValue(_context.GetP2Value<int>(7, rowIndex, i - beforeColumn));
-                cell.CellStyle = _s7Style;
+                cell.CellStyle = _s7P2Style;
             }
         }
         private void Set2P8Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6 + StepLength.P7;
+            int beforeColumn = StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7;
             for (int i = beforeColumn; i < StepLength.P8 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
-                cell.CellStyle = _s8Style;
+                cell.CellStyle = _s8P2Style;
                 cell.SetCellValue(_context.GetP2Value<int>(8, rowIndex, i - beforeColumn));
             }
         }
         private void Set2P9Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4 + StepLength.P5 + StepLength.P6 + StepLength.P7 + StepLength.P8;
+            int beforeColumn = StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8;
             for (int i = beforeColumn; i < StepLength.P9 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
                 cell.SetCellValue(_context.GetP2Value<int>(9, rowIndex, i - beforeColumn));
-                cell.CellStyle = _s9Style;
+                cell.CellStyle = _s9P2Style;
+            }
+        }
+
+        #endregion
+
+        #region SetP3Value
+
+        private void Set3P2Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.DisplayTotal * 2;
+            for (int i = beforeColumn; i < StepLength.P2 + beforeColumn; i++)
+            {
+                var value = _context.GetP3Value<bool>(2, rowIndex, i - beforeColumn);
+                var cell = row.CreateCell(i);
+                cell.CellStyle = _s2P3Style;
+                if (value)
+                    cell.SetCellValue("▲");
+            }
+        }
+        private void Set3P3Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.P1 + StepLength.P2;
+            for (int i = beforeColumn; i < StepLength.P3 + beforeColumn; i++)
+            {
+                var cell = row.CreateCell(i);
+                cell.SetCellValue(_context.GetP3Value<int>(3, rowIndex, i - beforeColumn));
+            }
+        }
+
+        private void Set3P4Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.DisplayTotal * 2 + StepLength.P2;
+            for (int i = beforeColumn; i < StepLength.P4 + beforeColumn; i++)
+            {
+                var value = _context.GetP3Value<bool>(4, rowIndex, i - beforeColumn);
+                var cell = row.CreateCell(i);
+                cell.CellStyle = _s4P3Style;
+                if (value)
+                    cell.SetCellValue(i - beforeColumn);
+            }
+        }
+
+        private void Set3P5Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4;
+            for (int i = beforeColumn; i < StepLength.P5 + beforeColumn; i++)
+            {
+                var cell = row.CreateCell(i);
+                cell.SetCellValue(_context.GetP3Value<int>(5, rowIndex, i - beforeColumn));
+            }
+        }
+
+        private void Set3P6Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.DisplayTotal * 2 + StepLength.P2 + StepLength.P4;
+            for (int i = beforeColumn; i < StepLength.P6 + beforeColumn; i++)
+            {
+                var value = _context.GetP3Value<bool>(6, rowIndex, i - beforeColumn);
+                var cell = row.CreateCell(i);
+                cell.CellStyle = _s6P3Style;
+                if (value)
+                    cell.SetCellValue(i - beforeColumn);
+            }
+        }
+
+        private void Set3P7Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.DisplayTotal * 2 + StepLength.P2 + StepLength.P4 + StepLength.P6;
+            for (int i = beforeColumn; i < StepLength.P7 + beforeColumn; i++)
+            {
+                var cell = row.CreateCell(i);
+                cell.SetCellValue(_context.GetP3Value<int>(7, rowIndex, i - beforeColumn));
+                cell.CellStyle = _s7P3Style;
+            }
+        }
+        private void Set3P8Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.DisplayTotal * 2 + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7;
+            for (int i = beforeColumn; i < StepLength.P8 + beforeColumn; i++)
+            {
+                var cell = row.CreateCell(i);
+                cell.CellStyle = _s8P3Style;
+                cell.SetCellValue(_context.GetP3Value<int>(8, rowIndex, i - beforeColumn));
+            }
+        }
+        private void Set3P9Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.DisplayTotal * 2 + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8;
+            for (int i = beforeColumn; i < StepLength.P9 + beforeColumn; i++)
+            {
+                var cell = row.CreateCell(i);
+                cell.SetCellValue(_context.GetP3Value<int>(9, rowIndex, i - beforeColumn));
+                cell.CellStyle = _s9P3Style;
+            }
+        }
+
+        #endregion
+
+        #region SetP4Value
+
+        private void Set4P2Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.DisplayTotal * 3;
+            for (int i = beforeColumn; i < StepLength.P2 + beforeColumn; i++)
+            {
+                var value = _context.GetP4Value<bool>(2, rowIndex, i - beforeColumn);
+                var cell = row.CreateCell(i);
+                cell.CellStyle = _s2P4Style;
+                if (value)
+                    cell.SetCellValue("⭕");
+            }
+        }
+        private void Set4P3Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.P1 + StepLength.P2;
+            for (int i = beforeColumn; i < StepLength.P3 + beforeColumn; i++)
+            {
+                var cell = row.CreateCell(i);
+                cell.SetCellValue(_context.GetP4Value<int>(3, rowIndex, i - beforeColumn));
+            }
+        }
+
+        private void Set4P4Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.DisplayTotal * 3 + StepLength.P2;
+            for (int i = beforeColumn; i < StepLength.P4 + beforeColumn; i++)
+            {
+                var value = _context.GetP4Value<bool>(4, rowIndex, i - beforeColumn);
+                var cell = row.CreateCell(i);
+                cell.CellStyle = _s4P4Style;
+                if (value)
+                    cell.SetCellValue(i - beforeColumn);
+            }
+        }
+
+        private void Set4P5Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.P1 + StepLength.P2 + StepLength.P3 + StepLength.P4;
+            for (int i = beforeColumn; i < StepLength.P5 + beforeColumn; i++)
+            {
+                var cell = row.CreateCell(i);
+                cell.SetCellValue(_context.GetP4Value<int>(5, rowIndex, i - beforeColumn));
+            }
+        }
+
+        private void Set4P6Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.DisplayTotal * 3 + StepLength.P2 + StepLength.P4;
+            for (int i = beforeColumn; i < StepLength.P6 + beforeColumn; i++)
+            {
+                var value = _context.GetP4Value<bool>(6, rowIndex, i - beforeColumn);
+                var cell = row.CreateCell(i);
+                cell.CellStyle = _s6P4Style;
+                if (value)
+                    cell.SetCellValue(i - beforeColumn);
+            }
+        }
+
+        private void Set4P7Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.DisplayTotal * 3 + StepLength.P2 + StepLength.P4 + StepLength.P6;
+            for (int i = beforeColumn; i < StepLength.P7 + beforeColumn; i++)
+            {
+                var cell = row.CreateCell(i);
+                cell.SetCellValue(_context.GetP4Value<int>(7, rowIndex, i - beforeColumn));
+                cell.CellStyle = _s7P4Style;
+            }
+        }
+        private void Set4P8Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.DisplayTotal * 3 + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7;
+            for (int i = beforeColumn; i < StepLength.P8 + beforeColumn; i++)
+            {
+                var cell = row.CreateCell(i);
+                cell.CellStyle = _s8P4Style;
+                cell.SetCellValue(_context.GetP4Value<int>(8, rowIndex, i - beforeColumn));
+            }
+        }
+        private void Set4P9Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.DisplayTotal * 3 + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8;
+            for (int i = beforeColumn; i < StepLength.P9 + beforeColumn; i++)
+            {
+                var cell = row.CreateCell(i);
+                cell.SetCellValue(_context.GetP4Value<int>(9, rowIndex, i - beforeColumn));
+                cell.CellStyle = _s9P4Style;
             }
         }
 

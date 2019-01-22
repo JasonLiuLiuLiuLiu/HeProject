@@ -11,5 +11,7 @@
         public const int P7 = 3;
         public const int P8 = 3;
         public const int P9 = 3;
+
+        public const int DisplayTotal = P2 + P4 + P6 + P7 + P8 + P9;
     }
 }
