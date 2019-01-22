@@ -194,11 +194,181 @@ namespace HeProject.Model
 
 
         #endregion
+
+        #region P3
+        public void SetP3Value(int step, int row, int column, object value)
+        {
+            try
+            {
+                lock (_lockP3)
+                {
+                    if (!valueP3Map.ContainsKey(step))
+                        valueP3Map.Add(step, new Dictionary<int, Dictionary<int, object>>(stepCont));
+                    var stepValueMap = valueP3Map[step];
+                    if (!stepValueMap.ContainsKey(row))
+                        stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
+                    var rowValueMap = stepValueMap[row];
+                    if (!rowValueMap.ContainsKey(column))
+                        rowValueMap.Add(column, null);
+
+                    rowValueMap[column] = value;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"step:{step},row:{row},column:{column},value:{value},exception:{e.ToString()}");
+                throw;
+            }
+
+        }
+
+        public T GetP3Value<T>(int step, int row, int column)
+        {
+            try
+            {
+                lock (_lockP3)
+                {
+                    int loop = 0;
+                    while (!_stepP3State[step - 1, row])
+                    {
+                        if (loop > 100)
+                            return default(T);
+                        Thread.Sleep(50);
+                    }
+                    if (!valueP3Map.ContainsKey(step))
+                        valueP3Map.Add(step, new Dictionary<int, Dictionary<int, object>>(stepCont));
+                    var stepValueMap = valueP3Map[step];
+                    if (!stepValueMap.ContainsKey(row))
+                        stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
+                    var rowValueMap = stepValueMap[row];
+                    if (!rowValueMap.ContainsKey(column))
+                        rowValueMap.Add(column, default(T));
+                    return (T)rowValueMap[column];
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"step:{step},row:{row},column:{column},exception:{e.ToString()}");
+                throw;
+            }
+
+        }
+
+        public Dictionary<int, object> GetP3RowResult(int step, int row)
+        {
+            int loop = 0;
+            while (!_stepP3State[step - 1, row])
+            {
+                if (loop > 100)
+                    return new Dictionary<int, object>(Capacity);
+                Thread.Sleep(50);
+            }
+            if (!valueP3Map.ContainsKey(step))
+                valueP3Map.Add(step, new Dictionary<int, Dictionary<int, object>>(stepCont));
+            var stepValueMap = valueP3Map[step];
+            if (!stepValueMap.ContainsKey(row))
+                stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
+            return stepValueMap[row];
+        }
+
+        public void SetP3StepState(int step, int row, bool value)
+        {
+            _stepP3State[step - 1, row] = value;
+        }
+
+
+        #endregion
+
+        #region P4
+
+        public void SetP4Value(int step, int row, int column, object value)
+        {
+            try
+            {
+                lock (_lockP4)
+                {
+                    if (!valueP4Map.ContainsKey(step))
+                        valueP4Map.Add(step, new Dictionary<int, Dictionary<int, object>>(stepCont));
+                    var stepValueMap = valueP4Map[step];
+                    if (!stepValueMap.ContainsKey(row))
+                        stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
+                    var rowValueMap = stepValueMap[row];
+                    if (!rowValueMap.ContainsKey(column))
+                        rowValueMap.Add(column, null);
+
+                    rowValueMap[column] = value;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"step:{step},row:{row},column:{column},value:{value},exception:{e.ToString()}");
+                throw;
+            }
+
+        }
+
+        public T GetP4Value<T>(int step, int row, int column)
+        {
+            try
+            {
+                lock (_lockP4)
+                {
+                    int loop = 0;
+                    while (!_stepP4State[step - 1, row])
+                    {
+                        if (loop > 100)
+                            return default(T);
+                        Thread.Sleep(50);
+                    }
+                    if (!valueP4Map.ContainsKey(step))
+                        valueP4Map.Add(step, new Dictionary<int, Dictionary<int, object>>(stepCont));
+                    var stepValueMap = valueP4Map[step];
+                    if (!stepValueMap.ContainsKey(row))
+                        stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
+                    var rowValueMap = stepValueMap[row];
+                    if (!rowValueMap.ContainsKey(column))
+                        rowValueMap.Add(column, default(T));
+                    return (T)rowValueMap[column];
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"step:{step},row:{row},column:{column},exception:{e.ToString()}");
+                throw;
+            }
+
+        }
+
+        public Dictionary<int, object> GetP4RowResult(int step, int row)
+        {
+            int loop = 0;
+            while (!_stepP4State[step - 1, row])
+            {
+                if (loop > 100)
+                    return new Dictionary<int, object>(Capacity);
+                Thread.Sleep(50);
+            }
+            if (!valueP4Map.ContainsKey(step))
+                valueP4Map.Add(step, new Dictionary<int, Dictionary<int, object>>(stepCont));
+            var stepValueMap = valueP4Map[step];
+            if (!stepValueMap.ContainsKey(row))
+                stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
+            return stepValueMap[row];
+        }
+
+        public void SetP4StepState(int step, int row, bool value)
+        {
+            _stepP4State[step - 1, row] = value;
+        }
+
+        #endregion
         public ProcessContext(int capacity)
         {
             Capacity = capacity;
             _stepP1State = new bool[stepCont, capacity];
             _stepP2State = new bool[stepCont, capacity];
+            _stepP3State = new bool[stepCont, capacity];
+            _stepP4State = new bool[stepCont, capacity];
             valueP1Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
             valueP2Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
             valueP3Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
