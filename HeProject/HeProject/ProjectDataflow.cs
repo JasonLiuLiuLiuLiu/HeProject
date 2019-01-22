@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using HeProject.Model;
 using HeProject.Part2;
+using HeProject.ProgressHandler.P3;
+using HeProject.ProgressHandler.P4;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -36,7 +38,11 @@ namespace HeProject
 
         public Task CreatePipeLine()
         {
-            var p1S2Block = CreateReadFileBlock(CreateP1Block(2));
+            var s2P1Block = CreateP1Block(2);
+            var s2P3Block = CreateP3Block(2);
+            CreateReadFileBlock(s2P1Block, s2P3Block);
+
+            #region P1 P2
 
             var p1S3Block = CreateP1Block(3);
             var currentP1Block = p1S3Block;
@@ -56,14 +62,16 @@ namespace HeProject
                 currentP2Block = block;
             }
 
-            var p1BroadcastBlock = new BroadcastBlock<int>(i =>
-              {
-                  //Console.WriteLine($"第一,二部分第{i}行开始处理;");
-                  return i;
-              }, _executionDataflowBlockOptions);
-            p1S2Block.LinkTo(p1BroadcastBlock, new DataflowLinkOptions() { PropagateCompletion = true });
-            p1BroadcastBlock.LinkTo(p1S3Block, new DataflowLinkOptions() { PropagateCompletion = true });
-            p1BroadcastBlock.LinkTo(p2S2Block, new DataflowLinkOptions() { PropagateCompletion = true });
+
+
+            var s2P1BroadcastBlock = new BroadcastBlock<int>(i =>
+            {
+                //Console.WriteLine($"第一,二部分第{i}行开始处理;");
+                return i;
+            }, _executionDataflowBlockOptions);
+            s2P1Block.LinkTo(s2P1BroadcastBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            s2P1BroadcastBlock.LinkTo(p1S3Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s2P1BroadcastBlock.LinkTo(p2S2Block, new DataflowLinkOptions() { PropagateCompletion = true });
 
 
             var finallyP1Block = new ActionBlock<int>(x =>
@@ -80,7 +88,57 @@ namespace HeProject
             });
             currentP2Block.LinkTo(finallyP2Block, new DataflowLinkOptions() { PropagateCompletion = true });
 
-            return Task.WhenAll(new Task[] { finallyP1Block.Completion, finallyP2Block.Completion });
+            #endregion
+
+            #region P3 P4
+
+            var p3S3Block = CreateP3Block(3);
+            var currentP3Block = p3S3Block;
+            for (int i = 4; i < 10; i++)
+            {
+                var block = CreateP3Block(i);
+                currentP3Block.LinkTo(block, new DataflowLinkOptions() { PropagateCompletion = true });
+                currentP3Block = block;
+            }
+
+            IPropagatorBlock<int, int> p4S2Block = CreateP4Block(2);
+            var currentP4Block = p4S2Block;
+            for (int i = 3; i < 10; i++)
+            {
+                var block = CreateP4Block(i);
+                currentP4Block.LinkTo(block, new DataflowLinkOptions() { PropagateCompletion = true });
+                currentP4Block = block;
+            }
+
+
+
+            var s2P3BroadcastBlock = new BroadcastBlock<int>(i =>
+            {
+                //Console.WriteLine($"第一,二部分第{i}行开始处理;");
+                return i;
+            }, _executionDataflowBlockOptions);
+            s2P3Block.LinkTo(s2P3BroadcastBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            s2P3BroadcastBlock.LinkTo(p3S3Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s2P3BroadcastBlock.LinkTo(p4S2Block, new DataflowLinkOptions() { PropagateCompletion = true });
+
+
+            var finallyP3Block = new ActionBlock<int>(x =>
+            {
+                Console.WriteLine($"第三部分{x}行处理完成!");
+                // Thread.Sleep(2000);
+            });
+            currentP3Block.LinkTo(finallyP3Block, new DataflowLinkOptions() { PropagateCompletion = true });
+
+            var finallyP4Block = new ActionBlock<int>(x =>
+            {
+                Console.WriteLine($"第四部分{x}行处理完成!");
+                //  Thread.Sleep(2000);
+            });
+            currentP4Block.LinkTo(finallyP4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+
+            #endregion
+
+            return Task.WhenAll(new Task[] { finallyP1Block.Completion, finallyP2Block.Completion, finallyP3Block.Completion, finallyP4Block.Completion });
         }
 
         private void PrintState(ProgressState state)
@@ -102,7 +160,7 @@ namespace HeProject
             //});
         }
 
-        private IPropagatorBlock<int, int> CreateReadFileBlock(IPropagatorBlock<int, int> p2Block)
+        private void CreateReadFileBlock(IPropagatorBlock<int, int> s2P1Block, IPropagatorBlock<int, int> s2P3Block)
         {
 
             _startBlock = new ActionBlock<string>(x =>
@@ -143,7 +201,8 @@ namespace HeProject
                                     _processContext.SetP1Value(1, row, column, (int)sheet.GetRow(row).GetCell(column).NumericCellValue);
                                 }
                                 _processContext.SetP1StepState(1, row, true);
-                                p2Block.Post(row);
+                                s2P1Block.Post(row);
+                                s2P3Block.Post(row);
                             }
                         }
                     }
@@ -158,9 +217,9 @@ namespace HeProject
             _startBlock.Completion.ContinueWith(x =>
             {
                 PrintState(new ProgressState(1, -2));
-                p2Block.Complete();
+                s2P1Block.Complete();
+                s2P3Block.Complete();
             });
-            return p2Block;
         }
 
         private bool CheckSourceData(IRow row)
@@ -220,6 +279,49 @@ namespace HeProject
                     if (result != null)
                         PrintState(new ProgressState(step, -1) { ErrorMessage = result });
                     _processContext.SetP2StepState(step, x, true);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                return x;
+            }, _executionDataflowBlockOptions);
+            progressBlock.Completion.ContinueWith(t => { PrintState(new ProgressState(step, -2)); });
+            return progressBlock;
+        }
+
+        private IPropagatorBlock<int, int> CreateP3Block(int step)
+        {
+            var progressBlock = new TransformBlock<int, int>(x =>
+            {
+                try
+                {
+                    var handler = (IP3Handler)Activator.CreateInstance(Type.GetType($"HeProject.ProgressHandler.P3.S{step}P3Handler") ?? throw new InvalidOperationException());
+                    var result = handler.Hnalder(x, _processContext);
+                    if (result != null)
+                        PrintState(new ProgressState(step, -1) { ErrorMessage = result });
+                    _processContext.SetP3StepState(step, x, true);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                return x;
+            }, _executionDataflowBlockOptions);
+            progressBlock.Completion.ContinueWith(t => { PrintState(new ProgressState(step, -2)); });
+            return progressBlock;
+        }
+        private IPropagatorBlock<int, int> CreateP4Block(int step)
+        {
+            var progressBlock = new TransformBlock<int, int>(x =>
+            {
+                try
+                {
+                    var handler = (IP4Handler)Activator.CreateInstance(Type.GetType($"HeProject.ProgressHandler.P4.S{step}P4Handler") ?? throw new InvalidOperationException());
+                    var result = handler.Hnalder(x, _processContext);
+                    if (result != null)
+                        PrintState(new ProgressState(step, -1) { ErrorMessage = result });
+                    _processContext.SetP4StepState(step, x, true);
                 }
                 catch (Exception e)
                 {

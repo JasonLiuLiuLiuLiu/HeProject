@@ -142,15 +142,16 @@ namespace HeProject.Model
         {
             try
             {
+                int loop = 0;
+                while (!_stepP2State[step - 1, row])
+                {
+                    if (loop > 100)
+                        return default(T);
+                    Thread.Sleep(1000);
+                }
                 lock (_lockP2)
                 {
-                    int loop = 0;
-                    while (!_stepP2State[step - 1, row])
-                    {
-                        if (loop > 100)
-                            return default(T);
-                        Thread.Sleep(50);
-                    }
+                   
                     if (!valueP2Map.ContainsKey(step))
                         valueP2Map.Add(step, new Dictionary<int, Dictionary<int, object>>(stepCont));
                     var stepValueMap = valueP2Map[step];
@@ -177,7 +178,7 @@ namespace HeProject.Model
             {
                 if (loop > 100)
                     return new Dictionary<int, object>(Capacity);
-                Thread.Sleep(50);
+                Thread.Sleep(1000);
             }
             if (!valueP2Map.ContainsKey(step))
                 valueP2Map.Add(step, new Dictionary<int, Dictionary<int, object>>(stepCont));
@@ -226,15 +227,15 @@ namespace HeProject.Model
         {
             try
             {
+                int loop = 0;
+                while (!_stepP3State[step - 1, row])
+                {
+                    if (loop > 1000)
+                        return default(T);
+                    Thread.Sleep(1000);
+                }
                 lock (_lockP3)
                 {
-                    int loop = 0;
-                    while (!_stepP3State[step - 1, row])
-                    {
-                        if (loop > 100)
-                            return default(T);
-                        Thread.Sleep(50);
-                    }
                     if (!valueP3Map.ContainsKey(step))
                         valueP3Map.Add(step, new Dictionary<int, Dictionary<int, object>>(stepCont));
                     var stepValueMap = valueP3Map[step];
@@ -259,16 +260,19 @@ namespace HeProject.Model
             int loop = 0;
             while (!_stepP3State[step - 1, row])
             {
-                if (loop > 100)
+                if (loop > 1000)
                     return new Dictionary<int, object>(Capacity);
-                Thread.Sleep(50);
+                Thread.Sleep(1000);
             }
-            if (!valueP3Map.ContainsKey(step))
-                valueP3Map.Add(step, new Dictionary<int, Dictionary<int, object>>(stepCont));
-            var stepValueMap = valueP3Map[step];
-            if (!stepValueMap.ContainsKey(row))
-                stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
-            return stepValueMap[row];
+            lock (_lockP3)
+            {
+                if (!valueP3Map.ContainsKey(step))
+                    valueP3Map.Add(step, new Dictionary<int, Dictionary<int, object>>(stepCont));
+                var stepValueMap = valueP3Map[step];
+                if (!stepValueMap.ContainsKey(row))
+                    stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
+                return stepValueMap[row];
+            }
         }
 
         public void SetP3StepState(int step, int row, bool value)
@@ -311,15 +315,16 @@ namespace HeProject.Model
         {
             try
             {
+                int loop = 0;
+                while (!_stepP4State[step - 1, row])
+                {
+                    if (loop > 100)
+                        return default(T);
+                    Thread.Sleep(1000);
+                }
                 lock (_lockP4)
                 {
-                    int loop = 0;
-                    while (!_stepP4State[step - 1, row])
-                    {
-                        if (loop > 100)
-                            return default(T);
-                        Thread.Sleep(50);
-                    }
+                    
                     if (!valueP4Map.ContainsKey(step))
                         valueP4Map.Add(step, new Dictionary<int, Dictionary<int, object>>(stepCont));
                     var stepValueMap = valueP4Map[step];
@@ -346,14 +351,18 @@ namespace HeProject.Model
             {
                 if (loop > 100)
                     return new Dictionary<int, object>(Capacity);
-                Thread.Sleep(50);
+                Thread.Sleep(1000);
             }
-            if (!valueP4Map.ContainsKey(step))
-                valueP4Map.Add(step, new Dictionary<int, Dictionary<int, object>>(stepCont));
-            var stepValueMap = valueP4Map[step];
-            if (!stepValueMap.ContainsKey(row))
-                stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
-            return stepValueMap[row];
+            lock (_lockP4)
+            {
+               
+                if (!valueP4Map.ContainsKey(step))
+                    valueP4Map.Add(step, new Dictionary<int, Dictionary<int, object>>(stepCont));
+                var stepValueMap = valueP4Map[step];
+                if (!stepValueMap.ContainsKey(row))
+                    stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
+                return stepValueMap[row];
+            }
         }
 
         public void SetP4StepState(int step, int row, bool value)
