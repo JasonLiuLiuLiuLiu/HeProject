@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System.IO;
@@ -199,14 +200,8 @@ namespace HeProject
                     Set4P9Value(row, index);
 
                     #endregion
-
-
-
                 }
-
-                FileStream sw = File.Create("_Output.xlsx");
-                workbook.Write(sw);
-                sw.Close();
+                SaveFile(workbook);
             }
             catch (Exception ex)
             {
@@ -442,7 +437,7 @@ namespace HeProject
 
         private void Set2P2Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.DisplayTotal;
+            int beforeColumn = 2 * StepLength.DisplayTotal;
             for (int i = beforeColumn; i < StepLength.P2 + beforeColumn; i++)
             {
                 var value = _context.GetP2Value<bool>(2, rowIndex, i - beforeColumn);
@@ -464,7 +459,7 @@ namespace HeProject
 
         private void Set2P4Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.DisplayTotal + StepLength.P2;
+            int beforeColumn = 2 * StepLength.DisplayTotal + StepLength.P2;
             for (int i = beforeColumn; i < StepLength.P4 + beforeColumn; i++)
             {
                 var value = _context.GetP2Value<bool>(4, rowIndex, i - beforeColumn);
@@ -487,7 +482,7 @@ namespace HeProject
 
         private void Set2P6Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.DisplayTotal + StepLength.P2 + StepLength.P4;
+            int beforeColumn = 2 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4;
             for (int i = beforeColumn; i < StepLength.P6 + beforeColumn; i++)
             {
                 var value = _context.GetP2Value<bool>(6, rowIndex, i - beforeColumn);
@@ -500,7 +495,7 @@ namespace HeProject
 
         private void Set2P7Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6;
+            int beforeColumn = 2 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6;
             for (int i = beforeColumn; i < StepLength.P7 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
@@ -510,7 +505,7 @@ namespace HeProject
         }
         private void Set2P8Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7;
+            int beforeColumn = 2 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7;
             for (int i = beforeColumn; i < StepLength.P8 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
@@ -520,7 +515,7 @@ namespace HeProject
         }
         private void Set2P9Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8;
+            int beforeColumn = 2 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8;
             for (int i = beforeColumn; i < StepLength.P9 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
@@ -535,7 +530,7 @@ namespace HeProject
 
         private void Set3P2Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.DisplayTotal * 2;
+            int beforeColumn = StepLength.DisplayTotal;
             for (int i = beforeColumn; i < StepLength.P2 + beforeColumn; i++)
             {
                 var value = _context.GetP3Value<bool>(2, rowIndex, i - beforeColumn);
@@ -557,7 +552,7 @@ namespace HeProject
 
         private void Set3P4Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.DisplayTotal * 2 + StepLength.P2;
+            int beforeColumn = StepLength.DisplayTotal + StepLength.P2;
             for (int i = beforeColumn; i < StepLength.P4 + beforeColumn; i++)
             {
                 var value = _context.GetP3Value<bool>(4, rowIndex, i - beforeColumn);
@@ -580,7 +575,7 @@ namespace HeProject
 
         private void Set3P6Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.DisplayTotal * 2 + StepLength.P2 + StepLength.P4;
+            int beforeColumn = StepLength.DisplayTotal + StepLength.P2 + StepLength.P4;
             for (int i = beforeColumn; i < StepLength.P6 + beforeColumn; i++)
             {
                 var value = _context.GetP3Value<bool>(6, rowIndex, i - beforeColumn);
@@ -593,7 +588,7 @@ namespace HeProject
 
         private void Set3P7Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.DisplayTotal * 2 + StepLength.P2 + StepLength.P4 + StepLength.P6;
+            int beforeColumn = StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6;
             for (int i = beforeColumn; i < StepLength.P7 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
@@ -603,7 +598,7 @@ namespace HeProject
         }
         private void Set3P8Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.DisplayTotal * 2 + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7;
+            int beforeColumn = StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7;
             for (int i = beforeColumn; i < StepLength.P8 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
@@ -613,7 +608,7 @@ namespace HeProject
         }
         private void Set3P9Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.DisplayTotal * 2 + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8;
+            int beforeColumn = StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8;
             for (int i = beforeColumn; i < StepLength.P9 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
@@ -717,5 +712,28 @@ namespace HeProject
 
         #endregion
 
+
+        private void SaveFile(IWorkbook workBook)
+        {
+            try
+            {
+                var path = AppDomain.CurrentDomain.BaseDirectory + DateTime.Now.ToString("yyyy-MM-dd");
+                var fullPath = path + "\\" + DateTime.Now.ToString("HH-mm-ss-ffff") + ".xlsx";
+                if (!Directory.Exists(path))//如果不存在就创建file文件夹　　             　　              
+                    Directory.CreateDirectory(path);//创建该文件夹　　 
+                FileStream sw = File.Create(fullPath);
+                workBook.Write(sw);
+                sw.Close();
+                Process.Start("explorer.exe", "/select, \"" + fullPath + "\"");
+                Process.Start(fullPath);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.ReadKey();
+                throw;
+            }
+
+        }
     }
 }

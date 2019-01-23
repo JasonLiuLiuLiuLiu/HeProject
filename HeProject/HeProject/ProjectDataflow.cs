@@ -76,14 +76,14 @@ namespace HeProject
 
             var finallyP1Block = new ActionBlock<int>(x =>
             {
-                Console.WriteLine($"第一部分{x}行处理完成!");
+                // Console.WriteLine($"第一部分{x}行处理完成!");
                 // Thread.Sleep(2000);
             });
             currentP1Block.LinkTo(finallyP1Block, new DataflowLinkOptions() { PropagateCompletion = true });
 
             var finallyP2Block = new ActionBlock<int>(x =>
             {
-                Console.WriteLine($"第二部分{x}行处理完成!");
+                // Console.WriteLine($"第二部分{x}行处理完成!");
                 //  Thread.Sleep(2000);
             });
             currentP2Block.LinkTo(finallyP2Block, new DataflowLinkOptions() { PropagateCompletion = true });
@@ -124,14 +124,14 @@ namespace HeProject
 
             var finallyP3Block = new ActionBlock<int>(x =>
             {
-                Console.WriteLine($"第三部分{x}行处理完成!");
+                //  Console.WriteLine($"第三部分{x}行处理完成!");
                 // Thread.Sleep(2000);
             });
             currentP3Block.LinkTo(finallyP3Block, new DataflowLinkOptions() { PropagateCompletion = true });
 
             var finallyP4Block = new ActionBlock<int>(x =>
             {
-                Console.WriteLine($"第四部分{x}行处理完成!");
+                // Console.WriteLine($"第四部分{x}行处理完成!");
                 //  Thread.Sleep(2000);
             });
             currentP4Block.LinkTo(finallyP4Block, new DataflowLinkOptions() { PropagateCompletion = true });
@@ -175,7 +175,8 @@ namespace HeProject
 
                         if (!File.Exists(x))
                         {
-                            PrintState(new ProgressState(1, -1) { ErrorMessage = "文件不存在!" });
+                            Console.WriteLine("无法读取到输入文件:" + x + ",请检查文件是否存在!");
+                            Console.ReadKey();
                             return;
                         }
                         XSSFWorkbook hssfwb;
@@ -208,7 +209,8 @@ namespace HeProject
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e);
+                        Console.WriteLine("输入文件被占用,请关闭该文件!");
+                        Console.ReadKey();
                     }
 
 
