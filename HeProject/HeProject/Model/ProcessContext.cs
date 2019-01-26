@@ -23,13 +23,13 @@ namespace HeProject.Model
         private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP4Map;
         public readonly int Capacity;
         private const int StepCont = 9;
-        private object _lockSourceP1 = new object();
-        private object _lockSourceP2 = new object();
-        private object _lockSourceP3 = new object();
-        private object _lockP1 = new object();
-        private object _lockP2 = new object();
-        private object _lockP3 = new object();
-        private object _lockP4 = new object();
+        private readonly object _lockSourceP1 = new object();
+        private readonly object _lockSourceP2 = new object();
+        private readonly object _lockSourceP3 = new object();
+        private readonly object _lockP1 = new object();
+        private readonly object _lockP2 = new object();
+        private readonly object _lockP3 = new object();
+        private readonly object _lockP4 = new object();
 
         #region SourceSourceP1
 
