@@ -42,6 +42,7 @@ namespace HeProject
         private ICellStyle _s7P4Style;
         private ICellStyle _s8P4Style;
         private ICellStyle _s9P4Style;
+
         public WriteToExcel(ProcessContext context)
         {
             _p1FirstRow = 1;
@@ -111,7 +112,6 @@ namespace HeProject
                 _s7P4Style.FillForegroundColor = 55;
                 _s8P4Style.FillForegroundColor = 61;
 
-
                 _s2P1Style.FillPattern = FillPattern.SolidForeground;
                 _s4P1Style.FillPattern = FillPattern.SolidForeground;
                 _s6P1Style.FillPattern = FillPattern.SolidForeground;
@@ -136,8 +136,7 @@ namespace HeProject
                 _s7P4Style.FillPattern = FillPattern.SolidForeground;
                 _s8P4Style.FillPattern = FillPattern.SolidForeground;
 
-                #endregion
-
+                #endregion SetStyle
 
                 ISheet sheet1 = workbook.CreateSheet("Sheet1");
                 sheet1.DefaultColumnWidth = 1;
@@ -160,7 +159,7 @@ namespace HeProject
                     SetP8Value(row, index);
                     SetP9Value(row, index);
 
-                    #endregion
+                    #endregion P1
 
                     #region P2
 
@@ -173,7 +172,7 @@ namespace HeProject
                     Set2P8Value(row, index);
                     Set2P9Value(row, index);
 
-                    #endregion
+                    #endregion P2
 
                     #region P3
 
@@ -186,7 +185,7 @@ namespace HeProject
                     Set3P8Value(row, index);
                     Set3P9Value(row, index);
 
-                    #endregion
+                    #endregion P3
 
                     #region P4
 
@@ -199,7 +198,7 @@ namespace HeProject
                     Set4P8Value(row, index);
                     Set4P9Value(row, index);
 
-                    #endregion
+                    #endregion P4
                 }
                 SaveFile(workbook);
             }
@@ -208,8 +207,6 @@ namespace HeProject
                 Console.WriteLine("处理失败!");
                 Console.WriteLine(ex.Message);
             }
-
-
         }
 
         private void SetHeader(ISheet sheet, int headerIndex)
@@ -332,7 +329,6 @@ namespace HeProject
 
         #region SetP1Value
 
-
         private void SetP1Value(IRow row, int rowIndex)
         {
             for (int i = 0; i < StepLength.P1; i++)
@@ -341,6 +337,7 @@ namespace HeProject
                 cell.SetCellValue(_context.GetP1Value<int>(1, rowIndex, i));
             }
         }
+
         private void SetP2Value(IRow row, int rowIndex)
         {
             int beforeColumn = 0;
@@ -353,6 +350,7 @@ namespace HeProject
                     cell.SetCellValue("🔺");
             }
         }
+
         private void SetP3Value(IRow row, int rowIndex)
         {
             int beforeColumn = StepLength.P1 + StepLength.P2;
@@ -409,6 +407,7 @@ namespace HeProject
                 cell.CellStyle = _s7P1Style;
             }
         }
+
         private void SetP8Value(IRow row, int rowIndex)
         {
             int beforeColumn = StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7;
@@ -419,6 +418,7 @@ namespace HeProject
                 cell.SetCellValue(_context.GetP1Value<int>(8, rowIndex, i - beforeColumn));
             }
         }
+
         private void SetP9Value(IRow row, int rowIndex)
         {
             int beforeColumn = StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8;
@@ -430,10 +430,9 @@ namespace HeProject
             }
         }
 
-        #endregion
+        #endregion SetP1Value
 
         #region SetP2Value
-
 
         private void Set2P2Value(IRow row, int rowIndex)
         {
@@ -447,6 +446,7 @@ namespace HeProject
                     cell.SetCellValue("⭕");
             }
         }
+
         private void Set2P3Value(IRow row, int rowIndex)
         {
             int beforeColumn = StepLength.P1 + StepLength.P2;
@@ -503,6 +503,7 @@ namespace HeProject
                 cell.CellStyle = _s7P2Style;
             }
         }
+
         private void Set2P8Value(IRow row, int rowIndex)
         {
             int beforeColumn = 2 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7;
@@ -513,6 +514,7 @@ namespace HeProject
                 cell.SetCellValue(_context.GetP2Value<int>(8, rowIndex, i - beforeColumn));
             }
         }
+
         private void Set2P9Value(IRow row, int rowIndex)
         {
             int beforeColumn = 2 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8;
@@ -524,7 +526,7 @@ namespace HeProject
             }
         }
 
-        #endregion
+        #endregion SetP2Value
 
         #region SetP3Value
 
@@ -540,6 +542,7 @@ namespace HeProject
                     cell.SetCellValue("▲");
             }
         }
+
         private void Set3P3Value(IRow row, int rowIndex)
         {
             int beforeColumn = StepLength.P1 + StepLength.P2;
@@ -596,6 +599,7 @@ namespace HeProject
                 cell.CellStyle = _s7P3Style;
             }
         }
+
         private void Set3P8Value(IRow row, int rowIndex)
         {
             int beforeColumn = StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7;
@@ -606,6 +610,7 @@ namespace HeProject
                 cell.SetCellValue(_context.GetP3Value<int>(8, rowIndex, i - beforeColumn));
             }
         }
+
         private void Set3P9Value(IRow row, int rowIndex)
         {
             int beforeColumn = StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8;
@@ -617,7 +622,7 @@ namespace HeProject
             }
         }
 
-        #endregion
+        #endregion SetP3Value
 
         #region SetP4Value
 
@@ -633,6 +638,7 @@ namespace HeProject
                     cell.SetCellValue("⭕");
             }
         }
+
         private void Set4P3Value(IRow row, int rowIndex)
         {
             int beforeColumn = StepLength.P1 + StepLength.P2;
@@ -689,6 +695,7 @@ namespace HeProject
                 cell.CellStyle = _s7P4Style;
             }
         }
+
         private void Set4P8Value(IRow row, int rowIndex)
         {
             int beforeColumn = StepLength.DisplayTotal * 3 + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7;
@@ -699,6 +706,7 @@ namespace HeProject
                 cell.SetCellValue(_context.GetP4Value<int>(8, rowIndex, i - beforeColumn));
             }
         }
+
         private void Set4P9Value(IRow row, int rowIndex)
         {
             int beforeColumn = StepLength.DisplayTotal * 3 + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8;
@@ -710,8 +718,7 @@ namespace HeProject
             }
         }
 
-        #endregion
-
+        #endregion SetP4Value
 
         private void SaveFile(IWorkbook workBook)
         {
@@ -719,8 +726,8 @@ namespace HeProject
             {
                 var path = AppDomain.CurrentDomain.BaseDirectory + DateTime.Now.ToString("yyyy-MM-dd");
                 var fullPath = path + "\\" + DateTime.Now.ToString("HH-mm-ss-ffff") + ".xlsx";
-                if (!Directory.Exists(path))//如果不存在就创建file文件夹　　             　　              
-                    Directory.CreateDirectory(path);//创建该文件夹　　 
+                if (!Directory.Exists(path))//如果不存在就创建file文件夹　　             　　
+                    Directory.CreateDirectory(path);//创建该文件夹　　
                 FileStream sw = File.Create(fullPath);
                 workBook.Write(sw);
                 sw.Close();
@@ -733,7 +740,6 @@ namespace HeProject
                 Console.ReadKey();
                 throw;
             }
-
         }
     }
 }
