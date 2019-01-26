@@ -30,7 +30,7 @@ namespace HeProject
             _startBlock.Complete();
         }
 
-        private void CreateReadFileBlock(IPropagatorBlock<int, int> s2P1Block, IPropagatorBlock<int, int> s2P3Block)
+        private void CreateReadFileBlock(IPropagatorBlock<int, int> s2P1Block, IPropagatorBlock<int, int> s2P2Block, IPropagatorBlock<int, int> s2P3Block)
         {
             _startBlock = new ActionBlock<string>(x =>
             {
@@ -68,10 +68,13 @@ namespace HeProject
 
                             for (int column = 0; column < StepLength.P1; column++)
                             {
-                                ProcessContext.SetP1Value(1, row, column, (int)sheet.GetRow(row).GetCell(column).NumericCellValue);
+                                var cellValue = sheet.GetRow(row).GetCell(column).ToString();
+                                if (!string.IsNullOrEmpty(cellValue))
+                                    ProcessContext.SetSourceP1Value(1, row, column, (int?)int.Parse(cellValue));
                             }
-                            ProcessContext.SetP1StepState(1, row, true);
+                            ProcessContext.SetSourceP1StepState(1, row, true);
                             s2P1Block.Post(row);
+                            s2P2Block.Post(row);
                             s2P3Block.Post(row);
                         }
                     }
@@ -84,9 +87,9 @@ namespace HeProject
             }, _executionDataFlowBlockOptions);
             _startBlock.Completion.ContinueWith(x =>
             {
-                PrintState(new ProgressState(1, -2));
                 s2P1Block.Complete();
                 s2P3Block.Complete();
+                s2P2Block.Complete();
             });
         }
 
