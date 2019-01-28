@@ -16,7 +16,7 @@ namespace HeProject.Model
         private readonly bool[,] _stepP3State;
         private readonly bool[,] _stepP4State;
 
-        private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueSourceMap;
+        public readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueSourceMap;
 
         //private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueSourceP2Map;
         //private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueSourceP3Map;

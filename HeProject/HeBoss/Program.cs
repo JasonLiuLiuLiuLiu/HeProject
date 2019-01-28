@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading;
 using HeProject;
+using Newtonsoft.Json;
 
 namespace HeBoss
 {
@@ -33,6 +34,7 @@ namespace HeBoss
             var pipeline = sourceDataflow.CreatePipeline();
             sourceDataflow.Process("_Source.xlsx");
             pipeline.Wait();
+            var result = JsonConvert.SerializeObject(sourceDataflow.ProcessContext);
             Console.ReadKey();
         }
     }
