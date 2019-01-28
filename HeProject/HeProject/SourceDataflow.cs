@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using HeProject.Model;
+using HeProject.ProgressHandler.Source;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
@@ -13,8 +16,8 @@ namespace HeProject
     {
         private readonly ExecutionDataflowBlockOptions _executionDataFlowBlockOptions;
         public ProcessContext ProcessContext;
-        private int _totalRow;
         private ITargetBlock<string> _startBlock;
+        private SourceHandler _sourceHandle;
 
         public SourceDataflow()
         {
@@ -22,12 +25,25 @@ namespace HeProject
             {
                 MaxDegreeOfParallelism = Environment.ProcessorCount
             };
+            _sourceHandle = new SourceHandler(ProcessContext);
         }
 
         public void Process(string filePath)
         {
             _startBlock.Post(filePath);
             _startBlock.Complete();
+        }
+
+        public Task CreatePipeline()
+        {
+            var step2PaiXuBlock = _sourceHandle.CreatePaiXuBlock(2);
+            CreateReadFileBlock(step2PaiXuBlock);
+            var step3DengJiBlock = _sourceHandle.CreateDengJiBlock(3);
+            var step4PaiXuBlock = _sourceHandle.CreatePaiXuBlock(4);
+            var step5DengJiBlock = _sourceHandle.CreateDengJiBlock(5);
+            var step6PaiXuBlock = _sourceHandle.CreatePaiXuBlock(6);
+            var step7DengJiBlock = _sourceHandle.CreateDengJiBlock(7);
+            var setPart1Block = _sourceHandle.SetPart1ValueBlock();
         }
 
         private void CreateReadFileBlock(IPropagatorBlock<int, int> s2P1Block)
@@ -54,7 +70,6 @@ namespace HeProject
                         hssfwb = new XSSFWorkbook(file);
                     }
                     ISheet sheet = hssfwb.GetSheetAt(0);
-                    _totalRow = sheet.LastRowNum;
                     ProcessContext = new ProcessContext(sheet.LastRowNum + 1);
                     for (int row = 0; row <= sheet.LastRowNum; row++)
                     {
@@ -70,9 +85,9 @@ namespace HeProject
                             {
                                 var cellValue = sheet.GetRow(row).GetCell(column).ToString();
                                 if (!string.IsNullOrEmpty(cellValue))
-                                    ProcessContext.SetSourceP1Value(1, row, column, (int?)int.Parse(cellValue));
+                                    ProcessContext.SetSourceValue(1, row, column, true);
                             }
-                            ProcessContext.SetSourceP1StepState(1, row, true);
+                            ProcessContext.SetSourceStepState(1, row, true);
                             s2P1Block.Post(row);
                         }
                     }
