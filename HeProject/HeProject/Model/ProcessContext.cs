@@ -68,15 +68,15 @@ namespace HeProject.Model
         {
             try
             {
+                int loop = 0;
+                while (!_stepSourceState[step - 1, row])
+                {
+                    if (loop > 100)
+                        return default(T);
+                    Thread.Sleep(50);
+                }
                 lock (_lockSourceP1)
                 {
-                    int loop = 0;
-                    while (!_stepSourceState[step - 1, row])
-                    {
-                        if (loop > 100)
-                            return default(T);
-                        Thread.Sleep(50);
-                    }
                     if (!_valueSourceMap.ContainsKey(step))
                         _valueSourceMap.Add(step, new Dictionary<int, Dictionary<int, object>>(StepCont));
                     var stepValueMap = _valueSourceMap[step];
@@ -284,15 +284,15 @@ namespace HeProject.Model
         {
             try
             {
+                int loop = 0;
+                while (!_stepP1State[step - 1, row])
+                {
+                    if (loop > 100)
+                        return default(T);
+                    Thread.Sleep(50);
+                }
                 lock (_lockP1)
                 {
-                    int loop = 0;
-                    while (!_stepP1State[step - 1, row])
-                    {
-                        if (loop > 100)
-                            return default(T);
-                        Thread.Sleep(50);
-                    }
                     if (!_valueP1Map.ContainsKey(step))
                         _valueP1Map.Add(step, new Dictionary<int, Dictionary<int, object>>(StepCont));
                     var stepValueMap = _valueP1Map[step];
@@ -597,7 +597,7 @@ namespace HeProject.Model
         public ProcessContext(int capacity)
         {
             Capacity = capacity;
-            _stepSourceState = new bool[20, capacity];
+            _stepSourceState = new bool[21, capacity];
             //_stepSourceP2State = new bool[StepCont, capacity];
             //_stepSourceP3State = new bool[StepCont, capacity];
             _stepP1State = new bool[StepCont, capacity];

@@ -9,12 +9,11 @@ namespace HeProject.ProgressHandler.Source
 {
     public class SourceHandler
     {
-        private readonly ProcessContext _processContext;
+        public ProcessContext ProcessContext;
         private readonly ExecutionDataflowBlockOptions _executionDataFlowBlockOptions;
 
-        public SourceHandler(ProcessContext processContext)
+        public SourceHandler()
         {
-            _processContext = processContext;
             _executionDataFlowBlockOptions = new ExecutionDataflowBlockOptions()
             {
                 MaxDegreeOfParallelism = Environment.ProcessorCount
@@ -38,66 +37,15 @@ namespace HeProject.ProgressHandler.Source
                 }
                 else
                 {
-                    Handle(step, row, _processContext, order, handled);
+                    Handle(step, row, ProcessContext, order, handled);
                 }
 
-                for (int i = 0; i < StepLength.P3; i++)
+                for (int i = 0; i < StepLength.SourceLength; i++)
                 {
-                    _processContext.SetSourceValue(step, row, order[i], i);
+                    ProcessContext.SetSourceValue(step, row, order[i], i);
                 }
-                _processContext.SetSourceStepState(step, row, true);
-                return row;
-            }, _executionDataFlowBlockOptions);
-            block.Completion.ContinueWith(t => { });
-            return block;
-        }
-
-        public IPropagatorBlock<int, int> SetValueBlock(int step)
-        {
-            var block = new TransformBlock<int, int>(row =>
-            {
-                var beforeRow = _processContext.GetSourceRowResult(step - 1, row).FirstOrDefault(u => (bool)u.Value);
-                var beforeRow_1 = _processContext.GetSourceRowResult(step - 1, row - 1).FirstOrDefault(u => (bool)u.Value);
-
-                _processContext.SetSourceValue(step, row, (beforeRow_1.Key + beforeRow.Key) % 6, true);
-
-                return row;
-            }, _executionDataFlowBlockOptions);
-            block.Completion.ContinueWith(t => { });
-            return block;
-        }
-
-        public IPropagatorBlock<int, int> SetPart1ValueBlock()
-        {
-            var block = new TransformBlock<int, int>(row =>
-            {
-                var step3Value = _processContext.GetSourceRowResult(3, row).FirstOrDefault(u => (bool)u.Value);
-                var step5Value = _processContext.GetSourceRowResult(5, row).FirstOrDefault(u => (bool)u.Value);
-                var step7Value = _processContext.GetSourceRowResult(7, row).FirstOrDefault(u => (bool)u.Value);
-                _processContext.SetP1Value(1, row, 0, step3Value.Key);
-                _processContext.SetP1Value(1, row, 1, step5Value.Key);
-                _processContext.SetP1Value(1, row, 2, step7Value.Key);
-                return row;
-            }, _executionDataFlowBlockOptions);
-            block.Completion.ContinueWith(t => { });
-            return block;
-        }
-
-        public IPropagatorBlock<int, int> SetPart2ValueBlock()
-        {
-            var block = new TransformBlock<int, int>(row =>
-            {
-                return row;
-            }, _executionDataFlowBlockOptions);
-            block.Completion.ContinueWith(t => { });
-            return block;
-        }
-
-        public IPropagatorBlock<int, int> SetPart3ValueBlock()
-        {
-            var block = new TransformBlock<int, int>(row =>
-            {
-                _processContext.SetP1StepState(1, row, true);
+                ProcessContext.SetSourceStepState(step, row, true);
+                Console.WriteLine($"step:{step},row:{row}");
                 return row;
             }, _executionDataFlowBlockOptions);
             block.Completion.ContinueWith(t => { });
@@ -112,16 +60,16 @@ namespace HeProject.ProgressHandler.Source
                 {
                     if (row < 1)
                     {
-                        _processContext.SetSourceStepState(step, row, true);
+                        ProcessContext.SetSourceStepState(step, row, true);
                         return row;
                     }
 
-                    var beforePaiXu = _processContext.GetP1RowResult(step - 2, row);
-                    var paiXuResult = _processContext.GetP1RowResult(step - 1, row - 1);
+                    var beforePaiXu = ProcessContext.GetSourceRowResult(step - 2, row);
+                    var paiXuResult = ProcessContext.GetSourceRowResult(step - 1, row - 1);
                     for (int i = 0; i < StepLength.SourceLength; i++)
                     {
                         if ((bool)beforePaiXu[i])
-                            _processContext.SetSourceValue(step, row, (int)paiXuResult[i], true);
+                            ProcessContext.SetSourceValue(step, row, (int)paiXuResult[i], true);
                     }
                 }
                 catch (Exception e)
@@ -129,7 +77,104 @@ namespace HeProject.ProgressHandler.Source
                     Console.WriteLine(e);
                     throw;
                 }
-                _processContext.SetSourceStepState(step, row, true);
+                ProcessContext.SetSourceStepState(step, row, true);
+                Console.WriteLine($"step:{step},row:{row}");
+                return row;
+            }, _executionDataFlowBlockOptions);
+            block.Completion.ContinueWith(t => { });
+            return block;
+        }
+
+        public IPropagatorBlock<int, int> SetValueBlock1(int step)
+        {
+            var block = new TransformBlock<int, int>(row =>
+            {
+                if (row < 1)
+                {
+                    ProcessContext.SetSourceStepState(step, row, true);
+                    return row;
+                }
+
+                var beforeRow = ProcessContext.GetSourceRowResult(step - 1, row).FirstOrDefault(u => (bool)u.Value);
+                var beforeRow_1 = ProcessContext.GetSourceRowResult(step - 1, row - 1).FirstOrDefault(u => (bool)u.Value);
+
+                ProcessContext.SetSourceValue(step, row, (beforeRow_1.Key + beforeRow.Key) % 6, true);
+
+                ProcessContext.SetSourceStepState(step, row, true);
+                Console.WriteLine($"step:{step},row:{row}");
+                return row;
+            }, _executionDataFlowBlockOptions);
+            block.Completion.ContinueWith(t => { });
+            return block;
+        }
+
+        public IPropagatorBlock<int, int> SetValueBlock2(int step)
+        {
+            var block = new TransformBlock<int, int>(row =>
+            {
+                if (row < 2)
+                {
+                    ProcessContext.SetSourceStepState(step, row, true);
+                    return row;
+                }
+
+                var beforeRow = ProcessContext.GetSourceRowResult(step - 1, row).FirstOrDefault(u => (bool)u.Value);
+                var beforeRow_1 = ProcessContext.GetSourceRowResult(step - 1, row - 1).FirstOrDefault(u => (bool)u.Value);
+                var beforeRow_2 = ProcessContext.GetSourceRowResult(step - 1, row - 2).FirstOrDefault(u => (bool)u.Value);
+
+                ProcessContext.SetSourceValue(step, row, (beforeRow_1.Key + beforeRow.Key + beforeRow_2.Key) % 6, true);
+
+                ProcessContext.SetSourceStepState(step, row, true);
+                Console.WriteLine($"step:{step},row:{row}");
+                return row;
+            }, _executionDataFlowBlockOptions);
+            block.Completion.ContinueWith(t => { });
+            return block;
+        }
+
+        public IPropagatorBlock<int, int> SetPart1ValueBlock()
+        {
+            var block = new TransformBlock<int, int>(row =>
+            {
+                var step3Value = ProcessContext.GetSourceRowResult(3, row).FirstOrDefault(u => (bool)u.Value);
+                var step5Value = ProcessContext.GetSourceRowResult(5, row).FirstOrDefault(u => (bool)u.Value);
+                var step7Value = ProcessContext.GetSourceRowResult(7, row).FirstOrDefault(u => (bool)u.Value);
+                ProcessContext.SetP1Value(1, row, 0, step3Value.Key);
+                ProcessContext.SetP1Value(1, row, 1, step5Value.Key);
+                ProcessContext.SetP1Value(1, row, 2, step7Value.Key);
+                return row;
+            }, _executionDataFlowBlockOptions);
+            block.Completion.ContinueWith(t => { });
+            return block;
+        }
+
+        public IPropagatorBlock<int, int> SetPart2ValueBlock()
+        {
+            var block = new TransformBlock<int, int>(row =>
+            {
+                var step9Value = ProcessContext.GetSourceRowResult(10, row).FirstOrDefault(u => (bool)u.Value);
+                var step11Value = ProcessContext.GetSourceRowResult(12, row).FirstOrDefault(u => (bool)u.Value);
+                var step13Value = ProcessContext.GetSourceRowResult(14, row).FirstOrDefault(u => (bool)u.Value);
+                ProcessContext.SetP1Value(1, row, 3, step9Value.Key);
+                ProcessContext.SetP1Value(1, row, 4, step11Value.Key);
+                ProcessContext.SetP1Value(1, row, 5, step13Value.Key);
+                return row;
+            }, _executionDataFlowBlockOptions);
+            block.Completion.ContinueWith(t => { });
+            return block;
+        }
+
+        public IPropagatorBlock<int, int> SetPart3ValueBlock()
+        {
+            var block = new TransformBlock<int, int>(row =>
+            {
+                var step9Value = ProcessContext.GetSourceRowResult(17, row).FirstOrDefault(u => (bool)u.Value);
+                var step11Value = ProcessContext.GetSourceRowResult(19, row).FirstOrDefault(u => (bool)u.Value);
+                var step13Value = ProcessContext.GetSourceRowResult(21, row).FirstOrDefault(u => (bool)u.Value);
+                ProcessContext.SetP1Value(1, row, 6, step9Value.Key);
+                ProcessContext.SetP1Value(1, row, 7, step11Value.Key);
+                ProcessContext.SetP1Value(1, row, 8, step13Value.Key);
+                ProcessContext.SetP1StepState(1, row, true);
                 return row;
             }, _executionDataFlowBlockOptions);
             block.Completion.ContinueWith(t => { });

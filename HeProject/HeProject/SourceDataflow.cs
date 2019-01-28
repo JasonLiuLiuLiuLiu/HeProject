@@ -25,7 +25,7 @@ namespace HeProject
             {
                 MaxDegreeOfParallelism = Environment.ProcessorCount
             };
-            _sourceHandle = new SourceHandler(ProcessContext);
+            _sourceHandle = new SourceHandler();
         }
 
         public void Process(string filePath)
@@ -44,6 +44,47 @@ namespace HeProject
             var step6PaiXuBlock = _sourceHandle.CreatePaiXuBlock(6);
             var step7DengJiBlock = _sourceHandle.CreateDengJiBlock(7);
             var setPart1Block = _sourceHandle.SetPart1ValueBlock();
+            var step8SetValueBlock = _sourceHandle.SetValueBlock1(8);
+            var step9PaiXuBlock = _sourceHandle.CreatePaiXuBlock(9);
+            var step10DengJiBlock = _sourceHandle.CreateDengJiBlock(10);
+            var step11PaiXuBlock = _sourceHandle.CreatePaiXuBlock(11);
+            var step12DengJiBlock = _sourceHandle.CreateDengJiBlock(12);
+            var step13PaiXuBlock = _sourceHandle.CreatePaiXuBlock(13);
+            var step14DengJiBlock = _sourceHandle.CreateDengJiBlock(14);
+            var setPart2Block = _sourceHandle.SetPart2ValueBlock();
+            var step15SetValueBlock = _sourceHandle.SetValueBlock2(15);
+            var step16PaiXuBlock = _sourceHandle.CreatePaiXuBlock(16);
+            var step17DengJiBlock = _sourceHandle.CreateDengJiBlock(17);
+            var step18PaiXuBlock = _sourceHandle.CreatePaiXuBlock(18);
+            var step19DengJiBlock = _sourceHandle.CreateDengJiBlock(19);
+            var step20PaiXuBlock = _sourceHandle.CreatePaiXuBlock(20);
+            var step21DengJiBlock = _sourceHandle.CreateDengJiBlock(21);
+            var setPart3Block = _sourceHandle.SetPart3ValueBlock();
+            step2PaiXuBlock.LinkTo(step3DengJiBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            step3DengJiBlock.LinkTo(step4PaiXuBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            step4PaiXuBlock.LinkTo(step5DengJiBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            step5DengJiBlock.LinkTo(step6PaiXuBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            step6PaiXuBlock.LinkTo(step7DengJiBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            step7DengJiBlock.LinkTo(setPart1Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            setPart1Block.LinkTo(step8SetValueBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            step8SetValueBlock.LinkTo(step9PaiXuBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            step9PaiXuBlock.LinkTo(step10DengJiBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            step10DengJiBlock.LinkTo(step11PaiXuBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            step11PaiXuBlock.LinkTo(step12DengJiBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            step12DengJiBlock.LinkTo(step13PaiXuBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            step13PaiXuBlock.LinkTo(step14DengJiBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            step14DengJiBlock.LinkTo(setPart2Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            setPart2Block.LinkTo(step15SetValueBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            step15SetValueBlock.LinkTo(step16PaiXuBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            step16PaiXuBlock.LinkTo(step17DengJiBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            step17DengJiBlock.LinkTo(step18PaiXuBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            step18PaiXuBlock.LinkTo(step19DengJiBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            step19DengJiBlock.LinkTo(step20PaiXuBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            step20PaiXuBlock.LinkTo(step21DengJiBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            step21DengJiBlock.LinkTo(setPart3Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            var finallyBlock = new ActionBlock<int>(x => { Console.WriteLine(x); });
+            setPart3Block.LinkTo(finallyBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+            return finallyBlock.Completion;
         }
 
         private void CreateReadFileBlock(IPropagatorBlock<int, int> s2P1Block)
@@ -71,6 +112,7 @@ namespace HeProject
                     }
                     ISheet sheet = hssfwb.GetSheetAt(0);
                     ProcessContext = new ProcessContext(sheet.LastRowNum + 1);
+                    _sourceHandle.ProcessContext = ProcessContext;
                     for (int row = 0; row <= sheet.LastRowNum; row++)
                     {
                         if (sheet.GetRow(row) != null) //null is when the row only contains empty cells
@@ -81,12 +123,7 @@ namespace HeProject
                                 return;
                             }
 
-                            for (int column = 0; column < StepLength.P1; column++)
-                            {
-                                var cellValue = sheet.GetRow(row).GetCell(column).ToString();
-                                if (!string.IsNullOrEmpty(cellValue))
-                                    ProcessContext.SetSourceValue(1, row, column, true);
-                            }
+                            ProcessContext.SetSourceValue(1, row, sheet.GetRow(row).FirstOrDefault(u => ((int)u.NumericCellValue % 6) == u.ColumnIndex).ColumnIndex, true);
                             ProcessContext.SetSourceStepState(1, row, true);
                             s2P1Block.Post(row);
                         }
@@ -106,23 +143,10 @@ namespace HeProject
 
         private bool CheckSourceData(IRow row)
         {
-            try
-            {
-                for (int j = 0; j < StepLength.P1; j++)
-                {
-                    var cellData = row.GetCell(j).ToString();
-                    if (string.IsNullOrEmpty(cellData))
-                        return false;
-                    if (int.Parse(cellData) % 6 != j)
-                        return false;
-                }
-            }
-            catch
-            {
-                return false;
-            }
-
-            return true;
+            var cells = row.Cells.Where(u => ((int)u.NumericCellValue % 6) == u.ColumnIndex);
+            if (cells.Count() == 1)
+                return true;
+            return false;
         }
     }
 }
