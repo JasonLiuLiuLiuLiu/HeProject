@@ -45,7 +45,7 @@ namespace HeProject.ProgressHandler.Source
                     ProcessContext.SetSourceValue(step, row, order[i], i);
                 }
                 ProcessContext.SetSourceStepState(step, row, true);
-                Console.WriteLine($"step:{step},row:{row}");
+                // Console.WriteLine($"step:{step},row:{row}");
                 return row;
             }, _executionDataFlowBlockOptions);
             block.Completion.ContinueWith(t => { });
@@ -78,7 +78,7 @@ namespace HeProject.ProgressHandler.Source
                     throw;
                 }
                 ProcessContext.SetSourceStepState(step, row, true);
-                Console.WriteLine($"step:{step},row:{row}");
+                // Console.WriteLine($"step:{step},row:{row}");
                 return row;
             }, _executionDataFlowBlockOptions);
             block.Completion.ContinueWith(t => { });
@@ -101,7 +101,7 @@ namespace HeProject.ProgressHandler.Source
                 ProcessContext.SetSourceValue(step, row, (beforeRow_1.Key + beforeRow.Key) % 6, true);
 
                 ProcessContext.SetSourceStepState(step, row, true);
-                Console.WriteLine($"step:{step},row:{row}");
+                //Console.WriteLine($"step:{step},row:{row}");
                 return row;
             }, _executionDataFlowBlockOptions);
             block.Completion.ContinueWith(t => { });
@@ -125,7 +125,7 @@ namespace HeProject.ProgressHandler.Source
                 ProcessContext.SetSourceValue(step, row, (beforeRow_1.Key + beforeRow.Key + beforeRow_2.Key) % 6, true);
 
                 ProcessContext.SetSourceStepState(step, row, true);
-                Console.WriteLine($"step:{step},row:{row}");
+                //Console.WriteLine($"step:{step},row:{row}");
                 return row;
             }, _executionDataFlowBlockOptions);
             block.Completion.ContinueWith(t => { });

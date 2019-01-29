@@ -18,6 +18,7 @@ namespace HeProject
         public ProcessContext ProcessContext;
         private ITargetBlock<string> _startBlock;
         private SourceHandler _sourceHandle;
+        private ProjectDataFlow _projectDataFlow;
 
         public SourceDataflow()
         {
@@ -26,6 +27,7 @@ namespace HeProject
                 MaxDegreeOfParallelism = Environment.ProcessorCount
             };
             _sourceHandle = new SourceHandler();
+            _projectDataFlow = new ProjectDataFlow();
         }
 
         public void Process(string filePath)
@@ -36,6 +38,7 @@ namespace HeProject
 
         public Task CreatePipeline()
         {
+            var pipeline = _projectDataFlow.CreatePipeLine();
             var step2PaiXuBlock = _sourceHandle.CreatePaiXuBlock(2);
             CreateReadFileBlock(step2PaiXuBlock);
             var step3DengJiBlock = _sourceHandle.CreateDengJiBlock(3);
@@ -82,9 +85,10 @@ namespace HeProject
             step19DengJiBlock.LinkTo(step20PaiXuBlock, new DataflowLinkOptions() { PropagateCompletion = true });
             step20PaiXuBlock.LinkTo(step21DengJiBlock, new DataflowLinkOptions() { PropagateCompletion = true });
             step21DengJiBlock.LinkTo(setPart3Block, new DataflowLinkOptions() { PropagateCompletion = true });
-            var finallyBlock = new ActionBlock<int>(x => { Console.WriteLine(x); });
+            var finallyBlock = new ActionBlock<int>(x => { _projectDataFlow.StartBlock.Post(x); });
+            finallyBlock.Completion.ContinueWith(x => { _projectDataFlow.StartBlock.Complete(); });
             setPart3Block.LinkTo(finallyBlock, new DataflowLinkOptions() { PropagateCompletion = true });
-            return finallyBlock.Completion;
+            return pipeline;
         }
 
         private void CreateReadFileBlock(IPropagatorBlock<int, int> s2P1Block)
@@ -113,6 +117,7 @@ namespace HeProject
                     ISheet sheet = hssfwb.GetSheetAt(0);
                     ProcessContext = new ProcessContext(sheet.LastRowNum + 1);
                     _sourceHandle.ProcessContext = ProcessContext;
+                    _projectDataFlow.ProcessContext = ProcessContext;
                     for (int row = 0; row <= sheet.LastRowNum; row++)
                     {
                         if (sheet.GetRow(row) != null) //null is when the row only contains empty cells
