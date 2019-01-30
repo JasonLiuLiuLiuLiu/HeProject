@@ -128,7 +128,7 @@ namespace HeProject
                                 return;
                             }
 
-                            ProcessContext.SetSourceValue(1, row, sheet.GetRow(row).FirstOrDefault(u => ((int)u.NumericCellValue % 6) == u.ColumnIndex).ColumnIndex, true);
+                            ProcessContext.SetSourceValue(1, row, sheet.GetRow(row).Where(u => !string.IsNullOrEmpty(u.ToString())).FirstOrDefault(u => ((int)u.NumericCellValue % 6) == u.ColumnIndex).ColumnIndex, true);
                             ProcessContext.SetSourceStepState(1, row, true);
                             s2P1Block.Post(row);
                         }
@@ -148,7 +148,7 @@ namespace HeProject
 
         private bool CheckSourceData(IRow row)
         {
-            var cells = row.Cells.Where(u => ((int)u.NumericCellValue % 6) == u.ColumnIndex);
+            var cells = row.Cells.Where(u => !string.IsNullOrEmpty(u.ToString())).Where(u => ((int)u.NumericCellValue % 6) == u.ColumnIndex);
             if (cells.Count() == 1)
                 return true;
             return false;
