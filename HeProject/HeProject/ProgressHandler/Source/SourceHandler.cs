@@ -95,8 +95,8 @@ namespace HeProject.ProgressHandler.Source
                     return row;
                 }
 
-                var beforeRow = ProcessContext.GetSourceRowResult(step - 1, row).FirstOrDefault(u => (bool)u.Value);
-                var beforeRow_1 = ProcessContext.GetSourceRowResult(step - 1, row - 1).FirstOrDefault(u => (bool)u.Value);
+                var beforeRow = ProcessContext.GetSourceRowResult(1, row).FirstOrDefault(u => (bool)u.Value);
+                var beforeRow_1 = ProcessContext.GetSourceRowResult(1, row - 1).FirstOrDefault(u => (bool)u.Value);
 
                 ProcessContext.SetSourceValue(step, row, (beforeRow_1.Key + beforeRow.Key) % 6, true);
 
@@ -118,9 +118,9 @@ namespace HeProject.ProgressHandler.Source
                     return row;
                 }
 
-                var beforeRow = ProcessContext.GetSourceRowResult(step - 1, row).FirstOrDefault(u => (bool)u.Value);
-                var beforeRow_1 = ProcessContext.GetSourceRowResult(step - 1, row - 1).FirstOrDefault(u => (bool)u.Value);
-                var beforeRow_2 = ProcessContext.GetSourceRowResult(step - 1, row - 2).FirstOrDefault(u => (bool)u.Value);
+                var beforeRow = ProcessContext.GetSourceRowResult(1, row).FirstOrDefault(u => (bool)u.Value);
+                var beforeRow_1 = ProcessContext.GetSourceRowResult(1, row - 1).FirstOrDefault(u => (bool)u.Value);
+                var beforeRow_2 = ProcessContext.GetSourceRowResult(1, row - 2).FirstOrDefault(u => (bool)u.Value);
 
                 ProcessContext.SetSourceValue(step, row, (beforeRow_1.Key + beforeRow.Key + beforeRow_2.Key) % 6, true);
 

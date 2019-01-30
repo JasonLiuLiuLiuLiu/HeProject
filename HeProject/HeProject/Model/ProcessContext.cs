@@ -20,7 +20,7 @@ namespace HeProject.Model
 
         //private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueSourceP2Map;
         //private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueSourceP3Map;
-        private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP1Map;
+        public readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP1Map;
 
         private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP2Map;
         private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP3Map;

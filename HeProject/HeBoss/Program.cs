@@ -14,7 +14,7 @@ namespace HeBoss
             var expData = new DateTime(2019, 3, 1);
             if (date > expData)
             {
-                Console.WriteLine("此软件已过期.");
+                // Console.WriteLine("此软件已过期.");
                 Console.ReadKey();
                 return;
             }
@@ -35,7 +35,7 @@ namespace HeBoss
             var pipeline = sourceDataflow.CreatePipeline();
             sourceDataflow.Process("_Source.xlsx");
             pipeline.Wait();
-            //    var result = JsonConvert.SerializeObject(sourceDataflow.ProcessContext);
+            // var result = JsonConvert.SerializeObject(sourceDataflow.ProcessContext);
             WriteToExcel writer = new WriteToExcel(sourceDataflow.ProcessContext);
             writer.Write();
             Console.ReadKey();
