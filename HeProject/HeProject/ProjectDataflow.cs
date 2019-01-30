@@ -15,32 +15,42 @@ namespace HeProject
 {
     public class ProjectDataFlow
     {
-        private readonly ExecutionDataflowBlockOptions _executionDataflowBlockOptions;
-        public ProcessContext _processContext;
+        private readonly ExecutionDataflowBlockOptions _executionDataFlowBlockOptions;
+        public ProcessContext ProcessContext;
         private int _totalRow;
-        private ITargetBlock<string> _startBlock;
-        private object _lock = new object();
+        public BroadcastBlock<int> StartBlock;
 
         public ProjectDataFlow()
         {
-
-            _executionDataflowBlockOptions = new ExecutionDataflowBlockOptions()
+            _executionDataFlowBlockOptions = new ExecutionDataflowBlockOptions()
             {
                 MaxDegreeOfParallelism = Environment.ProcessorCount
             };
         }
 
-        public void Process(string filePath)
-        {
-            _startBlock.Post(filePath);
-            _startBlock.Complete();
-        }
+        //public void Process(string filePath)
+        //{
+        //    _startBlock.Post(filePath);
+        //    _startBlock.Complete();
+        //}
 
         public Task CreatePipeLine()
         {
+            #region Start
+
             var s2P1Block = CreateP1Block(2);
             var s2P3Block = CreateP3Block(2);
-            CreateReadFileBlock(s2P1Block, s2P3Block);
+            StartBlock = new BroadcastBlock<int>(i =>
+            {
+                //Console.WriteLine($"第一,二部分第{i}行开始处理;");
+                return i;
+            }, _executionDataFlowBlockOptions);
+            StartBlock.LinkTo(s2P1Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            StartBlock.LinkTo(s2P3Block, new DataflowLinkOptions() { PropagateCompletion = true });
+
+            #endregion Start
+
+            //  CreateReadFileBlock(s2P1Block, s2P3Block);
 
             #region P1 P2
 
@@ -62,17 +72,14 @@ namespace HeProject
                 currentP2Block = block;
             }
 
-
-
             var s2P1BroadcastBlock = new BroadcastBlock<int>(i =>
             {
                 //Console.WriteLine($"第一,二部分第{i}行开始处理;");
                 return i;
-            }, _executionDataflowBlockOptions);
+            }, _executionDataFlowBlockOptions);
             s2P1Block.LinkTo(s2P1BroadcastBlock, new DataflowLinkOptions() { PropagateCompletion = true });
             s2P1BroadcastBlock.LinkTo(p1S3Block, new DataflowLinkOptions() { PropagateCompletion = true });
             s2P1BroadcastBlock.LinkTo(p2S2Block, new DataflowLinkOptions() { PropagateCompletion = true });
-
 
             var finallyP1Block = new ActionBlock<int>(x =>
             {
@@ -88,7 +95,7 @@ namespace HeProject
             });
             currentP2Block.LinkTo(finallyP2Block, new DataflowLinkOptions() { PropagateCompletion = true });
 
-            #endregion
+            #endregion P1 P2
 
             #region P3 P4
 
@@ -110,17 +117,14 @@ namespace HeProject
                 currentP4Block = block;
             }
 
-
-
             var s2P3BroadcastBlock = new BroadcastBlock<int>(i =>
             {
                 //Console.WriteLine($"第一,二部分第{i}行开始处理;");
                 return i;
-            }, _executionDataflowBlockOptions);
+            }, _executionDataFlowBlockOptions);
             s2P3Block.LinkTo(s2P3BroadcastBlock, new DataflowLinkOptions() { PropagateCompletion = true });
             s2P3BroadcastBlock.LinkTo(p3S3Block, new DataflowLinkOptions() { PropagateCompletion = true });
             s2P3BroadcastBlock.LinkTo(p4S2Block, new DataflowLinkOptions() { PropagateCompletion = true });
-
 
             var finallyP3Block = new ActionBlock<int>(x =>
             {
@@ -136,7 +140,7 @@ namespace HeProject
             });
             currentP4Block.LinkTo(finallyP4Block, new DataflowLinkOptions() { PropagateCompletion = true });
 
-            #endregion
+            #endregion P3 P4
 
             return Task.WhenAll(new Task[] { finallyP1Block.Completion, finallyP2Block.Completion, finallyP3Block.Completion, finallyP4Block.Completion });
         }
@@ -160,69 +164,65 @@ namespace HeProject
             //});
         }
 
-        private void CreateReadFileBlock(IPropagatorBlock<int, int> s2P1Block, IPropagatorBlock<int, int> s2P3Block)
-        {
+        //private void CreateReadFileBlock(IPropagatorBlock<int, int> s2P1Block, IPropagatorBlock<int, int> s2P3Block)
+        //{
+        //    _startBlock = new ActionBlock<string>(x =>
+        //        {
+        //            try
+        //            {
+        //                if (x == null)
+        //                {
+        //                    PrintState(new ProgressState(1, -1) { ErrorMessage = "路径不允许为空!" });
+        //                    return;
+        //                }
 
-            _startBlock = new ActionBlock<string>(x =>
-                {
-                    try
-                    {
-                        if (x == null)
-                        {
-                            PrintState(new ProgressState(1, -1) { ErrorMessage = "路径不允许为空!" });
-                            return;
-                        }
+        //                if (!File.Exists(x))
+        //                {
+        //                    Console.WriteLine("无法读取到输入文件:" + x + ",请检查文件是否存在!");
+        //                    Console.ReadKey();
+        //                    return;
+        //                }
+        //                XSSFWorkbook hssfwb;
+        //                using (FileStream file = new FileStream(x, FileMode.Open, FileAccess.Read))
+        //                {
+        //                    hssfwb = new XSSFWorkbook(file);
+        //                }
+        //                ISheet sheet = hssfwb.GetSheetAt(0);
+        //                _totalRow = sheet.LastRowNum;
+        //                ProcessContext = new ProcessContext(sheet.LastRowNum + 1);
+        //                for (int row = 0; row <= sheet.LastRowNum; row++)
+        //                {
+        //                    if (sheet.GetRow(row) != null) //null is when the row only contains empty cells
+        //                    {
+        //                        if (!CheckSourceData(sheet.GetRow(row)))
+        //                        {
+        //                            Console.WriteLine($"检查到第{row}行数据格式有误,请关闭此程序并检查导入数据或清空表格重新导入!");
+        //                            return;
+        //                        }
 
-                        if (!File.Exists(x))
-                        {
-                            Console.WriteLine("无法读取到输入文件:" + x + ",请检查文件是否存在!");
-                            Console.ReadKey();
-                            return;
-                        }
-                        XSSFWorkbook hssfwb;
-                        using (FileStream file = new FileStream(x, FileMode.Open, FileAccess.Read))
-                        {
-                            hssfwb = new XSSFWorkbook(file);
-                        }
-                        ISheet sheet = hssfwb.GetSheetAt(0);
-                        _totalRow = sheet.LastRowNum;
-                        _processContext = new ProcessContext(sheet.LastRowNum + 1);
-                        for (int row = 0; row <= sheet.LastRowNum; row++)
-                        {
-                            if (sheet.GetRow(row) != null) //null is when the row only contains empty cells 
-                            {
-                                if (!CheckSourceData(sheet.GetRow(row)))
-                                {
-                                    Console.WriteLine($"检查到第{row}行数据格式有误,请关闭此程序并检查导入数据或清空表格重新导入!");
-                                    return;
-                                }
-
-                                for (int column = 0; column < StepLength.P1; column++)
-                                {
-                                    _processContext.SetP1Value(1, row, column, (int)sheet.GetRow(row).GetCell(column).NumericCellValue);
-                                }
-                                _processContext.SetP1StepState(1, row, true);
-                                s2P1Block.Post(row);
-                                s2P3Block.Post(row);
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine("输入文件被占用,请关闭该文件!");
-                        Console.ReadKey();
-                    }
-
-
-
-                }, _executionDataflowBlockOptions);
-            _startBlock.Completion.ContinueWith(x =>
-            {
-                PrintState(new ProgressState(1, -2));
-                s2P1Block.Complete();
-                s2P3Block.Complete();
-            });
-        }
+        //                        for (int column = 0; column < StepLength.P1; column++)
+        //                        {
+        //                            ProcessContext.SetP1Value(1, row, column, (int)sheet.GetRow(row).GetCell(column).NumericCellValue);
+        //                        }
+        //                        ProcessContext.SetP1StepState(1, row, true);
+        //                        s2P1Block.Post(row);
+        //                        s2P3Block.Post(row);
+        //                    }
+        //                }
+        //            }
+        //            catch (Exception e)
+        //            {
+        //                Console.WriteLine("输入文件被占用,请关闭该文件!");
+        //                Console.ReadKey();
+        //            }
+        //        }, _executionDataFlowBlockOptions);
+        //    _startBlock.Completion.ContinueWith(x =>
+        //    {
+        //        PrintState(new ProgressState(1, -2));
+        //        s2P1Block.Complete();
+        //        s2P3Block.Complete();
+        //    });
+        //}
 
         private bool CheckSourceData(IRow row)
         {
@@ -248,6 +248,8 @@ namespace HeProject
             return true;
         }
 
+        #region CreateBlock
+
         private IPropagatorBlock<int, int> CreateP1Block(int step)
         {
             var progressBlock = new TransformBlock<int, int>(x =>
@@ -255,17 +257,17 @@ namespace HeProject
                 try
                 {
                     var handler = (IP1Handler)Activator.CreateInstance(Type.GetType($"HeProject.S{step}Handler") ?? throw new InvalidOperationException());
-                    var result = handler.Hnalder(x, _processContext);
+                    var result = handler.Hnalder(x, ProcessContext);
                     if (result != null)
                         PrintState(new ProgressState(step, -1) { ErrorMessage = result });
-                    _processContext.SetP1StepState(step, x, true);
+                    ProcessContext.SetP1StepState(step, x, true);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
                 }
                 return x;
-            }, _executionDataflowBlockOptions);
+            }, _executionDataFlowBlockOptions);
             progressBlock.Completion.ContinueWith(t => { PrintState(new ProgressState(step, -2)); });
             return progressBlock;
         }
@@ -277,17 +279,17 @@ namespace HeProject
                 try
                 {
                     var handler = (IP2Handler)Activator.CreateInstance(Type.GetType($"HeProject.ProgressHandler.P2.S{step}P2Handler") ?? throw new InvalidOperationException());
-                    var result = handler.Hnalder(x, _processContext);
+                    var result = handler.Hnalder(x, ProcessContext);
                     if (result != null)
                         PrintState(new ProgressState(step, -1) { ErrorMessage = result });
-                    _processContext.SetP2StepState(step, x, true);
+                    ProcessContext.SetP2StepState(step, x, true);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
                 }
                 return x;
-            }, _executionDataflowBlockOptions);
+            }, _executionDataFlowBlockOptions);
             progressBlock.Completion.ContinueWith(t => { PrintState(new ProgressState(step, -2)); });
             return progressBlock;
         }
@@ -299,20 +301,21 @@ namespace HeProject
                 try
                 {
                     var handler = (IP3Handler)Activator.CreateInstance(Type.GetType($"HeProject.ProgressHandler.P3.S{step}P3Handler") ?? throw new InvalidOperationException());
-                    var result = handler.Hnalder(x, _processContext);
+                    var result = handler.Hnalder(x, ProcessContext);
                     if (result != null)
                         PrintState(new ProgressState(step, -1) { ErrorMessage = result });
-                    _processContext.SetP3StepState(step, x, true);
+                    ProcessContext.SetP3StepState(step, x, true);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
                 }
                 return x;
-            }, _executionDataflowBlockOptions);
+            }, _executionDataFlowBlockOptions);
             progressBlock.Completion.ContinueWith(t => { PrintState(new ProgressState(step, -2)); });
             return progressBlock;
         }
+
         private IPropagatorBlock<int, int> CreateP4Block(int step)
         {
             var progressBlock = new TransformBlock<int, int>(x =>
@@ -320,19 +323,21 @@ namespace HeProject
                 try
                 {
                     var handler = (IP4Handler)Activator.CreateInstance(Type.GetType($"HeProject.ProgressHandler.P4.S{step}P4Handler") ?? throw new InvalidOperationException());
-                    var result = handler.Hnalder(x, _processContext);
+                    var result = handler.Hnalder(x, ProcessContext);
                     if (result != null)
                         PrintState(new ProgressState(step, -1) { ErrorMessage = result });
-                    _processContext.SetP4StepState(step, x, true);
+                    ProcessContext.SetP4StepState(step, x, true);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
                 }
                 return x;
-            }, _executionDataflowBlockOptions);
+            }, _executionDataFlowBlockOptions);
             progressBlock.Completion.ContinueWith(t => { PrintState(new ProgressState(step, -2)); });
             return progressBlock;
         }
+
+        #endregion CreateBlock
     }
 }
