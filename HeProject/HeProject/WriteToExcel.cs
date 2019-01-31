@@ -731,7 +731,7 @@ namespace HeProject
                 FileStream sw = File.Create(fullPath);
                 workBook.Write(sw);
                 sw.Close();
-                Process.Start("explorer.exe", "/select, \"" + fullPath + "\"");
+               // Process.Start("explorer.exe", "/select, \"" + fullPath + "\"");
                 Process.Start(fullPath);
             }
             catch (Exception e)
