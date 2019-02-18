@@ -7,6 +7,7 @@ using HeProject.Model;
 using HeProject.Part2;
 using HeProject.ProgressHandler.P3;
 using HeProject.ProgressHandler.P4;
+using HeProject.ProgressHandler.P5;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -142,7 +143,14 @@ namespace HeProject
 
             #endregion P3 P4
 
-            return Task.WhenAll(new Task[] { finallyP1Block.Completion, finallyP2Block.Completion, finallyP3Block.Completion, finallyP4Block.Completion });
+            return Task.WhenAll(new Task[] { finallyP1Block.Completion, finallyP2Block.Completion, finallyP3Block.Completion, finallyP4Block.Completion }).ContinueWith(t =>
+            {
+                for (int i = 0; i < ProcessContext.Capacity; i++)
+                {
+                    new S1P5Handler().Hnalder(i, ProcessContext);
+                    new S2P5Handler().Hnalder(i, ProcessContext);
+                }
+            });
         }
 
         private void PrintState(ProgressState state)
