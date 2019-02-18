@@ -43,6 +43,10 @@ namespace HeProject
         private ICellStyle _s8P4Style;
         private ICellStyle _s9P4Style;
 
+        private ICellStyle _totalStyle;
+        private ICellStyle _reStyle;
+        private ICellStyle _lengStyle;
+
         public WriteToExcel(ProcessContext context)
         {
             _p1FirstRow = 1;
@@ -87,6 +91,10 @@ namespace HeProject
                 _s8P4Style = workbook.CreateCellStyle();
                 _s9P4Style = workbook.CreateCellStyle();
 
+                _totalStyle = workbook.CreateCellStyle();
+                _reStyle = workbook.CreateCellStyle();
+                _lengStyle = workbook.CreateCellStyle();
+
                 //https://www.cnblogs.com/love-zf/p/4874098.html
                 _s2P1Style.FillForegroundColor = 13;
                 _s4P1Style.FillForegroundColor = 22;
@@ -96,9 +104,9 @@ namespace HeProject
 
                 _s2P2Style.FillForegroundColor = 40;
                 _s4P2Style.FillForegroundColor = 55;
-                _s6P2Style.FillForegroundColor = 61;
+                _s6P2Style.FillForegroundColor = 41;
                 _s7P2Style.FillForegroundColor = 55;
-                _s8P2Style.FillForegroundColor = 61;
+                _s8P2Style.FillForegroundColor = 41;
 
                 _s2P3Style.FillForegroundColor = 13;
                 _s4P3Style.FillForegroundColor = 22;
@@ -108,9 +116,13 @@ namespace HeProject
 
                 _s2P4Style.FillForegroundColor = 40;
                 _s4P4Style.FillForegroundColor = 55;
-                _s6P4Style.FillForegroundColor = 61;
+                _s6P4Style.FillForegroundColor = 41;
                 _s7P4Style.FillForegroundColor = 55;
-                _s8P4Style.FillForegroundColor = 61;
+                _s8P4Style.FillForegroundColor = 41;
+
+                _totalStyle.FillForegroundColor = 53;
+                _reStyle.FillForegroundColor = 10;
+                _lengStyle.FillForegroundColor = 40;
 
                 _s2P1Style.FillPattern = FillPattern.SolidForeground;
                 _s4P1Style.FillPattern = FillPattern.SolidForeground;
@@ -135,6 +147,11 @@ namespace HeProject
                 _s6P4Style.FillPattern = FillPattern.SolidForeground;
                 _s7P4Style.FillPattern = FillPattern.SolidForeground;
                 _s8P4Style.FillPattern = FillPattern.SolidForeground;
+
+
+                _totalStyle.FillPattern = FillPattern.SolidForeground;
+                _reStyle.FillPattern = FillPattern.SolidForeground;
+                _lengStyle.FillPattern = FillPattern.SolidForeground;
 
                 #endregion SetStyle
 
@@ -199,6 +216,9 @@ namespace HeProject
                     Set4P9Value(row, index);
 
                     #endregion P4
+
+                    SetTotalValue(row, index);
+                    SetReLengValue(row, index);
                 }
                 SaveFile(workbook);
             }
@@ -298,6 +318,17 @@ namespace HeProject
             s8p4.CellStyle = _headerStyle;
             s9p4.CellStyle = _headerStyle;
 
+            var totalCell = row.CreateCell(StepLength.DisplayTotal * 4);
+            totalCell.SetCellValue("总和");
+            totalCell.CellStyle = _headerStyle;
+
+            var re = row.CreateCell(StepLength.DisplayTotal * 4 + 3);
+            re.SetCellValue("热");
+            re.CellStyle = _headerStyle;
+            var leng = row.CreateCell(StepLength.DisplayTotal * 4 + 4);
+            leng.SetCellValue("冷");
+            leng.CellStyle = _headerStyle;
+
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 0, StepLength.P2 - 1));
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.P2, StepLength.P2 + StepLength.P4 - 1));
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.P2 + StepLength.P4, StepLength.P2 + StepLength.P4 + StepLength.P6 - 1));
@@ -325,6 +356,16 @@ namespace HeProject
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6, 3 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 - 1));
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7, 3 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8 - 1));
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8, 3 * StepLength.DisplayTotal + StepLength.P2 + StepLength.P4 + StepLength.P6 + StepLength.P7 + StepLength.P8 + StepLength.P9 - 1));
+
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.DisplayTotal * 4, StepLength.DisplayTotal * 4 + 2));
+
+            sheet.SetColumnWidth(StepLength.DisplayTotal * 4, 1000);
+            sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 1, 1000);
+            sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 2, 1000);
+            sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 3, 1000);
+            sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 4, 1000);
+
+
         }
 
         #region SetP1Value
@@ -720,6 +761,33 @@ namespace HeProject
 
         #endregion SetP4Value
 
+        #region SetP5Value
+
+        private void SetTotalValue(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.DisplayTotal * 4;
+            for (int i = beforeColumn; i < beforeColumn + 3; i++)
+            {
+                var cell = row.CreateCell(i);
+                cell.SetCellValue(_context.GetP5Value<int>(1, rowIndex, i - beforeColumn));
+                cell.CellStyle = _totalStyle;
+            }
+        }
+
+        private void SetReLengValue(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.DisplayTotal * 4 + 3;
+            var reCell = row.CreateCell(beforeColumn);
+            reCell.SetCellValue(_context.GetP5Value<int>(2, rowIndex, 0));
+            reCell.CellStyle = _reStyle;
+
+            var lengCell = row.CreateCell(beforeColumn+1);
+            lengCell.SetCellValue(_context.GetP5Value<int>(2, rowIndex, 1));
+            lengCell.CellStyle = _lengStyle;
+        }
+
+        #endregion
+
         private void SaveFile(IWorkbook workBook)
         {
             try
@@ -731,7 +799,7 @@ namespace HeProject
                 FileStream sw = File.Create(fullPath);
                 workBook.Write(sw);
                 sw.Close();
-               // Process.Start("explorer.exe", "/select, \"" + fullPath + "\"");
+                // Process.Start("explorer.exe", "/select, \"" + fullPath + "\"");
                 Process.Start(fullPath);
             }
             catch (Exception e)

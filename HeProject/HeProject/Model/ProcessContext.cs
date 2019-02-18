@@ -11,20 +11,20 @@ namespace HeProject.Model
         //private readonly bool[,] _stepSourceP2State;
         //private readonly bool[,] _stepSourceP3State;
         private readonly bool[,] _stepP1State;
-
         private readonly bool[,] _stepP2State;
         private readonly bool[,] _stepP3State;
         private readonly bool[,] _stepP4State;
+        private readonly bool[,] _stepP5State;
 
         public readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueSourceMap;
 
         //private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueSourceP2Map;
         //private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueSourceP3Map;
-        public readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP1Map;
-
+        private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP1Map;
         private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP2Map;
         private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP3Map;
         private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP4Map;
+        private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP5Map;
         public readonly int Capacity;
         private const int StepCont = 9;
         private readonly object _lockSourceP1 = new object();
@@ -32,10 +32,10 @@ namespace HeProject.Model
         //private readonly object _lockSourceP2 = new object();
         //private readonly object _lockSourceP3 = new object();
         private readonly object _lockP1 = new object();
-
         private readonly object _lockP2 = new object();
         private readonly object _lockP3 = new object();
         private readonly object _lockP4 = new object();
+        private readonly object _lockP5 = new object();
 
         #region Source
 
@@ -594,6 +594,91 @@ namespace HeProject.Model
 
         #endregion P4
 
+        #region P5
+
+        public void SetP5Value(int step, int row, int column, object value)
+        {
+            try
+            {
+                lock (_lockP5)
+                {
+                    if (!_valueP5Map.ContainsKey(step))
+                        _valueP5Map.Add(step, new Dictionary<int, Dictionary<int, object>>(StepCont));
+                    var stepValueMap = _valueP5Map[step];
+                    if (!stepValueMap.ContainsKey(row))
+                        stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
+                    var rowValueMap = stepValueMap[row];
+                    if (!rowValueMap.ContainsKey(column))
+                        rowValueMap.Add(column, null);
+
+                    rowValueMap[column] = value;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"step:{step},row:{row},column:{column},value:{value},exception:{e}");
+                throw;
+            }
+        }
+
+        public T GetP5Value<T>(int step, int row, int column)
+        {
+            try
+            {
+                int loop = 0;
+                while (!_stepP5State[step - 1, row])
+                {
+                    if (loop > 100)
+                        return default(T);
+                    Thread.Sleep(1000);
+                }
+                lock (_lockP5)
+                {
+                    if (!_valueP5Map.ContainsKey(step))
+                        _valueP5Map.Add(step, new Dictionary<int, Dictionary<int, object>>(StepCont));
+                    var stepValueMap = _valueP5Map[step];
+                    if (!stepValueMap.ContainsKey(row))
+                        stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
+                    var rowValueMap = stepValueMap[row];
+                    if (!rowValueMap.ContainsKey(column))
+                        rowValueMap.Add(column, default(T));
+                    return (T)rowValueMap[column];
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"step:{step},row:{row},column:{column},exception:{e}");
+                throw;
+            }
+        }
+
+        public Dictionary<int, object> GetP5RowResult(int step, int row)
+        {
+            int loop = 0;
+            while (!_stepP5State[step - 1, row])
+            {
+                if (loop > 100)
+                    return new Dictionary<int, object>(Capacity);
+                Thread.Sleep(1000);
+            }
+            lock (_lockP5)
+            {
+                if (!_valueP5Map.ContainsKey(step))
+                    _valueP5Map.Add(step, new Dictionary<int, Dictionary<int, object>>(StepCont));
+                var stepValueMap = _valueP5Map[step];
+                if (!stepValueMap.ContainsKey(row))
+                    stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
+                return stepValueMap[row];
+            }
+        }
+
+        public void SetP5StepState(int step, int row, bool value)
+        {
+            _stepP5State[step - 1, row] = value;
+        }
+
+        #endregion P5
+
         public ProcessContext(int capacity)
         {
             Capacity = capacity;
@@ -604,6 +689,7 @@ namespace HeProject.Model
             _stepP2State = new bool[StepCont, capacity];
             _stepP3State = new bool[StepCont, capacity];
             _stepP4State = new bool[StepCont, capacity];
+            _stepP5State = new bool[StepCont, capacity];
             _valueSourceMap = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
             //_valueSourceP2Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
             //_valueSourceP3Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
@@ -611,6 +697,7 @@ namespace HeProject.Model
             _valueP2Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
             _valueP3Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
             _valueP4Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
+            _valueP5Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
         }
     }
 }
