@@ -46,6 +46,7 @@ namespace HeProject
         private ICellStyle _totalStyle;
         private ICellStyle _reStyle;
         private ICellStyle _lengStyle;
+        private ICellStyle _reLengTotalStyle;
 
         public WriteToExcel(ProcessContext context)
         {
@@ -94,6 +95,7 @@ namespace HeProject
                 _totalStyle = workbook.CreateCellStyle();
                 _reStyle = workbook.CreateCellStyle();
                 _lengStyle = workbook.CreateCellStyle();
+                _reLengTotalStyle = workbook.CreateCellStyle();
 
                 //https://www.cnblogs.com/love-zf/p/4874098.html
                 _s2P1Style.FillForegroundColor = 13;
@@ -123,6 +125,7 @@ namespace HeProject
                 _totalStyle.FillForegroundColor = 53;
                 _reStyle.FillForegroundColor = 10;
                 _lengStyle.FillForegroundColor = 40;
+                _reLengTotalStyle.FillForegroundColor = 50;
 
                 _s2P1Style.FillPattern = FillPattern.SolidForeground;
                 _s4P1Style.FillPattern = FillPattern.SolidForeground;
@@ -152,6 +155,7 @@ namespace HeProject
                 _totalStyle.FillPattern = FillPattern.SolidForeground;
                 _reStyle.FillPattern = FillPattern.SolidForeground;
                 _lengStyle.FillPattern = FillPattern.SolidForeground;
+                _reLengTotalStyle.FillPattern = FillPattern.SolidForeground;
 
                 #endregion SetStyle
 
@@ -328,6 +332,9 @@ namespace HeProject
             var leng = row.CreateCell(StepLength.DisplayTotal * 4 + 4);
             leng.SetCellValue("冷");
             leng.CellStyle = _headerStyle;
+            var reLeng = row.CreateCell(StepLength.DisplayTotal * 4 + 5);
+            reLeng.SetCellValue("和");
+            reLeng.CellStyle = _headerStyle;
 
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 0, StepLength.P2 - 1));
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.P2, StepLength.P2 + StepLength.P4 - 1));
@@ -364,6 +371,7 @@ namespace HeProject
             sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 2, 1000);
             sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 3, 1000);
             sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 4, 1000);
+            sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 5, 1000);
 
 
         }
@@ -784,6 +792,10 @@ namespace HeProject
             var lengCell = row.CreateCell(beforeColumn+1);
             lengCell.SetCellValue(_context.GetP5Value<int>(2, rowIndex, 1));
             lengCell.CellStyle = _lengStyle;
+
+            var reLengCell = row.CreateCell(beforeColumn + 2);
+            reLengCell.SetCellValue(_context.GetP5Value<int>(2, rowIndex, 2));
+            reLengCell.CellStyle = _reLengTotalStyle;
         }
 
         #endregion
