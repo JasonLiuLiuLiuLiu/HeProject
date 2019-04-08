@@ -57,7 +57,7 @@ namespace HeProject
 
             var p1S3Block = CreateP1Block(3);
             var currentP1Block = p1S3Block;
-            for (int i = 4; i < 10; i++)
+            for (int i = 4; i < 11; i++)
             {
                 var block = CreateP1Block(i);
                 currentP1Block.LinkTo(block, new DataflowLinkOptions() { PropagateCompletion = true });
@@ -66,7 +66,7 @@ namespace HeProject
 
             IPropagatorBlock<int, int> p2S2Block = CreateP2Block(2);
             var currentP2Block = p2S2Block;
-            for (int i = 3; i < 10; i++)
+            for (int i = 3; i < 11; i++)
             {
                 var block = CreateP2Block(i);
                 currentP2Block.LinkTo(block, new DataflowLinkOptions() { PropagateCompletion = true });
@@ -102,7 +102,7 @@ namespace HeProject
 
             var p3S3Block = CreateP3Block(3);
             var currentP3Block = p3S3Block;
-            for (int i = 4; i < 10; i++)
+            for (int i = 4; i < 11; i++)
             {
                 var block = CreateP3Block(i);
                 currentP3Block.LinkTo(block, new DataflowLinkOptions() { PropagateCompletion = true });
@@ -111,7 +111,7 @@ namespace HeProject
 
             IPropagatorBlock<int, int> p4S2Block = CreateP4Block(2);
             var currentP4Block = p4S2Block;
-            for (int i = 3; i < 10; i++)
+            for (int i = 3; i < 11; i++)
             {
                 var block = CreateP4Block(i);
                 currentP4Block.LinkTo(block, new DataflowLinkOptions() { PropagateCompletion = true });
@@ -148,7 +148,7 @@ namespace HeProject
                 for (int i = 0; i < ProcessContext.Capacity; i++)
                 {
                     new S1P5Handler().Hnalder(i, ProcessContext);
-                    new S2P5Handler().Hnalder(i, ProcessContext);
+                    new S2P5Handler().Hnalder(i, ProcessContext)
                 }
             });
         }

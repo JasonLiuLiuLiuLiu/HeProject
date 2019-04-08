@@ -26,7 +26,7 @@ namespace HeProject.Model
         private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP4Map;
         private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP5Map;
         public readonly int Capacity;
-        private const int StepCont = 9;
+        private const int StepCont = 10;
         private readonly object _lockSourceP1 = new object();
 
         //private readonly object _lockSourceP2 = new object();
