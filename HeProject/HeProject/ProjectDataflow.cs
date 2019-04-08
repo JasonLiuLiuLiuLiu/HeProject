@@ -143,13 +143,14 @@ namespace HeProject
 
             #endregion P3 P4
 
-            return Task.WhenAll(new Task[] { finallyP1Block.Completion, finallyP2Block.Completion, finallyP3Block.Completion, finallyP4Block.Completion }).ContinueWith(t =>
+            return Task.WhenAll(new Task[] { finallyP1Block.Completion, finallyP2Block.Completion, finallyP3Block.Completion, finallyP4Block.Completion }).ContinueWith( t =>
             {
                 for (int i = 0; i < ProcessContext.Capacity; i++)
                 {
-                    new S1P5Handler().Hnalder(i, ProcessContext);
-                    new S2P5Handler().Hnalder(i, ProcessContext);
-                    new S3P5Handler().Hnalder(i, ProcessContext);
+                    var t1 = Task.Run(() => new S1P5Handler().Hnalder(i, ProcessContext));
+                    var t2 = Task.Run(() => new S2P5Handler().Hnalder(i, ProcessContext));
+                    var t3 = Task.Run(() => new S3P5Handler().Hnalder(i, ProcessContext));
+                    Task.WaitAll(t1, t2, t3);
                 }
             });
         }
