@@ -47,6 +47,9 @@ namespace HeProject
         private ICellStyle _reStyle;
         private ICellStyle _lengStyle;
         private ICellStyle _reLengTotalStyle;
+        private ICellStyle _wuJiaoStyle;
+        private ICellStyle _sanJiaoStyle;
+        private ICellStyle _yuanStyle;
 
         public WriteToExcel(ProcessContext context)
         {
@@ -96,6 +99,9 @@ namespace HeProject
                 _reStyle = workbook.CreateCellStyle();
                 _lengStyle = workbook.CreateCellStyle();
                 _reLengTotalStyle = workbook.CreateCellStyle();
+                _wuJiaoStyle = workbook.CreateCellStyle();
+                _sanJiaoStyle = workbook.CreateCellStyle();
+                _yuanStyle = workbook.CreateCellStyle();
 
                 //https://www.cnblogs.com/love-zf/p/4874098.html
                 _s2P1Style.FillForegroundColor = 13;
@@ -126,6 +132,9 @@ namespace HeProject
                 _reStyle.FillForegroundColor = 10;
                 _lengStyle.FillForegroundColor = 40;
                 _reLengTotalStyle.FillForegroundColor = 50;
+                _wuJiaoStyle.FillForegroundColor = 43;
+                _sanJiaoStyle.FillForegroundColor = 42;
+                _yuanStyle.FillForegroundColor = 41;
 
                 _s2P1Style.FillPattern = FillPattern.SolidForeground;
                 _s4P1Style.FillPattern = FillPattern.SolidForeground;
@@ -156,6 +165,9 @@ namespace HeProject
                 _reStyle.FillPattern = FillPattern.SolidForeground;
                 _lengStyle.FillPattern = FillPattern.SolidForeground;
                 _reLengTotalStyle.FillPattern = FillPattern.SolidForeground;
+                _wuJiaoStyle.FillPattern = FillPattern.SolidForeground;
+                _sanJiaoStyle.FillPattern = FillPattern.SolidForeground;
+                _yuanStyle.FillPattern = FillPattern.SolidForeground;
 
                 #endregion SetStyle
 
@@ -223,6 +235,7 @@ namespace HeProject
 
                     SetTotalValue(row, index);
                     SetReLengValue(row, index);
+                    SetShapeValue(row,index);
                 }
                 SaveFile(workbook);
             }
@@ -335,6 +348,15 @@ namespace HeProject
             var reLeng = row.CreateCell(StepLength.DisplayTotal * 4 + 5);
             reLeng.SetCellValue("和");
             reLeng.CellStyle = _headerStyle;
+            var wuJiao = row.CreateCell(StepLength.DisplayTotal * 4 + 6);
+            wuJiao.SetCellValue("★");
+            wuJiao.CellStyle = _headerStyle;
+            var sanJiao = row.CreateCell(StepLength.DisplayTotal * 4 + 7);
+            sanJiao.SetCellValue("▲");
+            sanJiao.CellStyle = _headerStyle;
+            var yuan = row.CreateCell(StepLength.DisplayTotal * 4 + 8);
+            yuan.SetCellValue("⚪");
+            yuan.CellStyle = _headerStyle;
 
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 0, StepLength.P2 - 1));
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.P2, StepLength.P2 + StepLength.P4 - 1));
@@ -372,6 +394,9 @@ namespace HeProject
             sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 3, 1000);
             sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 4, 1000);
             sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 5, 1000);
+            sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 6, 1000);
+            sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 7, 1000);
+            sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 8, 1000);
 
 
         }
@@ -789,13 +814,29 @@ namespace HeProject
             reCell.SetCellValue(_context.GetP5Value<int>(2, rowIndex, 0));
             reCell.CellStyle = _reStyle;
 
-            var lengCell = row.CreateCell(beforeColumn+1);
+            var lengCell = row.CreateCell(beforeColumn + 1);
             lengCell.SetCellValue(_context.GetP5Value<int>(2, rowIndex, 1));
             lengCell.CellStyle = _lengStyle;
 
             var reLengCell = row.CreateCell(beforeColumn + 2);
             reLengCell.SetCellValue(_context.GetP5Value<int>(2, rowIndex, 2));
             reLengCell.CellStyle = _reLengTotalStyle;
+        }
+
+        private void SetShapeValue(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.DisplayTotal * 4 + 3 + 3;
+            var wujiaoCell = row.CreateCell(beforeColumn);
+            var sanjiaoCell = row.CreateCell(beforeColumn + 1);
+            var yuanCell = row.CreateCell(beforeColumn + 2);
+
+            wujiaoCell.SetCellValue(_context.GetP5Value<int>(3,rowIndex,0));
+            sanjiaoCell.SetCellValue(_context.GetP5Value<int>(3, rowIndex, 1));
+            yuanCell.SetCellValue(_context.GetP5Value<int>(3, rowIndex, 2));
+
+            wujiaoCell.CellStyle = _wuJiaoStyle;
+            sanjiaoCell.CellStyle = _sanJiaoStyle;
+            yuanCell.CellStyle = _yuanStyle;
         }
 
         #endregion

@@ -5,13 +5,13 @@ namespace HeProject
 {
     public class S10Handler : IP1Handler
     {
-        private ProcessContext context;
+        private ProcessContext _context;
 
         public string Hnalder(int row, ProcessContext context)
         {
             if (row < 3)
                 return null;
-            this.context = context;
+            this._context = context;
 
             context.SetP1Value(10, row, 0, GetInputs(row, 7, 0).CalculateSameLength());
             context.SetP1Value(10, row, 1, GetInputs(row, 7, 1).CalculateSameLength());
@@ -26,10 +26,10 @@ namespace HeProject
         private int[] GetInputs(int row, int step, int column)
         {
             var result = new int[4];
-            result[0] = context.GetP1Value<int>(step, row, column);
-            result[1] = context.GetP1Value<int>(step, row - 1, column);
-            result[2] = context.GetP1Value<int>(step, row - 2, column);
-            result[3] = context.GetP1Value<int>(step, row - 3, column);
+            result[0] = _context.GetP1Value<int>(step, row, column);
+            result[1] = _context.GetP1Value<int>(step, row - 1, column);
+            result[2] = _context.GetP1Value<int>(step, row - 2, column);
+            result[3] = _context.GetP1Value<int>(step, row - 3, column);
             return result;
         }
     }

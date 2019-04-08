@@ -148,7 +148,8 @@ namespace HeProject
                 for (int i = 0; i < ProcessContext.Capacity; i++)
                 {
                     new S1P5Handler().Hnalder(i, ProcessContext);
-                    new S2P5Handler().Hnalder(i, ProcessContext)
+                    new S2P5Handler().Hnalder(i, ProcessContext);
+                    new S3P5Handler().Hnalder(i, ProcessContext);
                 }
             });
         }
