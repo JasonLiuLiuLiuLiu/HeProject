@@ -156,6 +156,7 @@ namespace HeProject.ProgressHandler.P5
 
             context.SetP5Value(2,row,0,re1);
             context.SetP5Value(2,row,1,leng2);
+            context.SetP5Value(2,row,2,re1+leng2);
             context.SetP5StepState(2, row, true);
 
             return null;
