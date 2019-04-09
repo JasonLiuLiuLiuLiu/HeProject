@@ -357,6 +357,9 @@ namespace HeProject
             var yuan = row.CreateCell(StepLength.DisplayTotal * 4 + 8);
             yuan.SetCellValue("⚪");
             yuan.CellStyle = _headerStyle;
+            var chong = row.CreateCell(StepLength.DisplayTotal * 4 + 9);
+            chong.SetCellValue("重");
+            chong.CellStyle = _headerStyle;
 
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 0, StepLength.P2 - 1));
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.P2, StepLength.P2 + StepLength.P4 - 1));
@@ -397,6 +400,7 @@ namespace HeProject
             sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 6, 1000);
             sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 7, 1000);
             sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 8, 1000);
+            sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 9, 1000);
 
 
         }
@@ -829,14 +833,17 @@ namespace HeProject
             var wujiaoCell = row.CreateCell(beforeColumn);
             var sanjiaoCell = row.CreateCell(beforeColumn + 1);
             var yuanCell = row.CreateCell(beforeColumn + 2);
+            var chongCell = row.CreateCell(beforeColumn + 3);
 
             wujiaoCell.SetCellValue(_context.GetP5Value<int>(3,rowIndex,0));
             sanjiaoCell.SetCellValue(_context.GetP5Value<int>(3, rowIndex, 1));
             yuanCell.SetCellValue(_context.GetP5Value<int>(3, rowIndex, 2));
+            chongCell.SetCellValue(_context.GetP5Value<int>(3, rowIndex, 3));
 
             wujiaoCell.CellStyle = _wuJiaoStyle;
             sanjiaoCell.CellStyle = _sanJiaoStyle;
             yuanCell.CellStyle = _yuanStyle;
+            chongCell.CellStyle = _s8P1Style;
         }
 
         #endregion

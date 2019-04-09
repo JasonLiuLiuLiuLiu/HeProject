@@ -41,6 +41,7 @@ namespace HeProject.ProgressHandler.P5
             context.SetP5Value(3, row, 0, _p1);
             context.SetP5Value(3, row, 1, _p2);
             context.SetP5Value(3, row, 2, _p3);
+            context.SetP5Value(3, row, 3, _p2 + _p3);
             context.SetP5StepState(3, row, true);
             return null;
         }
