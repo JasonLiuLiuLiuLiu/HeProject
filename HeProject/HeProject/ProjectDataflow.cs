@@ -8,6 +8,7 @@ using HeProject.Part2;
 using HeProject.ProgressHandler.P3;
 using HeProject.ProgressHandler.P4;
 using HeProject.ProgressHandler.P5;
+using HeProject.ProgressHandler.P6;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -35,7 +36,7 @@ namespace HeProject
         //    _startBlock.Complete();
         //}
 
-        public Task CreatePipeLine()
+        public async Task CreatePipeLine()
         {
             #region Start
 
@@ -143,16 +144,23 @@ namespace HeProject
 
             #endregion P3 P4
 
-            return Task.WhenAll(new Task[] { finallyP1Block.Completion, finallyP2Block.Completion, finallyP3Block.Completion, finallyP4Block.Completion }).ContinueWith( t =>
-            {
-                for (int i = 0; i < ProcessContext.Capacity; i++)
-                {
-                    var t1 = Task.Run(() => new S1P5Handler().Hnalder(i, ProcessContext));
-                    var t2 = Task.Run(() => new S2P5Handler().Hnalder(i, ProcessContext));
-                    var t3 = Task.Run(() => new S3P5Handler().Hnalder(i, ProcessContext));
-                    Task.WaitAll(t1, t2, t3);
-                }
-            });
+            await Task.WhenAll(new Task[] { finallyP1Block.Completion, finallyP2Block.Completion, finallyP3Block.Completion, finallyP4Block.Completion }).ContinueWith(t =>
+           {
+               for (int i = 0; i < ProcessContext.Capacity; i++)
+               {
+                   var t1 = Task.Run(() => new S1P5Handler().Hnalder(i, ProcessContext));
+                   var t2 = Task.Run(() => new S2P5Handler().Hnalder(i, ProcessContext));
+                   var t3 = Task.Run(() => new S3P5Handler().Hnalder(i, ProcessContext));
+
+                   var p6 = Task.Run(() =>
+                   {
+                       new S1P6Handler().Hnalder(i, ProcessContext);
+                       new S2P6Handler().Hnalder(i, ProcessContext);
+                   });
+
+                   Task.WaitAll(t1, t2, t3,p6);
+               }
+           });
         }
 
         private void PrintState(ProgressState state)
