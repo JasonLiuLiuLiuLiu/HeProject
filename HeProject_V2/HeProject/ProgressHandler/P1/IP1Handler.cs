@@ -1,9 +1,8 @@
-﻿using HeProject.Model;
+﻿using HeProject.ProgressHandler.Common;
 
 namespace HeProject
 {
-    public interface IP1Handler
+    public interface IP1Handler:IPHandler
     {
-        string Hnalder(int row, ProcessContext context);
     }
 }
