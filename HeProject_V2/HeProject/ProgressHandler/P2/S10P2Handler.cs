@@ -1,5 +1,4 @@
 ﻿using HeProject.Model;
-using HeProject.Part2;
 using HeProject.ProgressHandler.Common;
 
 namespace HeProject.ProgressHandler.P2

@@ -1,7 +1,7 @@
-﻿using HeProject.Model;
-using System.Linq;
+﻿using System.Linq;
+using HeProject.Model;
 
-namespace HeProject
+namespace HeProject.ProgressHandler.P1
 {
     public class S8Handler : IP1Handler
     {

@@ -1,6 +1,6 @@
 ﻿using HeProject.ProgressHandler.Common;
 
-namespace HeProject
+namespace HeProject.ProgressHandler.P1
 {
     public interface IP1Handler:IPHandler
     {

@@ -5,12 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using HeProject.Model;
-using HeProject.Part2;
+using HeProject.ProgressHandler.P1;
+using HeProject.ProgressHandler.P2;
 using HeProject.ProgressHandler.P3;
-using HeProject.ProgressHandler.P4;
-using HeProject.ProgressHandler.P5;
-using HeProject.ProgressHandler.P6;
-using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 

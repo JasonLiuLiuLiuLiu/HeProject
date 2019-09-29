@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using HeProject.Model;
-using HeProject.Part2;
 
 namespace HeProject.ProgressHandler.P2
 {
