@@ -20,12 +20,12 @@ namespace HeBoss
             //Console.WriteLine($"输出结果保存在{Directory.GetCurrentDirectory()}\\_Output.xlsx");
             // Console.ReadKey();
 
-            var sourceDataflow = new SourceDataflow();
-            var pipeline = sourceDataflow.CreatePipeline();
-            sourceDataflow.Process("_Source.xlsx");
+            var dataflow = new ProjectDataFlow();
+            var pipeline = dataflow.CreatePipeLine();
+            dataflow.Process("_Source.xlsx");
             pipeline.Wait();
             // var result = JsonConvert.SerializeObject(sourceDataflow.ProcessContext);
-            WriteToExcel writer = new WriteToExcel(sourceDataflow.ProcessContext);
+            WriteToExcel writer = new WriteToExcel(dataflow.ProcessContext);
             writer.Write();
         }
     }

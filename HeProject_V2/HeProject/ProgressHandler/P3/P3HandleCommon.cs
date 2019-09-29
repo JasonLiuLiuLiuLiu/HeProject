@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using HeProject.Model;
 
-namespace HeProject.ProgressHandler.P2
+namespace HeProject.ProgressHandler.P3
 {
-    class S5P2Handler : IP2Handler
+    public class P3HandleCommon
     {
-        public string Hnalder(int row, ProcessContext context)
+        private int _step;
+        public string GetOrder(int step,int row, ProcessContext context)
         {
+            _step = step;
             List<int> order = new List<int>();
-            bool[] handled = new bool[StepLength.P5];
+            bool[] handled = new bool[StepLength.SourceLength];
             if (row == 0)
             {
-                for (int i = 0; i < StepLength.P5; i++)
+                for (int i = 0; i < StepLength.SourceLength; i++)
                 {
                     if (handled[i])
                         continue;
@@ -26,9 +26,9 @@ namespace HeProject.ProgressHandler.P2
                 Handle(row, context, order, handled);
             }
 
-            for (int i = 0; i < StepLength.P3; i++)
+            for (int i = 0; i < StepLength.SourceLength; i++)
             {
-                context.SetP2Value(5, row, order[i], i);
+                context.SetP3Value(step, row, order[i], i);
             }
             return null;
         }
@@ -78,7 +78,7 @@ namespace HeProject.ProgressHandler.P2
         private List<KeyValuePair<int, KeyValuePair<int, int>>> GetOrder(int row, ProcessContext context, int[] columns = null)
         {
             Dictionary<int, KeyValuePair<int, int>> distance = new Dictionary<int, KeyValuePair<int, int>>();
-            for (int i = 0; i < StepLength.P5; i++)
+            for (int i = 0; i < StepLength.SourceLength; i++)
             {
                 if (columns != null && !columns.Contains(i))
                     continue;
@@ -90,7 +90,7 @@ namespace HeProject.ProgressHandler.P2
                 {
                     if (inValue)
                     {
-                        if (context.GetP2Value<bool>(4, j, i))
+                        if (context.GetP3Value<bool>(_step, j, i))
                             valueLength++;
                         else
                         {
@@ -99,7 +99,7 @@ namespace HeProject.ProgressHandler.P2
                     }
                     else
                     {
-                        if (context.GetP2Value<bool>(4, j, i))
+                        if (context.GetP3Value<bool>(_step, j, i))
                             inValue = true;
                         else
                         {
@@ -114,8 +114,6 @@ namespace HeProject.ProgressHandler.P2
                 distance.Add(i, new KeyValuePair<int, int>(distanceLength, valueLength));
             }
             return distance.OrderBy(u => u.Value.Key).ThenByDescending(u => u.Value.Value).ThenBy(u => u.Key).ToList();
-
-      
         }
     }
 }

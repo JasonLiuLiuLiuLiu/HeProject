@@ -17,7 +17,6 @@ namespace HeProject
     {
         private readonly ExecutionDataflowBlockOptions _executionDataFlowBlockOptions;
         public ProcessContext ProcessContext;
-        public BroadcastBlock<int> StartBlock;
         private ITargetBlock<string> _startBlock;
 
         public ProjectDataFlow()
@@ -27,17 +26,20 @@ namespace HeProject
                 MaxDegreeOfParallelism = Environment.ProcessorCount
             };
         }
+        public void Process(string filePath)
+        {
+            _startBlock.Post(filePath);
+            _startBlock.Complete();
+        }
 
 
         public async Task CreatePipeLine()
         {
             #region P1
 
-            var s0P1Block = CreateP1Block(0);
             var s1P1Block = CreateP1Block(1);
             var s2P1Block = CreateP1Block(2);
             var s3P1Block = CreateP1Block(3);
-            s0P1Block.LinkTo(s1P1Block, new DataflowLinkOptions() { PropagateCompletion = true });
             s1P1Block.LinkTo(s2P1Block, new DataflowLinkOptions() { PropagateCompletion = true });
             s2P1Block.LinkTo(s3P1Block, new DataflowLinkOptions() { PropagateCompletion = true });
 
@@ -70,7 +72,7 @@ namespace HeProject
             #endregion
             var sourceBroadCast = new BroadcastBlock<int>(i => i, _executionDataFlowBlockOptions);
             CreateStartBlock(sourceBroadCast);
-            sourceBroadCast.LinkTo(s0P1Block, new DataflowLinkOptions() {PropagateCompletion = true});
+            sourceBroadCast.LinkTo(s1P1Block, new DataflowLinkOptions() {PropagateCompletion = true});
             sourceBroadCast.LinkTo(s0P2Block, new DataflowLinkOptions() {PropagateCompletion = true});
             sourceBroadCast.LinkTo(s0P3Block, new DataflowLinkOptions() {PropagateCompletion = true});
 
@@ -205,8 +207,8 @@ namespace HeProject
                                 return;
                             }
 
-                            ProcessContext.SetP1Value(1, row, sheet.GetRow(row).Where(u => !string.IsNullOrEmpty(u.ToString())).FirstOrDefault(u => ((int)u.NumericCellValue % 6) == u.ColumnIndex).ColumnIndex, true);
-                            ProcessContext.SetP1StepState(1, row, true);
+                            ProcessContext.SetP1Value(0, row, sheet.GetRow(row).Where(u => !string.IsNullOrEmpty(u.ToString())).FirstOrDefault(u => ((int)u.NumericCellValue % 6) == u.ColumnIndex).ColumnIndex, true);
+                            ProcessContext.SetP1StepState(0, row, true);
                             nextBlock.Post(row);
                         }
                     }
