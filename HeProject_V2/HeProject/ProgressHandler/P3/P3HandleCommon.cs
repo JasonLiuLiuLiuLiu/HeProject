@@ -7,7 +7,7 @@ namespace HeProject.ProgressHandler.P3
     public class P3HandleCommon
     {
         private int _step;
-        public string GetOrder(int step,int row, ProcessContext context)
+        public string GetOrder(int step, int row, ProcessContext context)
         {
             _step = step;
             List<int> order = new List<int>();
@@ -26,9 +26,18 @@ namespace HeProject.ProgressHandler.P3
                 Handle(row, context, order, handled);
             }
 
-            for (int i = 0; i < StepLength.SourceLength; i++)
+            var beforePaiXu = context.GetP3RowResult(step - 1, row);
+            if (beforePaiXu == null || beforePaiXu.Count == 0)
+                return null;
+
+            var index = beforePaiXu.FirstOrDefault(u => (bool)u.Value).Key;
+            for (int i = 0; i <= StepLength.SourceLength; i++)
             {
-                context.SetP3Value(step, row, order[i], i);
+                if (order[i] == index)
+                {
+                    context.SetP3Value(step, row, i, true);
+                    break;
+                }
             }
             return null;
         }
@@ -86,11 +95,11 @@ namespace HeProject.ProgressHandler.P3
                 int distanceLength = 0;
                 int valueLength = 0;
                 bool inValue = false;
-                for (int j = row; j >= 0; j--)
+                for (int j = row - 1; j >= 0; j--)
                 {
                     if (inValue)
                     {
-                        if (context.GetP3Value<bool>(_step, j, i))
+                        if (context.GetP3Value<bool>(_step - 1, j, i))
                             valueLength++;
                         else
                         {
@@ -99,7 +108,7 @@ namespace HeProject.ProgressHandler.P3
                     }
                     else
                     {
-                        if (context.GetP3Value<bool>(_step, j, i))
+                        if (context.GetP3Value<bool>(_step - 1, j, i))
                             inValue = true;
                         else
                         {
@@ -108,7 +117,7 @@ namespace HeProject.ProgressHandler.P3
                     }
 
                     if (j == 0)
-                        distanceLength = row;
+                        distanceLength = row - 1;
 
                 }
                 distance.Add(i, new KeyValuePair<int, int>(distanceLength, valueLength));

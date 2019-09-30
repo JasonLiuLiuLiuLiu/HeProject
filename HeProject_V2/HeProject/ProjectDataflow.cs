@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using HeProject.Model;
@@ -33,7 +32,7 @@ namespace HeProject
         }
 
 
-        public async Task CreatePipeLine()
+        public Task CreatePipeLine()
         {
             #region P1
 
@@ -42,7 +41,11 @@ namespace HeProject
             var s3P1Block = CreateP1Block(3);
             s1P1Block.LinkTo(s2P1Block, new DataflowLinkOptions() { PropagateCompletion = true });
             s2P1Block.LinkTo(s3P1Block, new DataflowLinkOptions() { PropagateCompletion = true });
-
+            var finallyP1Block = new ActionBlock<int>(x =>
+            {
+               // Console.WriteLine(x);
+            });
+            s3P1Block.LinkTo(finallyP1Block, new DataflowLinkOptions() { PropagateCompletion = true });
 
             #endregion
 
@@ -52,10 +55,14 @@ namespace HeProject
             var s1P2Block = CreateP2Block(1);
             var s2P2Block = CreateP2Block(2);
             var s3P2Block = CreateP2Block(3);
-            s0P2Block.LinkTo(s0P2Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s0P2Block.LinkTo(s1P2Block, new DataflowLinkOptions() { PropagateCompletion = true });
             s1P2Block.LinkTo(s2P2Block, new DataflowLinkOptions() { PropagateCompletion = true });
             s2P2Block.LinkTo(s3P2Block, new DataflowLinkOptions() { PropagateCompletion = true });
-
+            var finallyP2Block = new ActionBlock<int>(x =>
+            {
+                // Console.WriteLine(x);
+            });
+            s3P2Block.LinkTo(finallyP2Block, new DataflowLinkOptions() { PropagateCompletion = true });
 
             #endregion
 
@@ -65,21 +72,28 @@ namespace HeProject
             var s1P3Block = CreateP3Block(1);
             var s2P3Block = CreateP3Block(2);
             var s3P3Block = CreateP3Block(3);
-            s0P3Block.LinkTo(s0P3Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s0P3Block.LinkTo(s1P3Block, new DataflowLinkOptions() { PropagateCompletion = true });
             s1P3Block.LinkTo(s2P3Block, new DataflowLinkOptions() { PropagateCompletion = true });
             s2P3Block.LinkTo(s3P3Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            var finallyP3Block = new ActionBlock<int>(x =>
+            {
+                // Console.WriteLine(x);
+            });
+            s3P3Block.LinkTo(finallyP3Block, new DataflowLinkOptions() { PropagateCompletion = true });
 
             #endregion
             var sourceBroadCast = new BroadcastBlock<int>(i => i, _executionDataFlowBlockOptions);
             CreateStartBlock(sourceBroadCast);
-            sourceBroadCast.LinkTo(s1P1Block, new DataflowLinkOptions() {PropagateCompletion = true});
-            sourceBroadCast.LinkTo(s0P2Block, new DataflowLinkOptions() {PropagateCompletion = true});
-            sourceBroadCast.LinkTo(s0P3Block, new DataflowLinkOptions() {PropagateCompletion = true});
+            sourceBroadCast.LinkTo(s1P1Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            sourceBroadCast.LinkTo(s0P2Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            sourceBroadCast.LinkTo(s0P3Block, new DataflowLinkOptions() { PropagateCompletion = true });
 
+            return Task.WhenAll(new[] {s3P1Block.Completion, s3P2Block.Completion, s3P3Block.Completion});
         }
 
         private void PrintState(ProgressState state)
         {
+            Console.WriteLine($"第{state.Step}步执行成功!");
             //Task.Run(() =>
             //{
             //    lock (_lock)
@@ -98,7 +112,7 @@ namespace HeProject
         }
 
 
-       
+
 
         #region CreateBlock
 
@@ -120,7 +134,7 @@ namespace HeProject
                 }
                 return x;
             }, _executionDataFlowBlockOptions);
-            progressBlock.Completion.ContinueWith(t => { PrintState(new ProgressState(step, -2)); });
+            progressBlock.Completion.ContinueWith(t => { PrintState(new ProgressState(step, int.MinValue)); });
             return progressBlock;
         }
 

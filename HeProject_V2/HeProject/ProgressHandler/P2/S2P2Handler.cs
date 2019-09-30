@@ -6,7 +6,7 @@ namespace HeProject.ProgressHandler.P2
     {
         public string Hnalder(int row, ProcessContext context)
         {
-            new P2HandleCommon().Hnalder(2, row, context);
+            new P2HandleCommon().GetOrder(2, row, context);
             return null;
         }
     }

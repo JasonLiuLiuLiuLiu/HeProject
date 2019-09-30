@@ -8,7 +8,7 @@ namespace HeProject.ProgressHandler.P3
 
         public string Hnalder(int row, ProcessContext context)
         {
-            new P3HandleCommon().Hnalder(1, row, context);
+            new P3HandleCommon().GetOrder(1, row, context);
             return null;
         }
     }

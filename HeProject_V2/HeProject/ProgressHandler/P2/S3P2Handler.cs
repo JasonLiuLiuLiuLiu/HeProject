@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using HeProject.Model;
+﻿using HeProject.Model;
 
 namespace HeProject.ProgressHandler.P2
 {
@@ -10,7 +6,7 @@ namespace HeProject.ProgressHandler.P2
     {
         public string Hnalder(int row, ProcessContext context)
         {
-            new P2HandleCommon().Hnalder(3, row, context);
+            new P2HandleCommon().GetOrder(3, row, context);
             return null;
         }
     }
