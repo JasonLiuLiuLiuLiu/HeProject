@@ -30,7 +30,7 @@ namespace HeProject.ProgressHandler.P4
 
                 if (count != 0)
                 {
-                    context.SetP4Value(1, row, i, count);
+                    context.SetP4Value(3, row, i, count);
                 }
             }
 

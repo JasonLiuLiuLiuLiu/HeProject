@@ -214,7 +214,7 @@ namespace HeProject
             {
                 try
                 {
-                    var handler = (IP4Handler)Activator.CreateInstance(Type.GetType($"HeProject.ProgressHandler.P3.S{step}P3Handler") ?? throw new InvalidOperationException());
+                    var handler = (IP4Handler)Activator.CreateInstance(Type.GetType($"HeProject.ProgressHandler.P4.S{step}P3Handler") ?? throw new InvalidOperationException());
                     var result = handler.Hnalder(x, ProcessContext);
                     if (result != null)
                         PrintState(new ProgressState(step, -1) { ErrorMessage = result });
