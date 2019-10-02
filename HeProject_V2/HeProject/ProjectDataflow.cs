@@ -89,13 +89,18 @@ namespace HeProject
 
             var p4StartBlock = CreateP4Block(1);
             var currentP4Block = p4StartBlock;
-            for (int i = 2; i < 18; i++)
+            for (int i = 2; i <= 18; i++)
             {
-                var block = CreateP1Block(i);
+                var block = CreateP4Block(i);
                 currentP4Block.LinkTo(block, new DataflowLinkOptions() { PropagateCompletion = true });
                 currentP4Block = block;
             }
             var p4EndBlock = currentP4Block;
+            var finallyP4Block = new ActionBlock<int>(x =>
+            {
+                // Console.WriteLine(x);
+            });
+            p4EndBlock.LinkTo(finallyP4Block, new DataflowLinkOptions() {PropagateCompletion = true});
 
             #endregion
 
@@ -119,7 +124,8 @@ namespace HeProject
 
         private void PrintState(ProgressState state)
         {
-            //Console.WriteLine($"第{state.Step}步执行成功!");
+            if (state.PNum == 4)
+                Console.WriteLine($"第{state.Step}步执行成功!");
             //Task.Run(() =>
             //{
             //    lock (_lock)
@@ -214,11 +220,11 @@ namespace HeProject
             {
                 try
                 {
-                    var handler = (IP4Handler)Activator.CreateInstance(Type.GetType($"HeProject.ProgressHandler.P4.S{step}P3Handler") ?? throw new InvalidOperationException());
+                    var handler = (IP4Handler)Activator.CreateInstance(Type.GetType($"HeProject.ProgressHandler.P4.S{step}P4Handle") ?? throw new InvalidOperationException());
                     var result = handler.Hnalder(x, ProcessContext);
                     if (result != null)
                         PrintState(new ProgressState(step, -1) { ErrorMessage = result });
-                    ProcessContext.SetP3StepState(step, x, true);
+                    ProcessContext.SetP4StepState(step, x, true);
                 }
                 catch (Exception e)
                 {
@@ -226,7 +232,7 @@ namespace HeProject
                 }
                 return x;
             }, _executionDataFlowBlockOptions);
-            progressBlock.Completion.ContinueWith(t => { PrintState(new ProgressState(step, -2)); });
+            progressBlock.Completion.ContinueWith(t => { PrintState(new ProgressState(step, -2, 4)); });
             return progressBlock;
         }
 

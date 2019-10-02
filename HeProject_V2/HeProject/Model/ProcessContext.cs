@@ -99,7 +99,12 @@ namespace HeProject.Model
                 var stepValueMap = _valueP1Map[step];
                 if (!stepValueMap.ContainsKey(row))
                     stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
-                return stepValueMap[row];
+                var result = new Dictionary<int, object>();
+                foreach (var item in stepValueMap[row])
+                {
+                    result.Add(item.Key, item.Value);
+                }
+                return result;
             }
 
         }
@@ -271,7 +276,12 @@ namespace HeProject.Model
                 var stepValueMap = _valueP3Map[step];
                 if (!stepValueMap.ContainsKey(row))
                     stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
-                return stepValueMap[row];
+                var result = new Dictionary<int, object>();
+                foreach (var item in stepValueMap[row])
+                {
+                    result.Add(item.Key, item.Value);
+                }
+                return result;
             }
         }
 
@@ -356,7 +366,12 @@ namespace HeProject.Model
                 var stepValueMap = _valueP4Map[step];
                 if (!stepValueMap.ContainsKey(row))
                     stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
-                return stepValueMap[row];
+                var result = new Dictionary<int, object>();
+                foreach (var item in stepValueMap[row])
+                {
+                    result.Add(item.Key, item.Value);
+                }
+                return result;
             }
         }
 
@@ -373,7 +388,7 @@ namespace HeProject.Model
             _stepP1State = new bool[StepCont, capacity];
             _stepP2State = new bool[StepCont, capacity];
             _stepP3State = new bool[StepCont, capacity];
-            _stepP4State = new bool[StepCont, capacity];
+            _stepP4State = new bool[20, capacity];
 
             _valueP1Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
             _valueP2Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();

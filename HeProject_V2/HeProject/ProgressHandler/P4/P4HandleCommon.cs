@@ -11,65 +11,74 @@ namespace HeProject.ProgressHandler.P4
         private int _step;
         public string GetOrder(int step, int row, ProcessContext context)
         {
-            _step = step;
-            List<int> order = new List<int>();
-            bool[] handled = new bool[StepLength.SourceLength];
-            if (row == 0)
+            try
             {
-                for (int i = 0; i < StepLength.SourceLength; i++)
+                _step = step;
+                List<int> order = new List<int>();
+                bool[] handled = new bool[StepLength.SourceLength];
+                if (row == 0)
                 {
-                    if (handled[i])
-                        continue;
-                    order.Add(i);
-                }
-            }
-            else
-            {
-                Handle(row, context, order, handled);
-            }
-
-            var beforePaiXu = context.GetP4RowResult(step - 12, row);
-            if (beforePaiXu == null || beforePaiXu.Count == 0)
-                return null;
-
-            var sum01 = 0;
-            var sum23 = 0;
-            var sum45 = 0;
-
-            var indexs = beforePaiXu.Where(u => (int)u.Value>0);
-            for (int i = 0; i <= StepLength.SourceLength; i++)
-            {
-                var value = indexs.Where(u => u.Key == order[i]).ToArray();
-                if (value.Any())
-                {
-                    var valueCount = (int)value.FirstOrDefault().Value;
-                    switch (order[i])
+                    for (int i = 0; i < StepLength.SourceLength; i++)
                     {
-                        case 0:
-                            sum01 += valueCount;
-                            break;
-                        case 1:
-                            sum01 += valueCount;
-                            break;
-                        case 2:
-                            sum23 += valueCount;
-                            break;
-                        case 3:
-                            sum23 += valueCount;
-                            break;
-                        case 4:
-                            sum45 += valueCount;
-                            break;
-                        case 5:
-                            sum45 += valueCount;
-                            break;
+                        if (handled[i])
+                            continue;
+                        order.Add(i);
                     }
                 }
+                else
+                {
+                    Handle(row, context, order, handled);
+                }
+
+                var beforePaiXu = context.GetP4RowResult(step - 12, row);
+                if (beforePaiXu == null || beforePaiXu.Count == 0)
+                    return null;
+
+                var sum01 = 0;
+                var sum23 = 0;
+                var sum45 = 0;
+
+                var indexs = beforePaiXu.Where(u => (int)u.Value > 0).ToArray();
+                for (int i = 0; i < StepLength.SourceLength; i++)
+                {
+                    var orderValue = order[i];
+                    var value = indexs.Where(u => u.Key == orderValue).ToArray();
+                    if (value.Any())
+                    {
+                        var valueCount = (int)value.FirstOrDefault().Value;
+                        switch (i)
+                        {
+                            case 0:
+                                sum01 += valueCount;
+                                break;
+                            case 1:
+                                sum01 += valueCount;
+                                break;
+                            case 2:
+                                sum23 += valueCount;
+                                break;
+                            case 3:
+                                sum23 += valueCount;
+                                break;
+                            case 4:
+                                sum45 += valueCount;
+                                break;
+                            case 5:
+                                sum45 += valueCount;
+                                break;
+                        }
+                    }
+                }
+                context.SetP4Value(step, row, 0, sum01);
+                context.SetP4Value(step, row, 1, sum23);
+                context.SetP4Value(step, row, 2, sum45);
+                return null;
             }
-            context.SetP4Value(step,row,0,sum01);
-            context.SetP4Value(step,row,1,sum23);
-            context.SetP4Value(step,row,2,sum45);
-            return null;
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         private void Handle(int row, ProcessContext context, List<int> order, bool[] handled, int[] columns = null)
@@ -160,7 +169,7 @@ namespace HeProject.ProgressHandler.P4
                     ValueCount = count
                 });
             }
-            return distance.OrderBy(u => u.Value.DistanceLength).ThenByDescending(u => u.Value.ValueLength).ThenByDescending(u => u.Value.ValueLength).ThenBy(u => u.Key).ToList();
+            return distance.OrderBy(u => u.Value.DistanceLength).ThenBy(u => u.Key).ThenByDescending(u => u.Value.ValueLength).ThenByDescending(u => u.Value.ValueLength).ToList();
         }
 
         public class OrderParams

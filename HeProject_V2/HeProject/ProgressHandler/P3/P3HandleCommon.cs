@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HeProject.Model;
 
@@ -9,37 +10,44 @@ namespace HeProject.ProgressHandler.P3
         private int _step;
         public string GetOrder(int step, int row, ProcessContext context)
         {
-            _step = step;
-            List<int> order = new List<int>();
-            bool[] handled = new bool[StepLength.SourceLength];
-            if (row == 0)
+            try
             {
-                for (int i = 0; i < StepLength.SourceLength; i++)
+                _step = step;
+                List<int> order = new List<int>();
+                bool[] handled = new bool[StepLength.SourceLength];
+                if (row == 0)
                 {
-                    if (handled[i])
-                        continue;
-                    order.Add(i);
+                    for (int i = 0; i < StepLength.SourceLength; i++)
+                    {
+                        if (handled[i])
+                            continue;
+                        order.Add(i);
+                    }
                 }
-            }
-            else
-            {
-                Handle(row, context, order, handled);
-            }
+                else
+                {
+                    Handle(row, context, order, handled);
+                }
 
-            var beforePaiXu = context.GetP3RowResult(step - 1, row);
-            if (beforePaiXu == null || beforePaiXu.Count == 0)
+                var beforePaiXu = context.GetP3RowResult(step - 1, row);
+                if (beforePaiXu == null || beforePaiXu.Count == 0)
+                    return null;
+
+                var index = beforePaiXu.FirstOrDefault(u => (bool)u.Value).Key;
+                for (int i = 0; i <= StepLength.SourceLength; i++)
+                {
+                    if (order[i] == index)
+                    {
+                        context.SetP3Value(step, row, i, true);
+                        break;
+                    }
+                }
                 return null;
-
-            var index = beforePaiXu.FirstOrDefault(u => (bool)u.Value).Key;
-            for (int i = 0; i <= StepLength.SourceLength; i++)
-            {
-                if (order[i] == index)
-                {
-                    context.SetP3Value(step, row, i, true);
-                    break;
-                }
             }
-            return null;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         private void Handle(int row, ProcessContext context, List<int> order, bool[] handled, int[] columns = null)

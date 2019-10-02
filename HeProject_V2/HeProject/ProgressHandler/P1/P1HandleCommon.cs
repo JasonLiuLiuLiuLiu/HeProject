@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HeProject.Model;
 
@@ -86,43 +87,53 @@ namespace HeProject.ProgressHandler.P1
 
         private List<KeyValuePair<int, KeyValuePair<int, int>>> GetOrder(int row, ProcessContext context, int[] columns = null)
         {
-            Dictionary<int, KeyValuePair<int, int>> distance = new Dictionary<int, KeyValuePair<int, int>>();
-            for (int i = 0; i < StepLength.SourceLength; i++)
+            try
             {
-                if (columns != null && !columns.Contains(i))
-                    continue;
-
-                int distanceLength = 0;
-                int valueLength = 0;
-                bool inValue = false;
-                for (int j = row - 1; j >= 0; j--)
+                Dictionary<int, KeyValuePair<int, int>> distance = new Dictionary<int, KeyValuePair<int, int>>();
+                for (int i = 0; i < StepLength.SourceLength; i++)
                 {
-                    if (inValue)
+                    if (columns != null && !columns.Contains(i))
+                        continue;
+
+                    int distanceLength = 0;
+                    int valueLength = 0;
+                    bool inValue = false;
+                    for (int j = row - 1; j >= 0; j--)
                     {
-                        if (context.GetP1Value<bool>(_step - 1, j, i))
-                            valueLength++;
+                        if (inValue)
+                        {
+                            if (context.GetP1Value<bool>(_step - 1, j, i))
+                                valueLength++;
+                            else
+                            {
+                                break;
+                            }
+                        }
                         else
                         {
-                            break;
+                            if (context.GetP1Value<bool>(_step - 1, j, i))
+                                inValue = true;
+                            else
+                            {
+                                distanceLength++;
+                            }
                         }
-                    }
-                    else
-                    {
-                        if (context.GetP1Value<bool>(_step - 1, j, i))
-                            inValue = true;
-                        else
-                        {
-                            distanceLength++;
-                        }
+
+                        if (j == 0)
+                            distanceLength = row - 1;
+
                     }
 
-                    if (j == 0)
-                        distanceLength = row - 1;
-
+                    distance.Add(i, new KeyValuePair<int, int>(distanceLength, valueLength));
                 }
-                distance.Add(i, new KeyValuePair<int, int>(distanceLength, valueLength));
+
+                return distance.OrderBy(u => u.Value.Key).ThenByDescending(u => u.Value.Value).ThenBy(u => u.Key)
+                    .ToList();
             }
-            return distance.OrderBy(u => u.Value.Key).ThenByDescending(u => u.Value.Value).ThenBy(u => u.Key).ToList();
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

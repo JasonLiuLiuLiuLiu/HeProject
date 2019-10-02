@@ -7,7 +7,7 @@ using HeProject.ProgressHandler.P3;
 
 namespace HeProject.ProgressHandler.P4
 {
-    public class S4P12Handle:IP4Handler
+    public class S12P4Handle:IP4Handler
     {
         public string Hnalder(int row, ProcessContext context)
         {
