@@ -7,6 +7,8 @@ using HeProject.Model;
 using HeProject.ProgressHandler.P1;
 using HeProject.ProgressHandler.P2;
 using HeProject.ProgressHandler.P3;
+using HeProject.ProgressHandler.P4;
+using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
@@ -32,7 +34,7 @@ namespace HeProject
         }
 
 
-        public Task CreatePipeLine()
+        public async Task CreatePipeLine()
         {
             #region P1
 
@@ -43,7 +45,7 @@ namespace HeProject
             s2P1Block.LinkTo(s3P1Block, new DataflowLinkOptions() { PropagateCompletion = true });
             var finallyP1Block = new ActionBlock<int>(x =>
             {
-               // Console.WriteLine(x);
+                // Console.WriteLine(x);
             });
             s3P1Block.LinkTo(finallyP1Block, new DataflowLinkOptions() { PropagateCompletion = true });
 
@@ -82,18 +84,42 @@ namespace HeProject
             s3P3Block.LinkTo(finallyP3Block, new DataflowLinkOptions() { PropagateCompletion = true });
 
             #endregion
+
+            #region P4
+
+            var p4StartBlock = CreateP4Block(1);
+            var currentP4Block = p4StartBlock;
+            for (int i = 2; i < 18; i++)
+            {
+                var block = CreateP1Block(i);
+                currentP4Block.LinkTo(block, new DataflowLinkOptions() { PropagateCompletion = true });
+                currentP4Block = block;
+            }
+            var p4EndBlock = currentP4Block;
+
+            #endregion
+
             var sourceBroadCast = new BroadcastBlock<int>(i => i, _executionDataFlowBlockOptions);
             CreateStartBlock(sourceBroadCast);
             sourceBroadCast.LinkTo(s1P1Block, new DataflowLinkOptions() { PropagateCompletion = true });
             sourceBroadCast.LinkTo(s0P2Block, new DataflowLinkOptions() { PropagateCompletion = true });
             sourceBroadCast.LinkTo(s0P3Block, new DataflowLinkOptions() { PropagateCompletion = true });
 
-            return Task.WhenAll(new[] {s3P1Block.Completion, s3P2Block.Completion, s3P3Block.Completion});
+            await Task.WhenAll(s3P1Block.Completion, s3P2Block.Completion, s3P3Block.Completion).ContinueWith(t =>
+               {
+                   for (int i = 0; i < ProcessContext.Capacity; i++)
+                   {
+                       p4StartBlock.Post(i);
+                   }
+
+                   p4StartBlock.Complete();
+                   p4EndBlock.Completion.Wait();
+               });
         }
 
         private void PrintState(ProgressState state)
         {
-            Console.WriteLine($"第{state.Step}步执行成功!");
+            //Console.WriteLine($"第{state.Step}步执行成功!");
             //Task.Run(() =>
             //{
             //    lock (_lock)
@@ -167,6 +193,28 @@ namespace HeProject
                 try
                 {
                     var handler = (IP3Handler)Activator.CreateInstance(Type.GetType($"HeProject.ProgressHandler.P3.S{step}P3Handler") ?? throw new InvalidOperationException());
+                    var result = handler.Hnalder(x, ProcessContext);
+                    if (result != null)
+                        PrintState(new ProgressState(step, -1) { ErrorMessage = result });
+                    ProcessContext.SetP3StepState(step, x, true);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                return x;
+            }, _executionDataFlowBlockOptions);
+            progressBlock.Completion.ContinueWith(t => { PrintState(new ProgressState(step, -2)); });
+            return progressBlock;
+        }
+
+        private IPropagatorBlock<int, int> CreateP4Block(int step)
+        {
+            var progressBlock = new TransformBlock<int, int>(x =>
+            {
+                try
+                {
+                    var handler = (IP4Handler)Activator.CreateInstance(Type.GetType($"HeProject.ProgressHandler.P3.S{step}P3Handler") ?? throw new InvalidOperationException());
                     var result = handler.Hnalder(x, ProcessContext);
                     if (result != null)
                         PrintState(new ProgressState(step, -1) { ErrorMessage = result });

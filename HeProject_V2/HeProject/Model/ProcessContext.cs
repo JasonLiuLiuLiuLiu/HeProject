@@ -9,17 +9,20 @@ namespace HeProject.Model
         private readonly bool[,] _stepP1State;
         private readonly bool[,] _stepP2State;
         private readonly bool[,] _stepP3State;
+        private readonly bool[,] _stepP4State;
 
 
         private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP1Map;
         private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP2Map;
         private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP3Map;
+        private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP4Map;
         public readonly int Capacity;
         private const int StepCont = 10;
 
         private readonly object _lockP1 = new object();
         private readonly object _lockP2 = new object();
         private readonly object _lockP3 = new object();
+        private readonly object _lockP4 = new object();
 
         #region P1
 
@@ -279,16 +282,103 @@ namespace HeProject.Model
 
         #endregion P3
 
+        #region P4
+
+        public void SetP4Value(int step, int row, int column, object value)
+        {
+            try
+            {
+                lock (_lockP4)
+                {
+                    if (!_valueP4Map.ContainsKey(step))
+                        _valueP4Map.Add(step, new Dictionary<int, Dictionary<int, object>>(StepCont));
+                    var stepValueMap = _valueP4Map[step];
+                    if (!stepValueMap.ContainsKey(row))
+                        stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
+                    var rowValueMap = stepValueMap[row];
+                    if (!rowValueMap.ContainsKey(column))
+                        rowValueMap.Add(column, null);
+
+                    rowValueMap[column] = value;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"step:{step},row:{row},column:{column},value:{value},exception:{e}");
+                throw;
+            }
+        }
+
+        public T GetP4Value<T>(int step, int row, int column)
+        {
+            try
+            {
+                int loop = 0;
+                while (!_stepP4State[step, row])
+                {
+                    if (loop > 1000)
+                        return default(T);
+                    Thread.Sleep(1000);
+                }
+                lock (_lockP4)
+                {
+                    if (!_valueP4Map.ContainsKey(step))
+                        _valueP4Map.Add(step, new Dictionary<int, Dictionary<int, object>>(StepCont));
+                    var stepValueMap = _valueP4Map[step];
+                    if (!stepValueMap.ContainsKey(row))
+                        stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
+                    var rowValueMap = stepValueMap[row];
+                    if (!rowValueMap.ContainsKey(column))
+                        rowValueMap.Add(column, default(T));
+                    return (T)rowValueMap[column];
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"step:{step},row:{row},column:{column},exception:{e}");
+                throw;
+            }
+        }
+
+        public Dictionary<int, object> GetP4RowResult(int step, int row)
+        {
+            int loop = 0;
+            while (!_stepP4State[step, row])
+            {
+                if (loop > 1000)
+                    return new Dictionary<int, object>(Capacity);
+                Thread.Sleep(1000);
+            }
+            lock (_lockP4)
+            {
+                if (!_valueP4Map.ContainsKey(step))
+                    _valueP4Map.Add(step, new Dictionary<int, Dictionary<int, object>>(StepCont));
+                var stepValueMap = _valueP4Map[step];
+                if (!stepValueMap.ContainsKey(row))
+                    stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
+                return stepValueMap[row];
+            }
+        }
+
+        public void SetP4StepState(int step, int row, bool value)
+        {
+            _stepP4State[step, row] = value;
+        }
+
+        #endregion P4
+
         public ProcessContext(int capacity)
         {
             Capacity = capacity;
             _stepP1State = new bool[StepCont, capacity];
             _stepP2State = new bool[StepCont, capacity];
             _stepP3State = new bool[StepCont, capacity];
+            _stepP4State = new bool[StepCont, capacity];
 
             _valueP1Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
             _valueP2Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
             _valueP3Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
+            _valueP4Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
         }
     }
 }
