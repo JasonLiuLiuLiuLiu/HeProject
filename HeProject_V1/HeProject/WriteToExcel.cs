@@ -51,6 +51,9 @@ namespace HeProject
         private ICellStyle _sanJiaoStyle;
         private ICellStyle _yuanStyle;
 
+        private ICellStyle _s1P6Style;
+        private ICellStyle _s2P6Style;
+
         public WriteToExcel(ProcessContext context)
         {
             _p1FirstRow = 1;
@@ -103,6 +106,9 @@ namespace HeProject
                 _sanJiaoStyle = workbook.CreateCellStyle();
                 _yuanStyle = workbook.CreateCellStyle();
 
+                _s1P6Style = workbook.CreateCellStyle();
+                _s2P6Style = workbook.CreateCellStyle();
+
                 //https://www.cnblogs.com/love-zf/p/4874098.html
                 _s2P1Style.FillForegroundColor = 13;
                 _s4P1Style.FillForegroundColor = 22;
@@ -136,6 +142,9 @@ namespace HeProject
                 _sanJiaoStyle.FillForegroundColor = 42;
                 _yuanStyle.FillForegroundColor = 41;
 
+                _s1P6Style.FillForegroundColor = 44;
+                _s2P6Style.FillForegroundColor = 46;
+
                 _s2P1Style.FillPattern = FillPattern.SolidForeground;
                 _s4P1Style.FillPattern = FillPattern.SolidForeground;
                 _s6P1Style.FillPattern = FillPattern.SolidForeground;
@@ -168,6 +177,9 @@ namespace HeProject
                 _wuJiaoStyle.FillPattern = FillPattern.SolidForeground;
                 _sanJiaoStyle.FillPattern = FillPattern.SolidForeground;
                 _yuanStyle.FillPattern = FillPattern.SolidForeground;
+
+                _s1P6Style.FillPattern = FillPattern.SolidForeground;
+                _s2P6Style.FillPattern = FillPattern.SolidForeground;
 
                 #endregion SetStyle
 
@@ -233,9 +245,18 @@ namespace HeProject
 
                     #endregion P4
 
+                    #region P5
                     SetTotalValue(row, index);
                     SetReLengValue(row, index);
-                    SetShapeValue(row,index);
+                    SetShapeValue(row, index);
+                    #endregion
+
+                    #region P6
+
+                    SetS1S2P6Value(row,index);
+
+                    #endregion
+
                 }
                 SaveFile(workbook);
             }
@@ -360,6 +381,12 @@ namespace HeProject
             var chong = row.CreateCell(StepLength.DisplayTotal * 4 + 9);
             chong.SetCellValue("重");
             chong.CellStyle = _headerStyle;
+            var biao = row.CreateCell(StepLength.DisplayTotal * 4 + 10);
+            biao.SetCellValue("标");
+            biao.CellStyle = _headerStyle;
+            var biaoSum = row.CreateCell(StepLength.DisplayTotal * 4 + 11);
+            biaoSum.SetCellValue("Sum");
+            biaoSum.CellStyle = _headerStyle;
 
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 0, StepLength.P2 - 1));
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.P2, StepLength.P2 + StepLength.P4 - 1));
@@ -401,6 +428,8 @@ namespace HeProject
             sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 7, 1000);
             sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 8, 1000);
             sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 9, 1000);
+            sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 10, 1000);
+            sheet.SetColumnWidth(StepLength.DisplayTotal * 4 + 11, 1000);
 
 
         }
@@ -835,7 +864,7 @@ namespace HeProject
             var yuanCell = row.CreateCell(beforeColumn + 2);
             var chongCell = row.CreateCell(beforeColumn + 3);
 
-            wujiaoCell.SetCellValue(_context.GetP5Value<int>(3,rowIndex,0));
+            wujiaoCell.SetCellValue(_context.GetP5Value<int>(3, rowIndex, 0));
             sanjiaoCell.SetCellValue(_context.GetP5Value<int>(3, rowIndex, 1));
             yuanCell.SetCellValue(_context.GetP5Value<int>(3, rowIndex, 2));
             chongCell.SetCellValue(_context.GetP5Value<int>(3, rowIndex, 3));
@@ -846,6 +875,22 @@ namespace HeProject
             chongCell.CellStyle = _s8P1Style;
         }
 
+        #endregion
+
+        #region SetP6Value
+
+        private void SetS1S2P6Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.DisplayTotal * 4 + 10;
+            var biaoCell = row.CreateCell(beforeColumn);
+            var biaoSumCell = row.CreateCell(beforeColumn + 1);
+
+            biaoCell.SetCellValue(_context.GetP6Value<int>(1, rowIndex, 24));
+            biaoSumCell.SetCellValue(_context.GetP6Value<int>(2, rowIndex, 0));
+
+            biaoCell.CellStyle = _wuJiaoStyle;
+            biaoSumCell.CellStyle = _sanJiaoStyle;
+        }
         #endregion
 
         private void SaveFile(IWorkbook workBook)
