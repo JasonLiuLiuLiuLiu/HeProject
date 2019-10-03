@@ -8,7 +8,6 @@ using HeProject.ProgressHandler.P1;
 using HeProject.ProgressHandler.P2;
 using HeProject.ProgressHandler.P3;
 using HeProject.ProgressHandler.P4;
-using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
@@ -95,12 +94,14 @@ namespace HeProject
                 currentP4Block.LinkTo(block, new DataflowLinkOptions() { PropagateCompletion = true });
                 currentP4Block = block;
             }
-            var p4EndBlock = currentP4Block;
+            var s25P4Block = CreateP4Block(25);
+            currentP4Block.LinkTo(s25P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            var p4EndBlock = s25P4Block;
             var finallyP4Block = new ActionBlock<int>(x =>
             {
                 // Console.WriteLine(x);
             });
-            p4EndBlock.LinkTo(finallyP4Block, new DataflowLinkOptions() {PropagateCompletion = true});
+            p4EndBlock.LinkTo(finallyP4Block, new DataflowLinkOptions() { PropagateCompletion = true });
 
             #endregion
 
@@ -281,7 +282,7 @@ namespace HeProject
                         }
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     Console.WriteLine("输入文件被占用,请关闭该文件!");
                     Console.ReadKey();

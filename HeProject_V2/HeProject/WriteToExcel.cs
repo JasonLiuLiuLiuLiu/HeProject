@@ -244,6 +244,7 @@ namespace HeProject
                     SetP4S22Value(row, index);
                     SetP4S23Value(row, index);
                     SetP4S24Value(row, index);
+                    SetP4S25Value(row, index);
 
                     #endregion
 
@@ -322,6 +323,8 @@ namespace HeProject
             var s22p4 = row.CreateCell(StepLength.SourceLength * 24);
             var s23p4 = row.CreateCell(StepLength.SourceLength * 25);
             var s24p4 = row.CreateCell(StepLength.SourceLength * 26);
+            var s251p4 = row.CreateCell(StepLength.SourceLength * 27 + 0);
+            var s252p4 = row.CreateCell(StepLength.SourceLength * 27 + 1);
 
             s1p4.SetCellValue("A总");
             s2p4.SetCellValue("B总");
@@ -347,6 +350,8 @@ namespace HeProject
             s22p4.SetCellValue("1序");
             s23p4.SetCellValue("2序");
             s24p4.SetCellValue("3序");
+            s251p4.SetCellValue("1");
+            s252p4.SetCellValue("2");
 
             s1p4.CellStyle = _headerStyle;
             s2p4.CellStyle = _headerStyle;
@@ -372,6 +377,8 @@ namespace HeProject
             s22p4.CellStyle = _headerStyle;
             s23p4.CellStyle = _headerStyle;
             s24p4.CellStyle = _headerStyle;
+            s251p4.CellStyle = _headerStyle;
+            s252p4.CellStyle = _headerStyle;
 
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 0, StepLength.SourceLength * 1 - 1));
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 1, StepLength.SourceLength * 2 - 1));
@@ -838,6 +845,20 @@ namespace HeProject
                 if (value > 0)
                     cell.SetCellValue(value);
             }
+        }
+
+        private void SetP4S25Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.SourceLength * 27;
+            var value = _context.GetP4Value<int>(25, rowIndex, 0);
+            var cell = row.CreateCell(beforeColumn);
+            cell.CellStyle = _s22P4Style;
+            cell.SetCellValue(value);
+
+            var value2 = _context.GetP4Value<int>(25, rowIndex, 1);
+            var cell2 = row.CreateCell(beforeColumn+1);
+            cell2.CellStyle = _s23P4Style;
+            cell2.SetCellValue(value2);
         }
 
         #endregion
