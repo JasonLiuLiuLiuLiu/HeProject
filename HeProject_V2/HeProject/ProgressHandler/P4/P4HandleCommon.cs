@@ -13,6 +13,7 @@ namespace HeProject.ProgressHandler.P4
         {
             try
             {
+                context.SetP4StepState(step + 6, row, true);
                 _step = step;
                 List<int> order = new List<int>();
                 bool[] handled = new bool[StepLength.SourceLength];
@@ -67,8 +68,10 @@ namespace HeProject.ProgressHandler.P4
                                 sum45 += valueCount;
                                 break;
                         }
+                        context.SetP4Value(step+6,row,i,valueCount);
                     }
                 }
+                
                 context.SetP4Value(step, row, 0, sum01);
                 context.SetP4Value(step, row, 1, sum23);
                 context.SetP4Value(step, row, 2, sum45);
@@ -101,8 +104,8 @@ namespace HeProject.ProgressHandler.P4
                 if (handled[valuePair.Key])
                     continue;
 
-                var sameCondition = orderKeyValuePair.Where(u => u.Value.DistanceLength == valuePair.Value.DistanceLength)
-                    .Where(u => u.Value.ValueLength == valuePair.Value.ValueLength).Where(u => u.Value.ValueLength == valuePair.Value.ValueCount).ToArray();
+                var sameCondition = orderKeyValuePair.Where(u => u.Value.Key == valuePair.Value.Key)
+                    .Where(u => u.Value.Value == valuePair.Value.Value).ToArray();
                 if (sameCondition.Count() > 1)
                 {
                     if (row < 1)
@@ -123,9 +126,9 @@ namespace HeProject.ProgressHandler.P4
             }
         }
 
-        private List<KeyValuePair<int, OrderParams>> GetOrder(int row, ProcessContext context, int[] columns = null)
+        private List<KeyValuePair<int, KeyValuePair<int,int>>> GetOrder(int row, ProcessContext context, int[] columns = null)
         {
-            Dictionary<int, OrderParams> distance = new Dictionary<int, OrderParams>();
+            Dictionary<int, KeyValuePair<int, int>> distance = new Dictionary<int, KeyValuePair<int, int>>();
             for (int i = 0; i < StepLength.SourceLength; i++)
             {
                 if (columns != null && !columns.Contains(i))
@@ -162,21 +165,9 @@ namespace HeProject.ProgressHandler.P4
                         distanceLength = row - 1;
 
                 }
-                distance.Add(i, new OrderParams
-                {
-                    DistanceLength = distanceLength,
-                    ValueLength = valueLength,
-                    ValueCount = count
-                });
+                distance.Add(i, new KeyValuePair<int, int>(distanceLength,valueLength));
             }
-            return distance.OrderBy(u => u.Value.DistanceLength).ThenBy(u => u.Key).ThenByDescending(u => u.Value.ValueLength).ThenByDescending(u => u.Value.ValueLength).ToList();
-        }
-
-        public class OrderParams
-        {
-            public int DistanceLength { get; set; }
-            public int ValueLength { get; set; }
-            public int ValueCount { get; set; }
+            return distance.OrderBy(u => u.Value.Key).ThenByDescending(u => u.Value.Value).ThenBy(u => u.Key).ToList();
         }
     }
 }

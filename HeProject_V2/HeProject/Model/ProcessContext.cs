@@ -388,7 +388,7 @@ namespace HeProject.Model
             _stepP1State = new bool[StepCont, capacity];
             _stepP2State = new bool[StepCont, capacity];
             _stepP3State = new bool[StepCont, capacity];
-            _stepP4State = new bool[20, capacity];
+            _stepP4State = new bool[30, capacity];
 
             _valueP1Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
             _valueP2Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
