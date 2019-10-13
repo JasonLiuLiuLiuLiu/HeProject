@@ -95,8 +95,12 @@ namespace HeProject
                 currentP4Block = block;
             }
             var s25P4Block = CreateP4Block(25);
+            var s26P4Block = CreateP4Block(26);
+            var s27P4Block = CreateP4Block(27);
             currentP4Block.LinkTo(s25P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
-            var p4EndBlock = s25P4Block;
+            s25P4Block.LinkTo(s26P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s26P4Block.LinkTo(s27P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            var p4EndBlock = s27P4Block;
             var finallyP4Block = new ActionBlock<int>(x =>
             {
                 // Console.WriteLine(x);
