@@ -10,37 +10,50 @@ namespace HeProject.ProgressHandler.P1
         private int _step;
         public string GetOrder(int step, int row, ProcessContext context)
         {
-            _step = step;
-            List<int> order = new List<int>();
-            bool[] handled = new bool[StepLength.SourceLength];
-            if (row == 0)
+            try
             {
+                _step = step;
+                List<int> order = new List<int>();
+                bool[] handled = new bool[StepLength.SourceLength];
+                if (row == 0)
+                {
+                    for (int i = 0; i < StepLength.SourceLength; i++)
+                    {
+                        if (handled[i])
+                            continue;
+                        order.Add(i);
+                    }
+                }
+                else
+                {
+                    Handle(row, context, order, handled);
+                }
+
+                var beforePaiXu = context.GetP1RowResult(step - 1, row);
+                if (beforePaiXu == null || beforePaiXu.Count == 0)
+                    return null;
+
+                var indexs = beforePaiXu.Where(u => (bool)u.Value).Select(u => u.Key);
                 for (int i = 0; i < StepLength.SourceLength; i++)
                 {
-                    if (handled[i])
-                        continue;
-                    order.Add(i);
+                    if (indexs.Contains(order[i]))
+                    {
+                        context.SetP1Value(step, row, i, true);
+                    }
                 }
-            }
-            else
-            {
-                Handle(row, context, order, handled);
-            }
 
-            var beforePaiXu = context.GetP1RowResult(step - 1, row);
-            if (beforePaiXu == null || beforePaiXu.Count == 0)
-                return null;
-
-            var index = beforePaiXu.Where(u => (bool)u.Value).Select(u => u.Key).ToArray();
-            for (int i = 0; i <= StepLength.SourceLength; i++)
-            {
-                if (index.Contains(order[i]))
+                for (int i = 0; i < StepLength.SourceLength; i++)
                 {
-                    context.SetP1Value(step, row, i, true);
-                    break;
+                    context.SetP1Value(step + 3, row, order[i], i);
                 }
+
+                return null;
             }
-            return null;
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         private void Handle(int row, ProcessContext context, List<int> order, bool[] handled, int[] columns = null)

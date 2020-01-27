@@ -1,11 +1,13 @@
 ﻿using System;
+using System.IO;
 using HeProject;
+using Newtonsoft.Json;
 
 namespace HeBoss
 {
     internal class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
             try
             {
@@ -15,10 +17,9 @@ namespace HeBoss
                 var pipeline = dataflow.CreatePipeLine();
                 dataflow.Process("_Source.xlsx");
                 pipeline.Wait();
-
-                //var writer = new WriteToExcel(dataflow.ProcessContext);
-                //writer.Write();
-                Console.ReadLine();
+                var writer = new WriteToExcel(dataflow.ProcessContext);
+                writer.Write();
+                File.WriteAllText("log.txt", JsonConvert.SerializeObject(dataflow.ProcessContext));
             }
             catch (Exception e)
             {

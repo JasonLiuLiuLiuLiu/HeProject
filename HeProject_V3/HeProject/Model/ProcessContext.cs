@@ -12,10 +12,10 @@ namespace HeProject.Model
         private readonly bool[,] _stepP4State;
 
 
-        private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP1Map;
-        private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP2Map;
-        private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP3Map;
-        private readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP4Map;
+        public readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP1Map;
+        public readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP2Map;
+        public readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP3Map;
+        public readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> _valueP4Map;
         public readonly int Capacity;
         private const int StepCont = 11;
 

@@ -40,14 +40,14 @@ namespace HeProject
             for (var i = 2; i < 4; i++)
             {
                 var newBlock = CreateP1Block(i);
-                p1CurrentBlock.LinkTo(newBlock, new DataflowLinkOptions() {PropagateCompletion = true});
+                p1CurrentBlock.LinkTo(newBlock, new DataflowLinkOptions() { PropagateCompletion = true });
                 p1CurrentBlock = newBlock;
             }
 
 
             var finallyP1Block = new ActionBlock<int>(x =>
             {
-                // Console.WriteLine(x);
+                //Console.WriteLine(x);
             });
             p1CurrentBlock.LinkTo(finallyP1Block, new DataflowLinkOptions() { PropagateCompletion = true });
 
@@ -58,8 +58,8 @@ namespace HeProject
 
         private void PrintState(ProgressState state)
         {
-            if (state.PNum == 4)
-                Console.WriteLine($"第{state.Step}步执行成功!");
+            //if (state.PNum == 4)
+            //Console.WriteLine($"第{state.Step}步第{state.Row}行执行成功!");
             //Task.Run(() =>
             //{
             //    lock (_lock)
@@ -89,8 +89,7 @@ namespace HeProject
                 {
                     var handler = (IP1Handler)Activator.CreateInstance(Type.GetType($"HeProject.S{step}Handler") ?? throw new InvalidOperationException());
                     var result = handler.Hnalder(x, ProcessContext);
-                    if (result != null)
-                        PrintState(new ProgressState(step, -1) { ErrorMessage = result });
+                    PrintState(new ProgressState(step, x) { ErrorMessage = result });
                     ProcessContext.SetP1StepState(step, x, true);
                 }
                 catch (Exception e)
@@ -99,7 +98,6 @@ namespace HeProject
                 }
                 return x;
             }, _executionDataFlowBlockOptions);
-            progressBlock.Completion.ContinueWith(t => { PrintState(new ProgressState(step, int.MinValue)); });
             return progressBlock;
         }
 
@@ -136,15 +134,26 @@ namespace HeProject
                     {
                         if (sheet.GetRow(row) != null) //null is when the row only contains empty cells
                         {
-                            if (!CheckSourceData(sheet.GetRow(row)))
+                            if (!CheckSourceData(sheet.GetRow(row), out var message))
                             {
-                                Console.WriteLine($"检查到第{row}行数据格式有误,请关闭此程序并检查导入数据或清空表格重新导入!");
+                                Console.WriteLine($"检查到第{row}行数据格式有误,{message},请关闭此程序并检查导入数据或清空表格重新导入!");
                                 return;
                             }
 
-                            ProcessContext.SetP1Value(0, row, sheet.GetRow(row).Where(u => !string.IsNullOrEmpty(u.ToString())).FirstOrDefault(u => ((int)u.NumericCellValue % 11) == u.ColumnIndex).ColumnIndex, true);
+                            var values = sheet.GetRow(row).Where(u => !string.IsNullOrEmpty(u.ToString()))
+                                .Where(u => ((int)u.NumericCellValue % 11) == u.ColumnIndex).Select(u => u.ColumnIndex)
+                                .ToArray();
+                            foreach (var value in values)
+                            {
+                                ProcessContext.SetP1Value(0, row, value, true);
+                            }
                             ProcessContext.SetP1StepState(0, row, true);
                             nextBlock.Post(row);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"检查到第{row}行数据为空,请检查源数据!");
+                            return;
                         }
                     }
                 }
@@ -160,11 +169,22 @@ namespace HeProject
             });
         }
 
-        private bool CheckSourceData(IRow row)
+        private bool CheckSourceData(IRow row, out string message)
         {
-            var cells = row.Cells.Where(u => !string.IsNullOrEmpty(u.ToString())).Where(u => ((int)u.NumericCellValue % 11) == u.ColumnIndex);
+            var cells = row.Cells.Where(u => !string.IsNullOrEmpty(u.ToString())).Where(u => ((int)u.NumericCellValue % 11) == u.ColumnIndex).ToArray();
+            if (!cells.Any())
+            {
+                message = "不存在任何数据,请检查源文件";
+                return false;
+            }
+
             if (cells.Count() == row.Cells.Count())
+            {
+                message = null;
                 return true;
+            }
+
+            message = "存在错误数据";
             return false;
         }
 
