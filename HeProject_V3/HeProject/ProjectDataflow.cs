@@ -75,6 +75,10 @@ namespace HeProject
 
             });
             p1CurrentBlock.LinkTo(finallyP1Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            await finallyP1Block.Completion.ContinueWith(x =>
+            {
+                p2StartBlock.Complete();
+            });
 
             await p2CurrentBlock.Completion;
         }

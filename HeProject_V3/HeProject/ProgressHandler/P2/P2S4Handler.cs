@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using HeProject.Model;
 
 namespace HeProject.ProgressHandler.P2
@@ -14,22 +13,22 @@ namespace HeProject.ProgressHandler.P2
             {
                 if (source[1] < 5)
                 {
-
+                    context.SetP2Value(stage, 4, row, 0, true);
                 }
                 else
                 {
-                    
+                    context.SetP2Value(stage, 4, row, 1, true);
                 }
             }
             else
             {
                 if (source[1] < 5)
                 {
-
+                    context.SetP2Value(stage, 4, row, 2, true);
                 }
                 else
                 {
-
+                    context.SetP2Value(stage, 4, row, 3, true);
                 }
             }
 
