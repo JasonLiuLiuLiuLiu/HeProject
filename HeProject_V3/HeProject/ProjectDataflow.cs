@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using HeProject.Model;
 using HeProject.ProgressHandler.P1;
+using HeProject.ProgressHandler.P2;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
@@ -43,19 +44,39 @@ namespace HeProject
                 p1CurrentBlock.LinkTo(newBlock, new DataflowLinkOptions() { PropagateCompletion = true });
                 p1CurrentBlock = newBlock;
             }
+            #endregion
 
+            #region P2
+
+            var p2StartBlock = CreateP2Block(1);
+            var p2CurrentBlock = p2StartBlock;
+            for (int i = 2; i < 8; i++)
+            {
+                var newBlock = CreateP2Block(i);
+                p2CurrentBlock.LinkTo(newBlock, new DataflowLinkOptions() { PropagateCompletion = true });
+                p2CurrentBlock = newBlock;
+            }
+            #endregion
 
             var finallyP1Block = new ActionBlock<int>(x =>
             {
-                //Console.WriteLine(x);
+                var stepIndex = 7;
+                for (int i = 0; i < 6; i++)
+                {
+                    if (ProcessContext.GetP1StepState(stepIndex + i, x))
+                    {
+                        p2StartBlock.Post(new P2BlockContext
+                        {
+                            Row = x,
+                            Stage = i
+                        });
+                    }
+                }
+
             });
             p1CurrentBlock.LinkTo(finallyP1Block, new DataflowLinkOptions() { PropagateCompletion = true });
 
-            #endregion
-
-
-
-            await finallyP1Block.Completion;
+            await p2CurrentBlock.Completion;
         }
 
         private void PrintState(ProgressState state)
@@ -103,6 +124,25 @@ namespace HeProject
             return progressBlock;
         }
 
+        private IPropagatorBlock<P2BlockContext, P2BlockContext> CreateP2Block(int step)
+        {
+            var progressBlock = new TransformBlock<P2BlockContext, P2BlockContext>(x =>
+            {
+                try
+                {
+                    var handler = (IP2Handler)Activator.CreateInstance(Type.GetType($"HeProject.ProgressHandler.P2.S{step}Handler") ?? throw new InvalidOperationException());
+                    var result = handler.Handler(x.Stage, x.Row, ProcessContext);
+                    PrintState(new ProgressState(step, x.Row) { ErrorMessage = result });
+                    ProcessContext.SetP2StepState(x.Stage, step, x.Row, true);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                return x;
+            }, _executionDataFlowBlockOptions);
+            return progressBlock;
+        }
         #endregion CreateBlock
 
         #region ReadExcel
