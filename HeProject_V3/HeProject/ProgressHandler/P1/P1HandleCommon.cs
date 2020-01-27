@@ -46,6 +46,7 @@ namespace HeProject.ProgressHandler.P1
                 {
                     context.SetP1Value(step + 3, row, order[i], i);
                 }
+                context.SetP1StepState(step + 3, row, true);
 
                 return null;
             }

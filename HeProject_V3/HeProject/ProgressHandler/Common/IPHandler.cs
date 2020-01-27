@@ -4,6 +4,6 @@ namespace HeProject.ProgressHandler.Common
 {
     public interface IPHandler
     {
-        string Hnalder(int row, ProcessContext context);
+        string Handler(int row, ProcessContext context);
     }
 }

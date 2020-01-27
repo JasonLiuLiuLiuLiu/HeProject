@@ -37,7 +37,7 @@ namespace HeProject
             #region P1
             var p1CurrentBlock = CreateP1Block(1);
             sourceBroadCast.LinkTo(p1CurrentBlock, new DataflowLinkOptions() { PropagateCompletion = true });
-            for (var i = 2; i < 4; i++)
+            for (var i = 2; i < 5; i++)
             {
                 var newBlock = CreateP1Block(i);
                 p1CurrentBlock.LinkTo(newBlock, new DataflowLinkOptions() { PropagateCompletion = true });
@@ -53,13 +53,15 @@ namespace HeProject
 
             #endregion
 
+
+
             await finallyP1Block.Completion;
         }
 
         private void PrintState(ProgressState state)
         {
             //if (state.PNum == 4)
-            //Console.WriteLine($"第{state.Step}步第{state.Row}行执行成功!");
+            Console.WriteLine($"第{state.Step}步第{state.Row}行执行成功!");
             //Task.Run(() =>
             //{
             //    lock (_lock)
@@ -88,7 +90,7 @@ namespace HeProject
                 try
                 {
                     var handler = (IP1Handler)Activator.CreateInstance(Type.GetType($"HeProject.S{step}Handler") ?? throw new InvalidOperationException());
-                    var result = handler.Hnalder(x, ProcessContext);
+                    var result = handler.Handler(x, ProcessContext);
                     PrintState(new ProgressState(step, x) { ErrorMessage = result });
                     ProcessContext.SetP1StepState(step, x, true);
                 }
