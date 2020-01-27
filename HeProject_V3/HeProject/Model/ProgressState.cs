@@ -13,6 +13,7 @@ namespace HeProject.Model
             PNum = pNum;
         }
 
+        public int Stage { get; set; }
         public int PNum { get; set; }
 
         public int Step { get; set; }

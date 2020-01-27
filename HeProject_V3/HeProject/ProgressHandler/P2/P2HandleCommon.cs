@@ -11,10 +11,13 @@ namespace HeProject.ProgressHandler.P2
         private int _step;
         private int _stage;
         private int _offset;
-        public string GetOrder(int stage, int step, int row, ProcessContext p2Context,int offset)
+        public string GetOrder(int stage, int step, int row, ProcessContext p2Context, int offset=1)
         {
             try
             {
+                if (row > 7)
+                    Console.WriteLine($"In:{stage}:{step}:{row}");
+
                 _step = step;
                 _stage = stage;
                 _offset = offset;
@@ -46,6 +49,9 @@ namespace HeProject.ProgressHandler.P2
                         p2Context.SetP2Value(_stage, step, row, i, true);
                     }
                 }
+
+                if (row > 7)
+                    Console.WriteLine($"Out:{stage}:{step}:{row}");
 
                 return null;
             }

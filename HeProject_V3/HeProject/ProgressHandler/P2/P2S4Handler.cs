@@ -9,9 +9,10 @@ namespace HeProject.ProgressHandler.P2
         public string Handler(int stage, int row, ProcessContext context)
         {
             var source = context.GetP1RowResult(stage + 7, row).Select(u => (int)u.Value).ToArray();
-            if (source[0] < 5)
+
+            if (source[1] % 2 == 1)
             {
-                if (source[1] < 5)
+                if (source[2] % 2 == 1)
                 {
                     context.SetP2Value(stage, 4, row, 0, true);
                 }
@@ -22,7 +23,7 @@ namespace HeProject.ProgressHandler.P2
             }
             else
             {
-                if (source[1] < 5)
+                if (source[2] % 2 == 1)
                 {
                     context.SetP2Value(stage, 4, row, 2, true);
                 }

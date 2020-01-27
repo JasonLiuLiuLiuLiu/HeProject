@@ -50,7 +50,7 @@ namespace HeProject
 
             var p2StartBlock = CreateP2Block(1);
             var p2CurrentBlock = p2StartBlock;
-            for (int i = 2; i < 8; i++)
+            for (int i = 2; i < 10; i++)
             {
                 var newBlock = CreateP2Block(i);
                 p2CurrentBlock.LinkTo(newBlock, new DataflowLinkOptions() { PropagateCompletion = true });
@@ -80,13 +80,20 @@ namespace HeProject
                 p2StartBlock.Complete();
             });
 
-            await p2CurrentBlock.Completion;
+            var finallyP2Block = new ActionBlock<P2BlockContext>(x =>
+              {
+                //Console.WriteLine($"Stage:{x.Stage},Row:{x.Row}");
+            });
+            p2CurrentBlock.LinkTo(finallyP2Block, new DataflowLinkOptions() { PropagateCompletion = true });
+
+            await finallyP2Block.Completion;
         }
 
         private void PrintState(ProgressState state)
         {
             //if (state.PNum == 4)
-            Console.WriteLine($"第{state.Step}步第{state.Row}行执行成功!");
+            if (state.Stage != 0)
+                Console.WriteLine($"阶段{state.Stage}第{state.Step}步第{state.Row}行执行成功!");
             //Task.Run(() =>
             //{
             //    lock (_lock)
@@ -116,7 +123,7 @@ namespace HeProject
                 {
                     var handler = (IP1Handler)Activator.CreateInstance(Type.GetType($"HeProject.S{step}Handler") ?? throw new InvalidOperationException());
                     var result = handler.Handler(x, ProcessContext);
-                    PrintState(new ProgressState(step, x) { ErrorMessage = result });
+                    //PrintState(new ProgressState(step, x) { ErrorMessage = result });
                     ProcessContext.SetP1StepState(step, x, true);
                 }
                 catch (Exception e)
@@ -134,9 +141,9 @@ namespace HeProject
             {
                 try
                 {
-                    var handler = (IP2Handler)Activator.CreateInstance(Type.GetType($"HeProject.ProgressHandler.P2.S{step}Handler") ?? throw new InvalidOperationException());
+                    var handler = (IP2Handler)Activator.CreateInstance(Type.GetType($"HeProject.ProgressHandler.P2.P2S{step}Handler") ?? throw new InvalidOperationException());
                     var result = handler.Handler(x.Stage, x.Row, ProcessContext);
-                    PrintState(new ProgressState(step, x.Row) { ErrorMessage = result });
+                    PrintState(new ProgressState(step, x.Row) { ErrorMessage = result, Stage = x.Stage });
                     ProcessContext.SetP2StepState(x.Stage, step, x.Row, true);
                 }
                 catch (Exception e)

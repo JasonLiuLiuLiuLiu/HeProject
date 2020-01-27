@@ -14,7 +14,7 @@ namespace HeProject.ProgressHandler.P2
             {
                 if (source[1] % 2 == 1)
                 {
-                    context.SetP2Value(stage,1,row,0,true);
+                    context.SetP2Value(stage, 1, row, 0, true);
                 }
                 else
                 {

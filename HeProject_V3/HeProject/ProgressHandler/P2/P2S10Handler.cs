@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using HeProject.Model;
 
 namespace HeProject.ProgressHandler.P2
@@ -7,7 +8,31 @@ namespace HeProject.ProgressHandler.P2
     {
         public string Handler(int stage, int row, ProcessContext context)
         {
-           return new P2HandleCommon().GetOrder(stage,10,row,context,9);
+            var source = context.GetP1RowResult(stage + 7, row).Select(u => (int)u.Value).ToArray();
+            if (source[0] < 5)
+            {
+                if (source[1] < 5)
+                {
+                    context.SetP2Value(stage, 10, row, 0, true);
+                }
+                else
+                {
+                    context.SetP2Value(stage, 10, row, 1, true);
+                }
+            }
+            else
+            {
+                if (source[1] < 5)
+                {
+                    context.SetP2Value(stage, 10, row, 2, true);
+                }
+                else
+                {
+                    context.SetP2Value(stage, 10, row, 3, true);
+                }
+            }
+
+            return null;
         }
     }
 }

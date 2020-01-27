@@ -5,13 +5,14 @@ namespace HeProject.ProgressHandler.P2
 {
     public class P2S7Handler : IP2Handler
     {
-        private static readonly int[] Ying = new[] { 1, 2, 5, 8, 9 };
+        
         public string Handler(int stage, int row, ProcessContext context)
         {
             var source = context.GetP1RowResult(stage + 7, row).Select(u => (int)u.Value).ToArray();
-            if (Ying.Contains(source[0]))
+
+            if (source[0] % 2 == 1)
             {
-                if (Ying.Contains(source[1]))
+                if (source[2] % 2 == 1)
                 {
                     context.SetP2Value(stage, 7, row, 0, true);
                 }
@@ -22,7 +23,7 @@ namespace HeProject.ProgressHandler.P2
             }
             else
             {
-                if (Ying.Contains(source[1]))
+                if (source[2] % 2 == 1)
                 {
                     context.SetP2Value(stage, 7, row, 2, true);
                 }

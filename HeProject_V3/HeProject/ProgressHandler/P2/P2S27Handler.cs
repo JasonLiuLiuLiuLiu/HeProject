@@ -7,7 +7,7 @@ namespace HeProject.ProgressHandler.P2
     {
         public string Handler(int stage, int row, ProcessContext context)
         {
-            return new P2HandleCommon().GetOrder(stage, 27, row, context, 1);
+            return new P2HandleCommon().GetOrder(stage, 27, row, context);
         }
     }
 }

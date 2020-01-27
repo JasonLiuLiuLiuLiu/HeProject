@@ -16,7 +16,8 @@ namespace HeProject.Model
         private const int StepCont = 50;
 
         private readonly object _lockP1 = new object();
-        private readonly object _lock = new object();
+        private readonly object _lockP2 = new object();
+        private readonly object _lockP2State = new object();
 
         #region P1
 
@@ -121,7 +122,7 @@ namespace HeProject.Model
         {
             try
             {
-                lock (_lock)
+                lock (_lockP2)
                 {
                     if (!ValueP2Map.ContainsKey(stage))
                         ValueP2Map.Add(stage, new Dictionary<int, Dictionary<int, Dictionary<int, object>>>());
@@ -154,9 +155,11 @@ namespace HeProject.Model
                 {
                     if (loop > 100)
                         return default(T);
+                    if (loop > 5)
+                        Console.WriteLine($"stage:{stage},step:{step},row:{row},column:{column}");
                     Thread.Sleep(50);
                 }
-                lock (_lock)
+                lock (_lockP2)
                 {
                     if (!ValueP2Map.ContainsKey(stage))
                         ValueP2Map.Add(stage, new Dictionary<int, Dictionary<int, Dictionary<int, object>>>());
@@ -180,8 +183,12 @@ namespace HeProject.Model
 
         private void CheckP2StepStage(int stage)
         {
-            if (!_stepP2State.ContainsKey(stage))
+            if (_stepP2State.ContainsKey(stage)) return;
+
+            lock (_lockP2State)
             {
+                if (_stepP2State.ContainsKey(stage))
+                    return;
                 _stepP2State.Add(stage, new bool[StepCont, Capacity]);
             }
         }
@@ -194,9 +201,11 @@ namespace HeProject.Model
             {
                 if (loop > 100)
                     return new Dictionary<int, object>(Capacity);
+                if (loop > 5)
+                    Console.WriteLine($"stage:{stage},step:{step},row:{row}");
                 Thread.Sleep(50);
             }
-            lock (_lock)
+            lock (_lockP2)
             {
                 if (!ValueP2Map.ContainsKey(stage))
                     ValueP2Map.Add(stage, new Dictionary<int, Dictionary<int, Dictionary<int, object>>>());
