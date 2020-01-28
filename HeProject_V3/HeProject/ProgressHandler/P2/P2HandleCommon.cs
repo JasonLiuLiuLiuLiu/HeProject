@@ -11,21 +11,19 @@ namespace HeProject.ProgressHandler.P2
         private int _step;
         private int _stage;
         private int _offset;
+        private int _columnWidth = 4;
         public string GetOrder(int stage, int step, int row, ProcessContext p2Context, int offset=1)
         {
             try
             {
-                if (row > 7)
-                    Console.WriteLine($"In:{stage}:{step}:{row}");
-
                 _step = step;
                 _stage = stage;
                 _offset = offset;
                 List<int> order = new List<int>();
-                bool[] handled = new bool[StepLength.SourceLength];
+                bool[] handled = new bool[_columnWidth];
                 if (row == 0)
                 {
-                    for (int i = 0; i < StepLength.SourceLength; i++)
+                    for (int i = 0; i < _columnWidth; i++)
                     {
                         if (handled[i])
                             continue;
@@ -42,16 +40,13 @@ namespace HeProject.ProgressHandler.P2
                     return null;
 
                 var indexs = beforePaiXu.Where(u => (bool)u.Value).Select(u => u.Key).ToArray();
-                for (int i = 0; i < StepLength.SourceLength; i++)
+                for (int i = 0; i < _columnWidth; i++)
                 {
                     if (indexs.Contains(order[i]))
                     {
                         p2Context.SetP2Value(_stage, step, row, i, true);
                     }
                 }
-
-                if (row > 7)
-                    Console.WriteLine($"Out:{stage}:{step}:{row}");
 
                 return null;
             }
@@ -109,7 +104,7 @@ namespace HeProject.ProgressHandler.P2
             try
             {
                 Dictionary<int, KeyValuePair<int, int>> distance = new Dictionary<int, KeyValuePair<int, int>>();
-                for (int i = 0; i < StepLength.SourceLength; i++)
+                for (int i = 0; i < _columnWidth; i++)
                 {
                     if (columns != null && !columns.Contains(i))
                         continue;
