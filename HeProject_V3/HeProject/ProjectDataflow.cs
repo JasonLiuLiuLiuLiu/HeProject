@@ -81,7 +81,7 @@ namespace HeProject
 
         private void PrintState(ProgressState state)
         {
-           // Console.WriteLine($"阶段{state.Stage}第{state.Step}步第{state.Row}行执行成功!");
+            // Console.WriteLine($"阶段{state.Stage}第{state.Step}步第{state.Row}行执行成功!");
         }
 
 
@@ -167,8 +167,7 @@ namespace HeProject
                                 return;
                             }
 
-                            var values = sheet.GetRow(row).Where(u => !string.IsNullOrEmpty(u.ToString()))
-                                .Where(u => ((int)u.NumericCellValue % 11) == u.ColumnIndex).Select(u => u.ColumnIndex)
+                            var values = sheet.GetRow(row).Where(u => !string.IsNullOrEmpty(u.ToString())).Select(u => u.ColumnIndex)
                                 .ToArray();
                             foreach (var value in values)
                             {
@@ -203,21 +202,16 @@ namespace HeProject
 
         private bool CheckSourceData(IRow row, out string message)
         {
-            var cells = row.Cells.Where(u => !string.IsNullOrEmpty(u.ToString())).Where(u => ((int)u.NumericCellValue % 11) == u.ColumnIndex).ToArray();
+            var cells = row.Cells.Where(u => !string.IsNullOrEmpty(u.ToString())).ToArray();
             if (!cells.Any())
             {
                 message = "不存在任何数据,请检查源文件";
                 return false;
             }
 
-            if (cells.Count() == row.Cells.Count())
-            {
-                message = null;
-                return true;
-            }
 
-            message = "存在错误数据";
-            return false;
+            message = null;
+            return true;
         }
 
         #endregion

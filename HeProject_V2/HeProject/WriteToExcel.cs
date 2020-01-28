@@ -245,8 +245,11 @@ namespace HeProject
                     SetP4S23Value(row, index);
                     SetP4S24Value(row, index);
                     SetP4S25Value(row, index);
-                    SetP4S26Value(row,index);
-                    SetP4S27Value(row,index);
+                    SetP4S26Value(row, index);
+                    SetP4S27Value(row, index);
+                    SetP4S28Value(row, index);
+                    SetP4S30Value(row, index);
+                    SetP4S31Value(row, index);
 
                     #endregion
 
@@ -329,6 +332,9 @@ namespace HeProject
             var s252p4 = row.CreateCell(StepLength.SourceLength * 27 + 1);
             var s26p4 = row.CreateCell(StepLength.SourceLength * 27 + 2);
             var s27p4 = row.CreateCell(StepLength.SourceLength * 28 + 2);
+            var s28p4 = row.CreateCell(StepLength.SourceLength * 29 + 2);
+            var s30p4 = row.CreateCell(StepLength.SourceLength * 29 + 6);
+            var s31p4 = row.CreateCell(StepLength.SourceLength * 30 + 6);
 
             s1p4.SetCellValue("A总");
             s2p4.SetCellValue("B总");
@@ -358,6 +364,9 @@ namespace HeProject
             s252p4.SetCellValue("2");
             s26p4.SetCellValue("增1");
             s27p4.SetCellValue("增2");
+            s28p4.SetCellValue("跳");
+            s30p4.SetCellValue("增2序1");
+            s31p4.SetCellValue("增2序2");
 
             s1p4.CellStyle = _headerStyle;
             s2p4.CellStyle = _headerStyle;
@@ -387,6 +396,9 @@ namespace HeProject
             s252p4.CellStyle = _headerStyle;
             s26p4.CellStyle = _headerStyle;
             s27p4.CellStyle = _headerStyle;
+            s28p4.CellStyle = _headerStyle;
+            s30p4.CellStyle = _headerStyle;
+            s31p4.CellStyle = _headerStyle;
 
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 0, StepLength.SourceLength * 1 - 1));
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 1, StepLength.SourceLength * 2 - 1));
@@ -426,6 +438,15 @@ namespace HeProject
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 26, StepLength.SourceLength * 27 - 1));
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 27 + 2, StepLength.SourceLength * 28 + 1));
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 28 + 2, StepLength.SourceLength * 29 + 1));
+
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 29 + 2, StepLength.SourceLength * 29 + 5));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 29 + 6, StepLength.SourceLength * 30 + 5));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 30 + 6, StepLength.SourceLength * 31 + 5));
+
+            for (int i = StepLength.SourceLength * 29 + 2; i < StepLength.SourceLength * 29 + 6; i++)
+            {
+                sheet.SetColumnWidth(i, 1000);
+            }
 
             for (int i = StepLength.SourceLength * 27; i < StepLength.SourceLength * 27 + 14; i++)
             {
@@ -878,7 +899,7 @@ namespace HeProject
 
         private void SetP4S26Value(IRow row, int rowIndex)
         {
-            int beforeColumn = StepLength.SourceLength * 27+2;
+            int beforeColumn = StepLength.SourceLength * 27 + 2;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
                 var value = _context.GetP4Value<int>(26, rowIndex, i - beforeColumn);
@@ -899,6 +920,44 @@ namespace HeProject
                 cell.CellStyle = _s23P4Style;
                 if (value > 0)
                     cell.SetCellValue(value);
+            }
+        }
+
+        private void SetP4S28Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.SourceLength * 29 + 2;
+            for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
+            {
+                var value = _context.GetP4Value<int>(28, rowIndex, i - beforeColumn);
+                var cell = row.CreateCell(i);
+                cell.CellStyle = _s22P4Style;
+                cell.SetCellValue(value);
+            }
+        }
+
+        private void SetP4S30Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.SourceLength * 29 + 6;
+            var valueDic = _context.GetP4RowResult(30, rowIndex);
+            for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
+            {
+                var cell = row.CreateCell(i);
+                cell.CellStyle = _s23P4Style;
+                if (valueDic.ContainsKey(i - beforeColumn) && (bool)valueDic[i - beforeColumn])
+                    cell.SetCellValue(i - beforeColumn);
+            }
+        }
+
+        private void SetP4S31Value(IRow row, int rowIndex)
+        {
+            int beforeColumn = StepLength.SourceLength * 30 + 6;
+            var valueDic = _context.GetP4RowResult(31, rowIndex);
+            for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
+            {
+                var cell = row.CreateCell(i);
+                cell.CellStyle = _s24P4Style;
+                if (valueDic.ContainsKey(i - beforeColumn) && (bool)valueDic[i - beforeColumn])
+                    cell.SetCellValue(i - beforeColumn);
             }
         }
 
