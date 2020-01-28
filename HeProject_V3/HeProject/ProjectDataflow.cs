@@ -127,7 +127,7 @@ namespace HeProject
         private void PrintState(ProgressState state)
         {
             //if (state.PNum == 4)
-            //Console.WriteLine($"阶段{state.Stage}第{state.Step}步第{state.Row}行执行成功!");
+            Console.WriteLine($"阶段{state.Stage}第{state.Step}步第{state.Row}行执行成功!");
             //Task.Run(() =>
             //{
             //    lock (_lock)
@@ -177,7 +177,7 @@ namespace HeProject
                 {
                     var handler = (IP2Handler)Activator.CreateInstance(Type.GetType($"HeProject.ProgressHandler.P2.P2S{step}Handler") ?? throw new InvalidOperationException());
                     var result = handler.Handler(x.Stage, x.Row, ProcessContext);
-                    PrintState(new ProgressState(step, x.Row) { ErrorMessage = result, Stage = x.Stage });
+                    //PrintState(new ProgressState(step, x.Row) { ErrorMessage = result, Stage = x.Stage });
                     ProcessContext.SetP2StepState(x.Stage, step, x.Row, true);
                 }
                 catch (Exception e)
@@ -197,7 +197,7 @@ namespace HeProject
                 {
                     var handler = (IP3Handler)Activator.CreateInstance(Type.GetType($"HeProject.ProgressHandler.P3.P3S{step}Handler") ?? throw new InvalidOperationException());
                     var result = handler.Handler(x, ProcessContext);
-                    //PrintState(new ProgressState(step, x) { ErrorMessage = result });
+                    PrintState(new ProgressState(step, x) { ErrorMessage = result });
                     ProcessContext.SetP3StepState(step, x, true);
                 }
                 catch (Exception e)

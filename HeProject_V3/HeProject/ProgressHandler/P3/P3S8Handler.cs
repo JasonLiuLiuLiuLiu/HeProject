@@ -13,7 +13,7 @@ namespace HeProject.ProgressHandler.P3
                 var values = context.GetP2RowResult(1, i, row);
                 for (int j = 0; j < 4; j++)
                 {
-                    if ((bool)values[j])
+                    if (values.ContainsKey(j) && (bool)values[j])
                     {
                         result[j]++;
                     }
