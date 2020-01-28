@@ -18,9 +18,11 @@ namespace HeProject
         private readonly ExecutionDataflowBlockOptions _executionDataFlowBlockOptions;
         public ProcessContext ProcessContext;
         private ITargetBlock<string> _startBlock;
+        private int extendIndex = 0;
 
-        public ProjectDataFlow()
+        public ProjectDataFlow(int index)
         {
+            extendIndex = index;
             _executionDataFlowBlockOptions = new ExecutionDataflowBlockOptions()
             {
                 MaxDegreeOfParallelism = Environment.ProcessorCount
@@ -138,8 +140,8 @@ namespace HeProject
 
         private void PrintState(ProgressState state)
         {
-            if (state.PNum == 4)
-                Console.WriteLine($"第{state.Step}步执行成功!");
+            //if (state.PNum == 4)
+            //    Console.WriteLine($"第{state.Step}步执行成功!");
             //Task.Run(() =>
             //{
             //    lock (_lock)
@@ -278,7 +280,7 @@ namespace HeProject
                         hssfwb = new XSSFWorkbook(file);
                     }
                     ISheet sheet = hssfwb.GetSheetAt(0);
-                    ProcessContext = new ProcessContext(sheet.LastRowNum + 1);
+                    ProcessContext = new ProcessContext(sheet.LastRowNum + 2);
                     for (int row = 0; row <= sheet.LastRowNum; row++)
                     {
                         if (sheet.GetRow(row) != null) //null is when the row only contains empty cells
@@ -294,6 +296,11 @@ namespace HeProject
                             nextBlock.Post(row);
                         }
                     }
+
+                    var lastRow = sheet.LastRowNum + 1;
+                    ProcessContext.SetP1Value(0, lastRow, extendIndex, true);
+                    ProcessContext.SetP1StepState(0, lastRow, true);
+                    nextBlock.Post(lastRow);
                 }
                 catch (Exception)
                 {

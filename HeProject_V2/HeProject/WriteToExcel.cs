@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -11,6 +12,7 @@ namespace HeProject
     public class WriteToExcel
     {
         private readonly ProcessContext _context;
+        private Dictionary<int, ProcessContext> _resultDic = new Dictionary<int, ProcessContext>(6);
         private ICellStyle _headerStyle;
 
         private ICellStyle _s1P1Style;
@@ -50,9 +52,10 @@ namespace HeProject
         private ICellStyle _s23P4Style;
         private ICellStyle _s24P4Style;
 
-        public WriteToExcel(ProcessContext context)
+        public WriteToExcel(Dictionary<int, ProcessContext> contexts)
         {
-            _context = context;
+            _resultDic = contexts;
+            _context = contexts[0];
         }
 
         public void Write()
@@ -254,6 +257,75 @@ namespace HeProject
                     #endregion
 
                 }
+
+                for (int i = 1; i < 6; i++)
+                {
+                    IRow row = sheet1.CreateRow(_context.Capacity + i * 2);
+
+                    var context = _resultDic[i];
+
+                    var index = context.Capacity - 1;
+
+                    #region P1
+
+                    SetP1S1Value(row, index, context);
+                    SetP1S2Value(row, index, context);
+                    SetP1S3Value(row, index, context);
+
+                    #endregion P1
+
+                    #region P2
+
+                    SetP2S1Value(row, index, context);
+                    SetP2S2Value(row, index, context);
+                    SetP2S3Value(row, index, context);
+
+                    #endregion P2
+
+                    #region P3
+
+                    SetP3S1Value(row, index, context);
+                    SetP3S2Value(row, index, context);
+                    SetP3S3Value(row, index, context);
+
+                    #endregion P3
+
+                    #region P4
+
+                    SetP4S1Value(row, index, context);
+                    SetP4S2Value(row, index, context);
+                    SetP4S3Value(row, index, context);
+                    SetP4S4Value(row, index, context);
+                    SetP4S5Value(row, index, context);
+                    SetP4S6Value(row, index, context);
+                    SetP4S7Value(row, index, context);
+                    SetP4S8Value(row, index, context);
+                    SetP4S9Value(row, index, context);
+                    SetP4S10Value(row, index, context);
+                    SetP4S11Value(row, index, context);
+                    SetP4S12Value(row, index, context);
+                    SetP4S13Value(row, index, context);
+                    SetP4S14Value(row, index, context);
+                    SetP4S15Value(row, index, context);
+                    SetP4S16Value(row, index, context);
+                    SetP4S17Value(row, index, context);
+                    SetP4S18Value(row, index, context);
+                    SetP4S19Value(row, index, context);
+                    SetP4S20Value(row, index, context);
+                    SetP4S21Value(row, index, context);
+                    SetP4S22Value(row, index, context);
+                    SetP4S23Value(row, index, context);
+                    SetP4S24Value(row, index, context);
+                    SetP4S25Value(row, index, context);
+                    SetP4S26Value(row, index, context);
+                    SetP4S27Value(row, index, context);
+                    SetP4S28Value(row, index, context);
+                    SetP4S30Value(row, index, context);
+                    SetP4S31Value(row, index, context);
+
+                    #endregion
+                }
+
                 SaveFile(workbook);
             }
             catch (Exception ex)
@@ -458,12 +530,16 @@ namespace HeProject
 
 
 
-        private void SetP1S1Value(IRow row, int rowIndex)
+        private void SetP1S1Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = 0;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP1Value<bool>(1, rowIndex, i - beforeColumn);
+                var value = context.GetP1Value<bool>(1, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s1P1Style;
                 if (value)
@@ -473,24 +549,32 @@ namespace HeProject
 
 
 
-        private void SetP1S2Value(IRow row, int rowIndex)
+        private void SetP1S2Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 1;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP1Value<bool>(2, rowIndex, i - beforeColumn);
+                var value = context.GetP1Value<bool>(2, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s2P1Style;
                 if (value)
                     cell.SetCellValue(i % StepLength.SourceLength);
             }
         }
-        private void SetP1S3Value(IRow row, int rowIndex)
+        private void SetP1S3Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 2;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP1Value<bool>(3, rowIndex, i - beforeColumn);
+                var value = context.GetP1Value<bool>(3, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s3P1Style;
                 if (value)
@@ -502,12 +586,16 @@ namespace HeProject
 
         #region SetP2Value
 
-        private void SetP2S1Value(IRow row, int rowIndex)
+        private void SetP2S1Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 3;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP2Value<bool>(1, rowIndex, i - beforeColumn);
+                var value = context.GetP2Value<bool>(1, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s1P2Style;
                 if (value)
@@ -515,12 +603,16 @@ namespace HeProject
             }
         }
 
-        private void SetP2S2Value(IRow row, int rowIndex)
+        private void SetP2S2Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 4;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP2Value<bool>(2, rowIndex, i - beforeColumn);
+                var value = context.GetP2Value<bool>(2, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s2P2Style;
                 if (value)
@@ -528,12 +620,16 @@ namespace HeProject
             }
         }
 
-        private void SetP2S3Value(IRow row, int rowIndex)
+        private void SetP2S3Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 5;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP2Value<bool>(3, rowIndex, i - beforeColumn);
+                var value = context.GetP2Value<bool>(3, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s3P2Style;
                 if (value)
@@ -545,12 +641,16 @@ namespace HeProject
 
         #region SetP3Value
 
-        private void SetP3S1Value(IRow row, int rowIndex)
+        private void SetP3S1Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 6;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP3Value<bool>(1, rowIndex, i - beforeColumn);
+                var value = context.GetP3Value<bool>(1, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s1P3Style;
                 if (value)
@@ -558,12 +658,16 @@ namespace HeProject
             }
         }
 
-        private void SetP3S2Value(IRow row, int rowIndex)
+        private void SetP3S2Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 7;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP3Value<bool>(2, rowIndex, i - beforeColumn);
+                var value = context.GetP3Value<bool>(2, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s2P3Style;
                 if (value)
@@ -571,12 +675,16 @@ namespace HeProject
             }
         }
 
-        private void SetP3S3Value(IRow row, int rowIndex)
+        private void SetP3S3Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 8;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP3Value<bool>(3, rowIndex, i - beforeColumn);
+                var value = context.GetP3Value<bool>(3, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s3P3Style;
                 if (value)
@@ -588,12 +696,16 @@ namespace HeProject
 
         #region SetP4Value
 
-        private void SetP4S1Value(IRow row, int rowIndex)
+        private void SetP4S1Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 9;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(1, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(1, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s1P4Style;
                 if (value > 0)
@@ -601,12 +713,16 @@ namespace HeProject
             }
         }
 
-        private void SetP4S2Value(IRow row, int rowIndex)
+        private void SetP4S2Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 10;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(2, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(2, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s2P4Style;
                 if (value > 0)
@@ -614,12 +730,16 @@ namespace HeProject
             }
         }
 
-        private void SetP4S3Value(IRow row, int rowIndex)
+        private void SetP4S3Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 11;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(3, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(3, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s3P4Style;
                 if (value > 0)
@@ -627,12 +747,16 @@ namespace HeProject
             }
         }
 
-        private void SetP4S4Value(IRow row, int rowIndex)
+        private void SetP4S4Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 12;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(4, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(4, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s4P4Style;
                 if (value > 0)
@@ -640,12 +764,16 @@ namespace HeProject
             }
         }
 
-        private void SetP4S5Value(IRow row, int rowIndex)
+        private void SetP4S5Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 13;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(5, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(5, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s5P4Style;
                 if (value > 0)
@@ -653,12 +781,16 @@ namespace HeProject
             }
         }
 
-        private void SetP4S6Value(IRow row, int rowIndex)
+        private void SetP4S6Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 14;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(6, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(6, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s6P4Style;
                 if (value > 0)
@@ -666,216 +798,288 @@ namespace HeProject
             }
         }
 
-        private void SetP4S7Value(IRow row, int rowIndex)
+        private void SetP4S7Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 15 + 3 * 0;
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(7, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(7, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s7P4Style;
                 cell.SetCellValue(value);
             }
         }
 
-        private void SetP4S8Value(IRow row, int rowIndex)
+        private void SetP4S8Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 15 + 3 * 1;
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(8, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(8, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s8P4Style;
                 cell.SetCellValue(value);
             }
         }
 
-        private void SetP4S9Value(IRow row, int rowIndex)
+        private void SetP4S9Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 15 + 3 * 2;
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(9, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(9, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s9P4Style;
                 cell.SetCellValue(value);
             }
         }
 
-        private void SetP4S10Value(IRow row, int rowIndex)
+        private void SetP4S10Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 15 + 3 * 3;
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(10, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(10, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s10P4Style;
                 cell.SetCellValue(value);
             }
         }
 
-        private void SetP4S11Value(IRow row, int rowIndex)
+        private void SetP4S11Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 15 + 3 * 4;
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(11, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(11, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s11P4Style;
                 cell.SetCellValue(value);
             }
         }
 
-        private void SetP4S12Value(IRow row, int rowIndex)
+        private void SetP4S12Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 15 + 3 * 5;
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(12, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(12, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s12P4Style;
                 cell.SetCellValue(value);
             }
         }
 
-        private void SetP4S13Value(IRow row, int rowIndex)
+        private void SetP4S13Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 15 + 3 * 6;
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(13, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(13, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s13P4Style;
                 cell.SetCellValue(value);
             }
         }
 
-        private void SetP4S14Value(IRow row, int rowIndex)
+        private void SetP4S14Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 15 + 3 * 7;
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(14, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(14, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s14P4Style;
                 cell.SetCellValue(value);
             }
         }
 
-        private void SetP4S15Value(IRow row, int rowIndex)
+        private void SetP4S15Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 15 + 3 * 8;
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(15, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(15, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s15P4Style;
                 cell.SetCellValue(value);
             }
         }
 
-        private void SetP4S16Value(IRow row, int rowIndex)
+        private void SetP4S16Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 15 + 3 * 9;
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(16, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(16, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s16P4Style;
                 cell.SetCellValue(value);
             }
         }
 
-        private void SetP4S17Value(IRow row, int rowIndex)
+        private void SetP4S17Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 15 + 3 * 10;
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(17, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(17, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s17P4Style;
                 cell.SetCellValue(value);
             }
         }
 
-        private void SetP4S18Value(IRow row, int rowIndex)
+        private void SetP4S18Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 15 + 3 * 11;
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(18, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(18, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s18P4Style;
                 cell.SetCellValue(value);
             }
         }
 
-        private void SetP4S19Value(IRow row, int rowIndex)
+        private void SetP4S19Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 21;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(19, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(19, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s19P4Style;
                 if (value > 0)
                     cell.SetCellValue(value);
             }
         }
-        private void SetP4S20Value(IRow row, int rowIndex)
+        private void SetP4S20Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 22;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(20, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(20, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s20P4Style;
                 if (value > 0)
                     cell.SetCellValue(value);
             }
         }
-        private void SetP4S21Value(IRow row, int rowIndex)
+        private void SetP4S21Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 23;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(21, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(21, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s21P4Style;
                 if (value > 0)
                     cell.SetCellValue(value);
             }
         }
-        private void SetP4S22Value(IRow row, int rowIndex)
+        private void SetP4S22Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 24;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(22, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(22, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s22P4Style;
                 if (value > 0)
                     cell.SetCellValue(value);
             }
         }
-        private void SetP4S23Value(IRow row, int rowIndex)
+        private void SetP4S23Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 25;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(23, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(23, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s23P4Style;
                 if (value > 0)
                     cell.SetCellValue(value);
             }
         }
-        private void SetP4S24Value(IRow row, int rowIndex)
+        private void SetP4S24Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 26;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(24, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(24, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s24P4Style;
                 if (value > 0)
@@ -883,26 +1087,34 @@ namespace HeProject
             }
         }
 
-        private void SetP4S25Value(IRow row, int rowIndex)
+        private void SetP4S25Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 27;
-            var value = _context.GetP4Value<int>(25, rowIndex, 0);
+            var value = context.GetP4Value<int>(25, rowIndex, 0);
             var cell = row.CreateCell(beforeColumn);
             cell.CellStyle = _s22P4Style;
             cell.SetCellValue(value);
 
-            var value2 = _context.GetP4Value<int>(25, rowIndex, 1);
+            var value2 = context.GetP4Value<int>(25, rowIndex, 1);
             var cell2 = row.CreateCell(beforeColumn + 1);
             cell2.CellStyle = _s23P4Style;
             cell2.SetCellValue(value2);
         }
 
-        private void SetP4S26Value(IRow row, int rowIndex)
+        private void SetP4S26Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 27 + 2;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(26, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(26, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s24P4Style;
                 if (value > 0)
@@ -910,12 +1122,16 @@ namespace HeProject
             }
         }
 
-        private void SetP4S27Value(IRow row, int rowIndex)
+        private void SetP4S27Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 28 + 2;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(27, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(27, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s23P4Style;
                 if (value > 0)
@@ -923,22 +1139,30 @@ namespace HeProject
             }
         }
 
-        private void SetP4S28Value(IRow row, int rowIndex)
+        private void SetP4S28Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 29 + 2;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP4Value<int>(28, rowIndex, i - beforeColumn);
+                var value = context.GetP4Value<int>(28, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
                 cell.CellStyle = _s22P4Style;
                 cell.SetCellValue(value);
             }
         }
 
-        private void SetP4S30Value(IRow row, int rowIndex)
+        private void SetP4S30Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 29 + 6;
-            var valueDic = _context.GetP4RowResult(30, rowIndex);
+            var valueDic = context.GetP4RowResult(30, rowIndex);
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
@@ -948,10 +1172,14 @@ namespace HeProject
             }
         }
 
-        private void SetP4S31Value(IRow row, int rowIndex)
+        private void SetP4S31Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 30 + 6;
-            var valueDic = _context.GetP4RowResult(31, rowIndex);
+            var valueDic = context.GetP4RowResult(31, rowIndex);
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
