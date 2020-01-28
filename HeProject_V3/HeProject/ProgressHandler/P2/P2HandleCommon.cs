@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using HeProject.Model;
 
 namespace HeProject.ProgressHandler.P2
@@ -9,15 +8,13 @@ namespace HeProject.ProgressHandler.P2
     public class P2HandleCommon
     {
         private int _step;
-        private int _stage;
         private int _offset;
         private int _columnWidth = 4;
-        public string GetOrder(int stage, int step, int row, ProcessContext p2Context, int offset=1)
+        public string GetOrder(int step, int row, ProcessContext p2Context, int offset = 1)
         {
             try
             {
                 _step = step;
-                _stage = stage;
                 _offset = offset;
                 List<int> order = new List<int>();
                 bool[] handled = new bool[_columnWidth];
@@ -35,7 +32,7 @@ namespace HeProject.ProgressHandler.P2
                     Handle(row, p2Context, order, handled);
                 }
 
-                var beforePaiXu = p2Context.GetP2RowResult(_stage, step - offset, row);
+                var beforePaiXu = p2Context.GetP2RowResult(step - offset, row);
                 if (beforePaiXu == null || beforePaiXu.Count == 0)
                     return null;
 
@@ -44,7 +41,7 @@ namespace HeProject.ProgressHandler.P2
                 {
                     if (indexs.Contains(order[i]))
                     {
-                        p2Context.SetP2Value(_stage, step, row, i, true);
+                        p2Context.SetP2Value(step, row, i, true);
                     }
                 }
 
@@ -116,7 +113,7 @@ namespace HeProject.ProgressHandler.P2
                     {
                         if (inValue)
                         {
-                            if (p2Context.GetP2Value<bool>(_stage, _step - _offset, j, i))
+                            if (p2Context.GetP2Value<bool>(_step - _offset, j, i))
                                 valueLength++;
                             else
                             {
@@ -125,7 +122,7 @@ namespace HeProject.ProgressHandler.P2
                         }
                         else
                         {
-                            if (p2Context.GetP2Value<bool>(_stage, _step - _offset, j, i))
+                            if (p2Context.GetP2Value<bool>(_step - _offset, j, i))
                                 inValue = true;
                             else
                             {

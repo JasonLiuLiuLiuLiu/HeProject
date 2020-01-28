@@ -3,11 +3,11 @@ using HeProject.Model;
 
 namespace HeProject.ProgressHandler.P2
 {
-    public class P2S24Handler:IP2Handler
+    public class P2S24Handler : IP2Handler
     {
-        public string Handler(int stage, int row, ProcessContext context)
+        public string Handler(int row, ProcessContext context)
         {
-            return new P2HandleCommon().GetOrder(stage, 24, row, context);
+            return new P2HandleCommon().GetOrder(24, row, context);
         }
     }
 }

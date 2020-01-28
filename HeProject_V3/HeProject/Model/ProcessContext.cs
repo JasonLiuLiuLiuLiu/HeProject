@@ -7,20 +7,16 @@ namespace HeProject.Model
     public class ProcessContext
     {
         private readonly bool[,] _stepP1State;
-        private readonly Dictionary<int, bool[,]> _stepP2State;
-        private readonly bool[,] _stepP3State;
+        private readonly bool[,] _stepP2State;
 
 
         public readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> ValueP1Map;
-        public readonly Dictionary<int, Dictionary<int, Dictionary<int, Dictionary<int, object>>>> ValueP2Map;
-        public readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> ValueP3Map;
+        public readonly Dictionary<int, Dictionary<int, Dictionary<int, object>>> ValueP2Map;
         public readonly int Capacity;
         private const int StepCont = 50;
 
         private readonly object _lockP1 = new object();
         private readonly object _lockP2 = new object();
-        private readonly object _lockP3 = new object();
-        private readonly object _lockP2State = new object();
 
         #region P1
 
@@ -121,140 +117,15 @@ namespace HeProject.Model
 
         #region P2
 
-        public void SetP2Value(int stage, int step, int row, int column, object value)
+        public void SetP2Value(int step, int row, int column, object value)
         {
             try
             {
                 lock (_lockP2)
                 {
-                    if (!ValueP2Map.ContainsKey(stage))
-                        ValueP2Map.Add(stage, new Dictionary<int, Dictionary<int, Dictionary<int, object>>>());
-                    if (!ValueP2Map[stage].ContainsKey(step))
-                        ValueP2Map[stage].Add(step, new Dictionary<int, Dictionary<int, object>>());
-                    var stepValueMap = ValueP2Map[stage][step];
-                    if (!stepValueMap.ContainsKey(row))
-                        stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
-                    var rowValueMap = stepValueMap[row];
-                    if (!rowValueMap.ContainsKey(column))
-                        rowValueMap.Add(column, null);
-
-                    rowValueMap[column] = value;
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"stage:{stage},step:{step},row:{row},column:{column},value:{value},exception:{e}");
-                throw;
-            }
-        }
-
-        public T GetP2Value<T>(int stage, int step, int row, int column)
-        {
-            CheckP2StepStage(stage);
-            try
-            {
-                int loop = 0;
-                while (!_stepP2State[stage][step, row])
-                {
-                    if (loop > 100)
-                        return default(T);
-                    if (loop > 5)
-                        Console.WriteLine($"stage:{stage},step:{step},row:{row},column:{column}");
-                    Thread.Sleep(50);
-                }
-                lock (_lockP2)
-                {
-                    if (!ValueP2Map.ContainsKey(stage))
-                        ValueP2Map.Add(stage, new Dictionary<int, Dictionary<int, Dictionary<int, object>>>());
-                    if (!ValueP2Map[stage].ContainsKey(step))
-                        ValueP2Map[stage].Add(step, new Dictionary<int, Dictionary<int, object>>(StepCont));
-                    var stepValueMap = ValueP2Map[stage][step];
-                    if (!stepValueMap.ContainsKey(row))
-                        stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
-                    var rowValueMap = stepValueMap[row];
-                    if (!rowValueMap.ContainsKey(column))
-                        rowValueMap.Add(column, default(T));
-                    return (T)rowValueMap[column];
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"stage:{stage},step:{step},row:{row},column:{column},exception:{e}");
-                throw;
-            }
-        }
-
-        private void CheckP2StepStage(int stage)
-        {
-            if (_stepP2State.ContainsKey(stage)) return;
-
-            lock (_lockP2State)
-            {
-                if (_stepP2State.ContainsKey(stage))
-                    return;
-                _stepP2State.Add(stage, new bool[StepCont, Capacity]);
-            }
-        }
-
-        public Dictionary<int, object> GetP2RowResult(int stage, int step, int row)
-        {
-            CheckP2StepStage(stage);
-            int loop = 0;
-            while (!_stepP2State[stage][step, row])
-            {
-                if (loop > 100)
-                    return new Dictionary<int, object>(Capacity);
-                if (loop > 5)
-                    Console.WriteLine($"stage:{stage},step:{step},row:{row}");
-                Thread.Sleep(50);
-            }
-            lock (_lockP2)
-            {
-                if (!ValueP2Map.ContainsKey(stage))
-                    ValueP2Map.Add(stage, new Dictionary<int, Dictionary<int, Dictionary<int, object>>>());
-
-                if (!ValueP2Map[stage].ContainsKey(step))
-                    ValueP2Map[stage].Add(step, new Dictionary<int, Dictionary<int, object>>(StepCont));
-
-                var stepValueMap = ValueP2Map[stage][step];
-                if (!stepValueMap.ContainsKey(row))
-                    stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
-                var result = new Dictionary<int, object>();
-                foreach (var item in stepValueMap[row])
-                {
-                    result.Add(item.Key, item.Value);
-                }
-                return result;
-            }
-
-        }
-
-        public void SetP2StepState(int stage, int step, int row, bool value)
-        {
-            CheckP2StepStage(stage);
-            _stepP2State[stage][step, row] = value;
-        }
-
-        public bool GetP2StepState(int stage, int step, int row)
-        {
-            CheckP2StepStage(stage);
-            return _stepP2State[stage][step, row];
-        }
-
-
-        #endregion
-
-        #region P3
-
-        public void SetP3Value(int step, int row, int column, object value)
-        {
-            try
-            {
-                lock (_lockP3)
-                {
-                    if (!ValueP3Map.ContainsKey(step))
-                        ValueP3Map.Add(step, new Dictionary<int, Dictionary<int, object>>(StepCont));
-                    var stepValueMap = ValueP3Map[step];
+                    if (!ValueP2Map.ContainsKey(step))
+                        ValueP2Map.Add(step, new Dictionary<int, Dictionary<int, object>>(StepCont));
+                    var stepValueMap = ValueP2Map[step];
                     if (!stepValueMap.ContainsKey(row))
                         stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
                     var rowValueMap = stepValueMap[row];
@@ -271,22 +142,22 @@ namespace HeProject.Model
             }
         }
 
-        public T GetP3Value<T>(int step, int row, int column)
+        public T GetP2Value<T>(int step, int row, int column)
         {
             try
             {
                 int loop = 0;
-                while (!_stepP3State[step, row])
+                while (!_stepP2State[step, row])
                 {
                     if (loop > 100)
                         return default(T);
                     Thread.Sleep(50);
                 }
-                lock (_lockP3)
+                lock (_lockP2)
                 {
-                    if (!ValueP3Map.ContainsKey(step))
-                        ValueP3Map.Add(step, new Dictionary<int, Dictionary<int, object>>(StepCont));
-                    var stepValueMap = ValueP3Map[step];
+                    if (!ValueP2Map.ContainsKey(step))
+                        ValueP2Map.Add(step, new Dictionary<int, Dictionary<int, object>>(StepCont));
+                    var stepValueMap = ValueP2Map[step];
                     if (!stepValueMap.ContainsKey(row))
                         stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
                     var rowValueMap = stepValueMap[row];
@@ -302,21 +173,21 @@ namespace HeProject.Model
             }
         }
 
-        public Dictionary<int, object> GetP3RowResult(int step, int row)
+        public Dictionary<int, object> GetP2RowResult(int step, int row)
         {
             int loop = 0;
-            while (!_stepP3State[step, row])
+            while (!_stepP2State[step, row])
             {
                 if (loop > 100)
                     return new Dictionary<int, object>(Capacity);
                 Thread.Sleep(50);
             }
-            lock (_lockP3)
+            lock (_lockP2)
             {
-                if (!ValueP3Map.ContainsKey(step))
-                    ValueP3Map.Add(step, new Dictionary<int, Dictionary<int, object>>(StepCont));
+                if (!ValueP2Map.ContainsKey(step))
+                    ValueP2Map.Add(step, new Dictionary<int, Dictionary<int, object>>(StepCont));
 
-                var stepValueMap = ValueP3Map[step];
+                var stepValueMap = ValueP2Map[step];
                 if (!stepValueMap.ContainsKey(row))
                     stepValueMap.Add(row, new Dictionary<int, object>(Capacity));
                 var result = new Dictionary<int, object>();
@@ -329,14 +200,14 @@ namespace HeProject.Model
 
         }
 
-        public void SetP3StepState(int step, int row, bool value)
+        public void SetP2StepState(int step, int row, bool value)
         {
-            _stepP3State[step, row] = value;
+            _stepP2State[step, row] = value;
         }
 
-        public bool GetP3StepState(int step, int row)
+        public bool GetP2StepState(int step, int row)
         {
-            return _stepP3State[step, row];
+            return _stepP2State[step, row];
         }
 
         #endregion
@@ -345,12 +216,10 @@ namespace HeProject.Model
         {
             Capacity = capacity;
             _stepP1State = new bool[StepCont, capacity];
-            _stepP3State = new bool[StepCont, capacity];
+            _stepP2State = new bool[StepCont, capacity];
 
             ValueP1Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
-            ValueP2Map = new Dictionary<int, Dictionary<int, Dictionary<int, Dictionary<int, object>>>>();
-            ValueP3Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
-            _stepP2State = new Dictionary<int, bool[,]>();
+            ValueP2Map = new Dictionary<int, Dictionary<int, Dictionary<int, object>>>();
         }
     }
 }

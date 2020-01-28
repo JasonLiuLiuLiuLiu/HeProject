@@ -1,13 +1,12 @@
-﻿using System;
-using HeProject.Model;
+﻿using HeProject.Model;
 
 namespace HeProject.ProgressHandler.P2
 {
     public class P2S17Handler:IP2Handler
     {
-        public string Handler(int stage, int row, ProcessContext context)
+        public string Handler(int row, ProcessContext context)
         {
-            return new P2HandleCommon().GetOrder(stage, 17, row, context);
+            return new P2HandleCommon().GetOrder( 17, row, context);
         }
     }
 }

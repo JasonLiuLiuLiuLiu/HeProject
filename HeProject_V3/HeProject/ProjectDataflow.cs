@@ -6,7 +6,6 @@ using System.Threading.Tasks.Dataflow;
 using HeProject.Model;
 using HeProject.ProgressHandler.P1;
 using HeProject.ProgressHandler.P2;
-using HeProject.ProgressHandler.P3;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
@@ -17,13 +16,15 @@ namespace HeProject
         private readonly ExecutionDataflowBlockOptions _executionDataFlowBlockOptions;
         public ProcessContext ProcessContext;
         private ITargetBlock<string> _startBlock;
+        private int extendIndex = 0;
 
-        public ProjectDataFlow()
+        public ProjectDataFlow(int index)
         {
             _executionDataFlowBlockOptions = new ExecutionDataflowBlockOptions()
             {
                 MaxDegreeOfParallelism = Environment.ProcessorCount
             };
+            extendIndex = index;
         }
         public void Process(string filePath)
         {
@@ -51,7 +52,7 @@ namespace HeProject
 
             var p2StartBlock = CreateP2Block(1);
             var p2CurrentBlock = p2StartBlock;
-            for (int i = 2; i < 28; i++)
+            for (int i = 2; i < 34; i++)
             {
                 var newBlock = CreateP2Block(i);
                 p2CurrentBlock.LinkTo(newBlock, new DataflowLinkOptions() { PropagateCompletion = true });
@@ -59,40 +60,9 @@ namespace HeProject
             }
             #endregion
 
-            #region P3
-
-            var p3CurrentBlock = CreateP3Block(1);
-            var p3StartBlock = p3CurrentBlock;
-
-            for (int i = 2; i < 13; i++)
-            {
-                var newBlock = CreateP3Block(i);
-                p3CurrentBlock.LinkTo(newBlock, new DataflowLinkOptions() { PropagateCompletion = true });
-                p3CurrentBlock = newBlock;
-            }
-
-
-            #endregion
-
             var finallyP1Block = new ActionBlock<int>(x =>
             {
-                var stepIndex = 7;
-                for (int i = 0; i < 6; i++)
-                {
-                    if (ProcessContext.GetP1StepState(stepIndex + i, x))
-                    {
-                        p2StartBlock.Post(new P2BlockContext
-                        {
-                            Row = x,
-                            Stage = i
-                        });
-                    }
-                    else
-                    {
-                        SetP2DefaultValue(i, x);
-                    }
-                }
-
+                p2StartBlock.Post(x);
             });
             p1CurrentBlock.LinkTo(finallyP1Block, new DataflowLinkOptions() { PropagateCompletion = true });
             await finallyP1Block.Completion.ContinueWith(x =>
@@ -100,49 +70,18 @@ namespace HeProject
                 p2StartBlock.Complete();
             });
 
-            var finallyP2Block = new ActionBlock<P2BlockContext>(x =>
+            var finallyP2Block = new ActionBlock<int>(x =>
             {
                 //Console.WriteLine($"Stage:{x.Stage},Row:{x.Row}");
             });
             p2CurrentBlock.LinkTo(finallyP2Block, new DataflowLinkOptions() { PropagateCompletion = true });
 
-            var finallyP3Block=new ActionBlock<int>(x =>
-            {
-
-            });
-            p3CurrentBlock.LinkTo(finallyP3Block, new DataflowLinkOptions() {PropagateCompletion = true});
-            await finallyP2Block.Completion.ContinueWith(x =>
-            {
-                for (int i = 0; i < ProcessContext.Capacity; i++)
-                {
-                    p3StartBlock.Post(i);
-                }
-                p3StartBlock.Complete();
-            });
-
-
-            await finallyP3Block.Completion;
+            await finallyP2Block.Completion;
         }
 
         private void PrintState(ProgressState state)
         {
-            //if (state.PNum == 4)
-            Console.WriteLine($"阶段{state.Stage}第{state.Step}步第{state.Row}行执行成功!");
-            //Task.Run(() =>
-            //{
-            //    lock (_lock)
-            //    {
-            //        Console.SetCursorPosition(0, state.Step);
-            //        if (state.Row == -1)
-            //        {
-            //            Console.WriteLine($"第{state.Step}步执行失败:{state.ErrorMessage}!");
-            //        }
-            //        //else if (state.Row == -2)
-            //        //{
-            //        //    Console.WriteLine($"第{state.Step}步执行成功!");
-            //        //}
-            //    }
-            //});
+           // Console.WriteLine($"阶段{state.Stage}第{state.Step}步第{state.Row}行执行成功!");
         }
 
 
@@ -156,7 +95,7 @@ namespace HeProject
                 try
                 {
                     var handler = (IP1Handler)Activator.CreateInstance(Type.GetType($"HeProject.S{step}Handler") ?? throw new InvalidOperationException());
-                    var result = handler.Handler(x, ProcessContext);
+                    handler.Handler(x, ProcessContext);
                     //PrintState(new ProgressState(step, x) { ErrorMessage = result });
                     ProcessContext.SetP1StepState(step, x, true);
                 }
@@ -169,36 +108,16 @@ namespace HeProject
             return progressBlock;
         }
 
-        private IPropagatorBlock<P2BlockContext, P2BlockContext> CreateP2Block(int step)
-        {
-            var progressBlock = new TransformBlock<P2BlockContext, P2BlockContext>(x =>
-            {
-                try
-                {
-                    var handler = (IP2Handler)Activator.CreateInstance(Type.GetType($"HeProject.ProgressHandler.P2.P2S{step}Handler") ?? throw new InvalidOperationException());
-                    var result = handler.Handler(x.Stage, x.Row, ProcessContext);
-                    //PrintState(new ProgressState(step, x.Row) { ErrorMessage = result, Stage = x.Stage });
-                    ProcessContext.SetP2StepState(x.Stage, step, x.Row, true);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-                return x;
-            }, _executionDataFlowBlockOptions);
-            return progressBlock;
-        }
-
-        private IPropagatorBlock<int, int> CreateP3Block(int step)
+        private IPropagatorBlock<int, int> CreateP2Block(int step)
         {
             var progressBlock = new TransformBlock<int, int>(x =>
             {
                 try
                 {
-                    var handler = (IP3Handler)Activator.CreateInstance(Type.GetType($"HeProject.ProgressHandler.P3.P3S{step}Handler") ?? throw new InvalidOperationException());
+                    var handler = (IP2Handler)Activator.CreateInstance(Type.GetType($"HeProject.ProgressHandler.P2.P2S{step}Handler") ?? throw new InvalidOperationException());
                     var result = handler.Handler(x, ProcessContext);
                     PrintState(new ProgressState(step, x) { ErrorMessage = result });
-                    ProcessContext.SetP3StepState(step, x, true);
+                    ProcessContext.SetP2StepState(step, x, true);
                 }
                 catch (Exception e)
                 {
@@ -212,19 +131,6 @@ namespace HeProject
         #endregion CreateBlock
 
         #region ReadExcel
-
-        private void SetP2DefaultValue(int stage, int rowIndex)
-        {
-            int columnWidth = 4;
-            for (int i = 0; i < 27; i++)
-            {
-                for (int j = 0; j < columnWidth; j++)
-                {
-                    ProcessContext.SetP2Value(stage, i + 1, rowIndex, j, false);
-                }
-                ProcessContext.SetP2StepState(stage, i + 1, rowIndex, true);
-            }
-        }
 
         private void CreateStartBlock(IPropagatorBlock<int, int> nextBlock)
         {
@@ -250,7 +156,7 @@ namespace HeProject
                         hssfwb = new XSSFWorkbook(file);
                     }
                     ISheet sheet = hssfwb.GetSheetAt(0);
-                    ProcessContext = new ProcessContext(sheet.LastRowNum + 1);
+                    ProcessContext = new ProcessContext(sheet.LastRowNum + 2);
                     for (int row = 0; row <= sheet.LastRowNum; row++)
                     {
                         if (sheet.GetRow(row) != null) //null is when the row only contains empty cells
@@ -277,6 +183,11 @@ namespace HeProject
                             return;
                         }
                     }
+
+                    var lastRow = sheet.LastRowNum + 1;
+                    ProcessContext.SetP1Value(0, lastRow, extendIndex, true);
+                    ProcessContext.SetP1StepState(0, lastRow, true);
+                    nextBlock.Post(lastRow);
                 }
                 catch (Exception)
                 {

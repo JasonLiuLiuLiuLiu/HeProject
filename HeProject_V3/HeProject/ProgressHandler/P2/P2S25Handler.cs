@@ -4,32 +4,31 @@ using HeProject.Model;
 
 namespace HeProject.ProgressHandler.P2
 {
-    public class P2S25Handler:IP2Handler
+    public class P2S25Handler : IP2Handler
     {
-        private static readonly int[] Ying = new[] { 1, 2, 5, 8, 9 };
-        public string Handler(int stage, int row, ProcessContext context)
+        private static readonly int[] Yin = new[] { 1, 2, 5, 8, 9 };
+        public string Handler(int row, ProcessContext context)
         {
-            var source = context.GetP1RowResult(stage + 7, row).Select(u => (int)u.Value).ToArray();
-            if (Ying.Contains(source[0]))
+            var source = new int[6][];
+            for (var i = 0; i < 6; i++)
             {
-                if (Ying.Contains(source[2]))
+                if (context.GetP1StepState(i + 7, row))
                 {
-                    context.SetP2Value(stage, 25, row, 0, true);
-                }
-                else
-                {
-                    context.SetP2Value(stage, 25, row, 1, true);
+                    source[i] = context.GetP1RowResult(i + 7, row).Select(u => (int)u.Value).ToArray();
                 }
             }
-            else
+
+            for (var i = 0; i < 6; i++)
             {
-                if (Ying.Contains(source[2]))
+                if (source[i] == null || source[i].Length != 3) continue;
+
+                if (Yin.Contains(source[i][0]))
                 {
-                    context.SetP2Value(stage, 25, row, 2, true);
+                    context.SetP2Value(25, row, Yin.Contains(source[i][2]) ? 0 : 1, true);
                 }
                 else
                 {
-                    context.SetP2Value(stage, 25, row, 3, true);
+                    context.SetP2Value(25, row, Yin.Contains(source[i][2]) ? 2 : 3, true);
                 }
             }
 

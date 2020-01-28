@@ -4,7 +4,6 @@ using System.Diagnostics;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System.IO;
-using System.Linq;
 using HeProject.Model;
 using NPOI.SS.Util;
 
@@ -14,12 +13,13 @@ namespace HeProject
     {
         private readonly ProcessContext _context;
         private ICellStyle _headerStyle;
-        private Dictionary<int, ISheet> sheets = new Dictionary<int, ISheet>(6);
-        private Dictionary<int, ICellStyle> styles = new Dictionary<int, ICellStyle>(50);
+        private readonly Dictionary<int, ICellStyle> _styles = new Dictionary<int, ICellStyle>(60);
+        private Dictionary<int, ProcessContext> _resultDic = new Dictionary<int, ProcessContext>(11);
 
-        public WriteToExcel(ProcessContext context)
+        public WriteToExcel(Dictionary<int, ProcessContext> contexts)
         {
-            _context = context;
+            _resultDic = contexts;
+            _context = contexts[0];
         }
 
         public void Write()
@@ -34,8 +34,6 @@ namespace HeProject
                 sheet1.CreateRow(0).CreateCell(0).SetCellValue("This is a Sample");
                 SetHeader(sheet1, 0);
                 CreateStyles(workbook);
-                CreateSheetsForP2(workbook);
-                CreateSheetsHeaderForP2();
                 for (int i = 1; i <= _context.Capacity; i++)
                 {
                     IRow row = sheet1.CreateRow(i);
@@ -55,7 +53,32 @@ namespace HeProject
 
                     #endregion P1
 
-                    SetP3Value(row, index);
+                    SetP2Value(row, index);
+                }
+
+                for (int i = 1; i < 11; i++)
+                {
+                    IRow row = sheet1.CreateRow(_context.Capacity + i * 2);
+
+                    var context = _resultDic[i];
+
+                    var index = context.Capacity - 1;
+
+                    #region P1
+
+                    SetP1S0Value(row, index, context);
+                    SetP1S1Value(row, index, context);
+                    SetP1S2Value(row, index, context);
+                    SetP1S3Value(row, index, context);
+                    SetP1S4Value(row, index, context);
+                    SetP1S5Value(row, index, context);
+                    SetP1S6Value(row, index, context);
+                    SetP1S7Value(row, index, context);
+                    SetP1S8Value(row, index, context);
+
+                    #endregion P1
+
+                    SetP2Value(row, index, context);
                 }
                 SaveFile(workbook);
             }
@@ -71,75 +94,38 @@ namespace HeProject
             var row = sheet.GetRow(headerIndex);
             _headerStyle.Alignment = HorizontalAlignment.Center;
 
-            var s0p1 = row.CreateCell(0);
-            var s1p1 = row.CreateCell(StepLength.SourceLength * 1);
-            var s2p1 = row.CreateCell(StepLength.SourceLength * 2);
-            var s3p1 = row.CreateCell(StepLength.SourceLength * 3);
-            var s4p1 = row.CreateCell(StepLength.SourceLength * 3 + 3);
-            var s5p1 = row.CreateCell(StepLength.SourceLength * 3 + 6);
-            var s6p1 = row.CreateCell(StepLength.SourceLength * 3 + 9);
-            var s7p1 = row.CreateCell(StepLength.SourceLength * 3 + 12);
-            var s8p1 = row.CreateCell(StepLength.SourceLength * 3 + 15);
-            var beforeLenth = StepLength.SourceLength * 3 + 18;
-            var columnWidth = 4;
-            var s1p3 = row.CreateCell(beforeLenth + columnWidth * 0);
-            var s2p3 = row.CreateCell(beforeLenth + columnWidth * 1);
-            var s3p3 = row.CreateCell(beforeLenth + columnWidth * 2);
-            var s4p3 = row.CreateCell(beforeLenth + columnWidth * 3);
-            var s5p3 = row.CreateCell(beforeLenth + columnWidth * 4);
-            var s6p3 = row.CreateCell(beforeLenth + columnWidth * 5);
-            var s7p3 = row.CreateCell(beforeLenth + columnWidth * 6);
-            var s8p3 = row.CreateCell(beforeLenth + columnWidth * 7);
-            var s9p3 = row.CreateCell(beforeLenth + columnWidth * 8);
-            var s10p3 = row.CreateCell(beforeLenth + columnWidth * 9);
-            var s11p3 = row.CreateCell(beforeLenth + columnWidth * 10);
-            var s12p3 = row.CreateCell(beforeLenth + columnWidth * 11);
+            var s0P1 = row.CreateCell(0);
+            var s1P1 = row.CreateCell(StepLength.SourceLength * 1);
+            var s2P1 = row.CreateCell(StepLength.SourceLength * 2);
+            var s3P1 = row.CreateCell(StepLength.SourceLength * 3);
+            var s4P1 = row.CreateCell(StepLength.SourceLength * 3 + 3);
+            var s5P1 = row.CreateCell(StepLength.SourceLength * 3 + 6);
+            var s6P1 = row.CreateCell(StepLength.SourceLength * 3 + 9);
+            var s7P1 = row.CreateCell(StepLength.SourceLength * 3 + 12);
+            var s8P1 = row.CreateCell(StepLength.SourceLength * 3 + 15);
 
-            s0p1.SetCellValue("源数据");
-            s1p1.SetCellValue("排序1");
-            s2p1.SetCellValue("排序2");
-            s3p1.SetCellValue("A");
-            s4p1.SetCellValue("B");
-            s5p1.SetCellValue("C");
-            s6p1.SetCellValue("D");
-            s7p1.SetCellValue("E");
-            s8p1.SetCellValue("F");
 
-            s1p3.SetCellValue("A1");
-            s2p3.SetCellValue("B1");
-            s3p3.SetCellValue("C1");
-            s4p3.SetCellValue("D1");
-            s5p3.SetCellValue("E1");
-            s6p3.SetCellValue("F1");
-            s7p3.SetCellValue("A2");
-            s8p3.SetCellValue("B2");
-            s9p3.SetCellValue("C2");
-            s10p3.SetCellValue("D2");
-            s11p3.SetCellValue("E2");
-            s12p3.SetCellValue("F2");
+            s0P1.SetCellValue("源数据");
+            s1P1.SetCellValue("排序1");
+            s2P1.SetCellValue("排序2");
+            s3P1.SetCellValue("A");
+            s4P1.SetCellValue("B");
+            s5P1.SetCellValue("C");
+            s6P1.SetCellValue("D");
+            s7P1.SetCellValue("E");
+            s8P1.SetCellValue("F");
 
-            s0p1.CellStyle = _headerStyle;
-            s1p1.CellStyle = _headerStyle;
-            s2p1.CellStyle = _headerStyle;
-            s3p1.CellStyle = _headerStyle;
-            s4p1.CellStyle = _headerStyle;
-            s5p1.CellStyle = _headerStyle;
-            s6p1.CellStyle = _headerStyle;
-            s7p1.CellStyle = _headerStyle;
-            s8p1.CellStyle = _headerStyle;
+            s0P1.CellStyle = _headerStyle;
+            s1P1.CellStyle = _headerStyle;
+            s2P1.CellStyle = _headerStyle;
+            s3P1.CellStyle = _headerStyle;
+            s4P1.CellStyle = _headerStyle;
+            s5P1.CellStyle = _headerStyle;
+            s6P1.CellStyle = _headerStyle;
+            s7P1.CellStyle = _headerStyle;
+            s8P1.CellStyle = _headerStyle;
 
-            s1p3.CellStyle = _headerStyle;
-            s2p3.CellStyle = _headerStyle;
-            s3p3.CellStyle = _headerStyle;
-            s4p3.CellStyle = _headerStyle;
-            s5p3.CellStyle = _headerStyle;
-            s6p3.CellStyle = _headerStyle;
-            s7p3.CellStyle = _headerStyle;
-            s8p3.CellStyle = _headerStyle;
-            s9p3.CellStyle = _headerStyle;
-            s10p3.CellStyle = _headerStyle;
-            s11p3.CellStyle = _headerStyle;
-            s12p3.CellStyle = _headerStyle;
+
 
 
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 0, StepLength.SourceLength * 1 - 1));
@@ -152,396 +138,349 @@ namespace HeProject
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 3 + 12, StepLength.SourceLength * 3 + 14));
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 3 + 15, StepLength.SourceLength * 3 + 17));
 
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLenth + columnWidth * 0, beforeLenth + columnWidth * 1 - 1));
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLenth + columnWidth * 1, beforeLenth + columnWidth * 2 - 1));
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLenth + columnWidth * 2, beforeLenth + columnWidth * 3 - 1));
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLenth + columnWidth * 3, beforeLenth + columnWidth * 4 - 1));
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLenth + columnWidth * 4, beforeLenth + columnWidth * 5 - 1));
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLenth + columnWidth * 5, beforeLenth + columnWidth * 6 - 1));
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLenth + columnWidth * 6, beforeLenth + columnWidth * 7 - 1));
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLenth + columnWidth * 7, beforeLenth + columnWidth * 8 - 1));
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLenth + columnWidth * 8, beforeLenth + columnWidth * 9 - 1));
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLenth + columnWidth * 9, beforeLenth + columnWidth * 10 - 1));
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLenth + columnWidth * 10, beforeLenth + columnWidth * 11 - 1));
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLenth + columnWidth * 11, beforeLenth + columnWidth * 12 - 1));
+            var columnWidth = 4;
+            var beforeLength = StepLength.SourceLength * 3 + 18;
+
+            var s0 = row.CreateCell(beforeLength + columnWidth * 0);
+            var s1 = row.CreateCell(beforeLength + columnWidth * 1);
+            var s2 = row.CreateCell(beforeLength + columnWidth * 2);
+            var s3 = row.CreateCell(beforeLength + columnWidth * 3);
+            var s4 = row.CreateCell(beforeLength + columnWidth * 4);
+            var s5 = row.CreateCell(beforeLength + columnWidth * 5);
+            var s6 = row.CreateCell(beforeLength + columnWidth * 6);
+            var s7 = row.CreateCell(beforeLength + columnWidth * 7);
+            var s8 = row.CreateCell(beforeLength + columnWidth * 8);
+            var s9 = row.CreateCell(beforeLength + columnWidth * 9);
+            var s10 = row.CreateCell(beforeLength + columnWidth * 10);
+            var s11 = row.CreateCell(beforeLength + columnWidth * 11);
+            var s12 = row.CreateCell(beforeLength + columnWidth * 12);
+            var s13 = row.CreateCell(beforeLength + columnWidth * 13);
+            var s14 = row.CreateCell(beforeLength + columnWidth * 14);
+            var s15 = row.CreateCell(beforeLength + columnWidth * 15);
+            var s16 = row.CreateCell(beforeLength + columnWidth * 16);
+            var s17 = row.CreateCell(beforeLength + columnWidth * 17);
+            var s18 = row.CreateCell(beforeLength + columnWidth * 18);
+            var s19 = row.CreateCell(beforeLength + columnWidth * 19);
+            var s20 = row.CreateCell(beforeLength + columnWidth * 20);
+            var s21 = row.CreateCell(beforeLength + columnWidth * 21);
+            var s22 = row.CreateCell(beforeLength + columnWidth * 22);
+            var s23 = row.CreateCell(beforeLength + columnWidth * 23);
+            var s24 = row.CreateCell(beforeLength + columnWidth * 24);
+            var s25 = row.CreateCell(beforeLength + columnWidth * 25);
+            var s26 = row.CreateCell(beforeLength + columnWidth * 26);
+            var s27 = row.CreateCell(beforeLength + columnWidth * 27);
+            var s28 = row.CreateCell(beforeLength + columnWidth * 28);
+            var s29 = row.CreateCell(beforeLength + columnWidth * 29);
+            var s30 = row.CreateCell(beforeLength + columnWidth * 30);
+            var s31 = row.CreateCell(beforeLength + columnWidth * 31);
+            var s32 = row.CreateCell(beforeLength + columnWidth * 32);
+
+            s0.SetCellValue("单双12");
+            s1.SetCellValue("排序1");
+            s2.SetCellValue("排序2");
+            s3.SetCellValue("单双13");
+            s4.SetCellValue("排序1");
+            s5.SetCellValue("排序2");
+            s6.SetCellValue("单双23");
+            s7.SetCellValue("排序1");
+            s8.SetCellValue("排序2");
+            s9.SetCellValue("大小12");
+            s10.SetCellValue("排序1");
+            s11.SetCellValue("排序2");
+            s12.SetCellValue("大小13");
+            s13.SetCellValue("排序1");
+            s14.SetCellValue("排序2");
+            s15.SetCellValue("大小23");
+            s16.SetCellValue("排序1");
+            s17.SetCellValue("排序2");
+            s18.SetCellValue("阴阳12");
+            s19.SetCellValue("排序1");
+            s20.SetCellValue("排序2");
+            s21.SetCellValue("阴阳13");
+            s22.SetCellValue("排序1");
+            s23.SetCellValue("排序2");
+            s24.SetCellValue("阴阳23");
+            s25.SetCellValue("排序1");
+            s26.SetCellValue("排序2");
+            s27.SetCellValue("单双1");
+            s28.SetCellValue("单双2");
+            s29.SetCellValue("大小1");
+            s30.SetCellValue("大小2");
+            s31.SetCellValue("阴阳1");
+            s32.SetCellValue("阴阳2");
+
+            s0.CellStyle = _headerStyle;
+            s1.CellStyle = _headerStyle;
+            s2.CellStyle = _headerStyle;
+            s3.CellStyle = _headerStyle;
+            s4.CellStyle = _headerStyle;
+            s5.CellStyle = _headerStyle;
+            s6.CellStyle = _headerStyle;
+            s7.CellStyle = _headerStyle;
+            s8.CellStyle = _headerStyle;
+            s9.CellStyle = _headerStyle;
+            s10.CellStyle = _headerStyle;
+            s11.CellStyle = _headerStyle;
+            s12.CellStyle = _headerStyle;
+            s13.CellStyle = _headerStyle;
+            s14.CellStyle = _headerStyle;
+            s15.CellStyle = _headerStyle;
+            s16.CellStyle = _headerStyle;
+            s17.CellStyle = _headerStyle;
+            s18.CellStyle = _headerStyle;
+            s19.CellStyle = _headerStyle;
+            s20.CellStyle = _headerStyle;
+            s21.CellStyle = _headerStyle;
+            s22.CellStyle = _headerStyle;
+            s23.CellStyle = _headerStyle;
+            s24.CellStyle = _headerStyle;
+            s25.CellStyle = _headerStyle;
+            s26.CellStyle = _headerStyle;
+            s27.CellStyle = _headerStyle;
+            s28.CellStyle = _headerStyle;
+            s29.CellStyle = _headerStyle;
+            s30.CellStyle = _headerStyle;
+            s31.CellStyle = _headerStyle;
+            s32.CellStyle = _headerStyle;
+
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 0, beforeLength + columnWidth * 1 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 1, beforeLength + columnWidth * 2 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 2, beforeLength + columnWidth * 3 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 3, beforeLength + columnWidth * 4 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 4, beforeLength + columnWidth * 5 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 5, beforeLength + columnWidth * 6 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 6, beforeLength + columnWidth * 7 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 7, beforeLength + columnWidth * 8 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 8, beforeLength + columnWidth * 9 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 9, beforeLength + columnWidth * 10 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 10, beforeLength + columnWidth * 11 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 11, beforeLength + columnWidth * 12 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 12, beforeLength + columnWidth * 13 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 13, beforeLength + columnWidth * 14 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 14, beforeLength + columnWidth * 15 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 15, beforeLength + columnWidth * 16 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 16, beforeLength + columnWidth * 17 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 17, beforeLength + columnWidth * 18 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 18, beforeLength + columnWidth * 19 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 19, beforeLength + columnWidth * 20 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 20, beforeLength + columnWidth * 21 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 21, beforeLength + columnWidth * 22 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 22, beforeLength + columnWidth * 23 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 23, beforeLength + columnWidth * 24 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 24, beforeLength + columnWidth * 25 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 25, beforeLength + columnWidth * 26 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 26, beforeLength + columnWidth * 27 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 27, beforeLength + columnWidth * 28 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 28, beforeLength + columnWidth * 29 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 29, beforeLength + columnWidth * 30 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 30, beforeLength + columnWidth * 31 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 31, beforeLength + columnWidth * 32 - 1));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, beforeLength + columnWidth * 32, beforeLength + columnWidth * 33 - 1));
         }
 
         private void CreateStyles(IWorkbook workbook)
         {
             var colorStartIndex = 10;
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 60; i++)
             {
                 var cellStyle = workbook.CreateCellStyle();
                 cellStyle.FillForegroundColor = (short)(i + colorStartIndex++);
                 cellStyle.FillPattern = FillPattern.SolidForeground;
-                styles.Add(i, cellStyle);
+                _styles.Add(i, cellStyle);
             }
         }
 
-        private void CreateSheetsForP2(IWorkbook workbook)
+        private void SetP2Value(IRow row, int rowIndex, ProcessContext context = null)
         {
-            var a = workbook.CreateSheet("A");
-            var b = workbook.CreateSheet("B");
-            var c = workbook.CreateSheet("C");
-            var d = workbook.CreateSheet("D");
-            var e = workbook.CreateSheet("E");
-            var f = workbook.CreateSheet("F");
-            var g = workbook.CreateSheet("G");
-            a.DefaultColumnWidth = 1;
-            b.DefaultColumnWidth = 1;
-            c.DefaultColumnWidth = 1;
-            d.DefaultColumnWidth = 1;
-            e.DefaultColumnWidth = 1;
-            f.DefaultColumnWidth = 1;
-            g.DefaultColumnWidth = 1;
-            sheets.Add(0, a);
-            sheets.Add(1, b);
-            sheets.Add(2, c);
-            sheets.Add(3, d);
-            sheets.Add(4, e);
-            sheets.Add(5, f);
-            sheets.Add(6, g);
-        }
-
-        private void CreateSheetsHeaderForP2()
-        {
-            var headerIndex = 0;
+            if (context == null)
+            {
+                context = _context;
+            }
             var columnWidth = 4;
-            foreach (var sheet in sheets.Values)
-            {
-                var row = sheet.CreateRow(headerIndex);
-                _headerStyle.Alignment = HorizontalAlignment.Center;
-                var source = row.CreateCell(0);
-                var s0 = row.CreateCell(3 + columnWidth * 0);
-                var s1 = row.CreateCell(3 + columnWidth * 1);
-                var s2 = row.CreateCell(3 + columnWidth * 2);
-                var s3 = row.CreateCell(3 + columnWidth * 3);
-                var s4 = row.CreateCell(3 + columnWidth * 4);
-                var s5 = row.CreateCell(3 + columnWidth * 5);
-                var s6 = row.CreateCell(3 + columnWidth * 6);
-                var s7 = row.CreateCell(3 + columnWidth * 7);
-                var s8 = row.CreateCell(3 + columnWidth * 8);
-                var s9 = row.CreateCell(3 + columnWidth * 9);
-                var s10 = row.CreateCell(3 + columnWidth * 10);
-                var s11 = row.CreateCell(3 + columnWidth * 11);
-                var s12 = row.CreateCell(3 + columnWidth * 12);
-                var s13 = row.CreateCell(3 + columnWidth * 13);
-                var s14 = row.CreateCell(3 + columnWidth * 14);
-                var s15 = row.CreateCell(3 + columnWidth * 15);
-                var s16 = row.CreateCell(3 + columnWidth * 16);
-                var s17 = row.CreateCell(3 + columnWidth * 17);
-                var s18 = row.CreateCell(3 + columnWidth * 18);
-                var s19 = row.CreateCell(3 + columnWidth * 19);
-                var s20 = row.CreateCell(3 + columnWidth * 20);
-                var s21 = row.CreateCell(3 + columnWidth * 21);
-                var s22 = row.CreateCell(3 + columnWidth * 22);
-                var s23 = row.CreateCell(3 + columnWidth * 23);
-                var s24 = row.CreateCell(3 + columnWidth * 24);
-                var s25 = row.CreateCell(3 + columnWidth * 25);
-                var s26 = row.CreateCell(3 + columnWidth * 26);
+            var beforeLength = StepLength.SourceLength * 3 + 18;
 
-                source.SetCellValue("源数据");
-                s0.SetCellValue("单双12");
-                s1.SetCellValue("排序1");
-                s2.SetCellValue("排序2");
-                s3.SetCellValue("单双13");
-                s4.SetCellValue("排序1");
-                s5.SetCellValue("排序2");
-                s6.SetCellValue("单双23");
-                s7.SetCellValue("排序1");
-                s8.SetCellValue("排序2");
-                s9.SetCellValue("大小12");
-                s10.SetCellValue("排序1");
-                s11.SetCellValue("排序2");
-                s12.SetCellValue("大小13");
-                s13.SetCellValue("排序1");
-                s14.SetCellValue("排序2");
-                s15.SetCellValue("大小23");
-                s16.SetCellValue("排序1");
-                s17.SetCellValue("排序2");
-                s18.SetCellValue("阴阳12");
-                s19.SetCellValue("排序1");
-                s20.SetCellValue("排序2");
-                s21.SetCellValue("阴阳13");
-                s22.SetCellValue("排序1");
-                s23.SetCellValue("排序2");
-                s24.SetCellValue("阴阳23");
-                s25.SetCellValue("排序1");
-                s26.SetCellValue("排序2");
-
-                source.CellStyle = _headerStyle;
-                s0.CellStyle = _headerStyle;
-                s1.CellStyle = _headerStyle;
-                s2.CellStyle = _headerStyle;
-                s3.CellStyle = _headerStyle;
-                s4.CellStyle = _headerStyle;
-                s5.CellStyle = _headerStyle;
-                s6.CellStyle = _headerStyle;
-                s7.CellStyle = _headerStyle;
-                s8.CellStyle = _headerStyle;
-                s9.CellStyle = _headerStyle;
-                s10.CellStyle = _headerStyle;
-                s11.CellStyle = _headerStyle;
-                s12.CellStyle = _headerStyle;
-                s13.CellStyle = _headerStyle;
-                s14.CellStyle = _headerStyle;
-                s15.CellStyle = _headerStyle;
-                s16.CellStyle = _headerStyle;
-                s17.CellStyle = _headerStyle;
-                s18.CellStyle = _headerStyle;
-                s19.CellStyle = _headerStyle;
-                s20.CellStyle = _headerStyle;
-                s21.CellStyle = _headerStyle;
-                s22.CellStyle = _headerStyle;
-                s23.CellStyle = _headerStyle;
-                s24.CellStyle = _headerStyle;
-                s25.CellStyle = _headerStyle;
-                s26.CellStyle = _headerStyle;
-
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 0, 2));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 0, 3 + columnWidth * 1 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 1, 3 + columnWidth * 2 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 2, 3 + columnWidth * 3 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 3, 3 + columnWidth * 4 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 4, 3 + columnWidth * 5 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 5, 3 + columnWidth * 6 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 6, 3 + columnWidth * 7 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 7, 3 + columnWidth * 8 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 8, 3 + columnWidth * 9 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 9, 3 + columnWidth * 10 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 10, 3 + columnWidth * 11 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 11, 3 + columnWidth * 12 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 12, 3 + columnWidth * 13 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 13, 3 + columnWidth * 14 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 14, 3 + columnWidth * 15 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 15, 3 + columnWidth * 16 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 16, 3 + columnWidth * 17 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 17, 3 + columnWidth * 18 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 18, 3 + columnWidth * 19 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 19, 3 + columnWidth * 20 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 20, 3 + columnWidth * 21 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 21, 3 + columnWidth * 22 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 22, 3 + columnWidth * 23 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 23, 3 + columnWidth * 24 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 24, 3 + columnWidth * 25 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 25, 3 + columnWidth * 26 - 1));
-                sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 3 + columnWidth * 26, 3 + columnWidth * 27 - 1));
-            }
-        }
-
-
-
-        private IRow GetSheetRow(int sheetIndex, int rowIndex)
-        {
-            var row = sheets[sheetIndex].GetRow(rowIndex);
-
-            if (row == null)
-            {
-                row = sheets[sheetIndex].CreateRow(rowIndex);
-            }
-
-            return row;
-        }
-
-        private void SetRowValueForP2(IRow row, int rowIndex, int stage)
-        {
-            int columnWidth = 4;
-            for (int i = 0; i < 3; i++)
-            {
-                var cell = row.CreateCell(i);
-                cell.CellStyle = styles[5];
-                if (_context.GetP1StepState(7 + stage, rowIndex))
-                {
-                    cell.SetCellValue(_context.GetP1Value<int>(7 + stage, rowIndex, i));
-                }
-            }
             for (int i = 0; i < 27; i++)
             {
                 for (int j = 0; j < columnWidth; j++)
                 {
-                    var columnIndex = i * columnWidth + j + 3;
+                    var columnIndex = i * columnWidth + j + beforeLength;
                     var cell = row.CreateCell(columnIndex);
-                    cell.CellStyle = styles[i];
-                    if (_context.GetP2StepState(stage, i + 1, rowIndex) && _context.GetP2Value<bool>(stage, i + 1, rowIndex, j))
+                    cell.CellStyle = _styles[i];
+                    if (context.GetP2Value<bool>(i + 1, rowIndex, j))
                         cell.SetCellValue(j);
                 }
             }
-        }
 
-        private void SetRowValueForP2(int stage, int rowIndex)
-        {
-            SetRowValueForP2(GetSheetRow(stage, rowIndex + 1), rowIndex, stage);
+            for (int i = 27; i < 33; i++)
+            {
+                for (int j = 0; j < columnWidth; j++)
+                {
+                    var columnIndex = i * columnWidth + j + beforeLength;
+                    var cell = row.CreateCell(columnIndex);
+                    cell.CellStyle = _styles[i - 10];
+                    cell.SetCellValue(context.GetP2Value<int>(i + 1, rowIndex, j));
+                }
+            }
         }
 
         #region SetP1Value
 
-        private void SetP1S0Value(IRow row, int rowIndex)
+        private void SetP1S0Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = 0;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP1Value<bool>(0, rowIndex, i - beforeColumn);
+                var value = context.GetP1Value<bool>(0, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
-                cell.CellStyle = styles[1];
+                cell.CellStyle = _styles[1];
                 if (value)
                     cell.SetCellValue(i % StepLength.SourceLength);
             }
         }
 
-        private void SetP1S1Value(IRow row, int rowIndex)
+        private void SetP1S1Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 1;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP1Value<bool>(1, rowIndex, i - beforeColumn);
+                var value = context.GetP1Value<bool>(1, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
-                cell.CellStyle = styles[2];
+                cell.CellStyle = _styles[2];
                 if (value)
                     cell.SetCellValue(i % StepLength.SourceLength);
             }
         }
 
-        private void SetP1S2Value(IRow row, int rowIndex)
+        private void SetP1S2Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 2;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
             {
-                var value = _context.GetP1Value<bool>(2, rowIndex, i - beforeColumn);
+                var value = context.GetP1Value<bool>(2, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
-                cell.CellStyle = styles[3];
+                cell.CellStyle = _styles[3];
                 if (value)
                     cell.SetCellValue(i % StepLength.SourceLength);
             }
         }
 
-        private void SetP1S3Value(IRow row, int rowIndex)
+        private void SetP1S3Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 3;
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
-                cell.CellStyle = styles[4];
-                if (_context.GetP1StepState(7, rowIndex))
+                cell.CellStyle = _styles[4];
+                if (context.GetP1StepState(7, rowIndex))
                 {
-                    cell.SetCellValue(_context.GetP1Value<int>(7, rowIndex, i - beforeColumn));
+                    cell.SetCellValue(context.GetP1Value<int>(7, rowIndex, i - beforeColumn));
                 }
             }
-            if (_context.GetP1StepState(7, rowIndex))
-            {
-                SetRowValueForP2(0, rowIndex);
-            }
         }
-        private void SetP1S4Value(IRow row, int rowIndex)
+        private void SetP1S4Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 3 + 3;
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
-                cell.CellStyle = styles[5];
-                if (_context.GetP1StepState(8, rowIndex))
+                cell.CellStyle = _styles[5];
+                if (context.GetP1StepState(8, rowIndex))
                 {
-                    cell.SetCellValue(_context.GetP1Value<int>(8, rowIndex, i - beforeColumn));
+                    cell.SetCellValue(context.GetP1Value<int>(8, rowIndex, i - beforeColumn));
                 }
             }
-            if (_context.GetP1StepState(8, rowIndex))
-            {
-                SetRowValueForP2(1, rowIndex);
-            }
         }
-        private void SetP1S5Value(IRow row, int rowIndex)
+        private void SetP1S5Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 3 + 6;
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
-                cell.CellStyle = styles[6];
-                if (_context.GetP1StepState(9, rowIndex))
+                cell.CellStyle = _styles[6];
+                if (context.GetP1StepState(9, rowIndex))
                 {
-                    cell.SetCellValue(_context.GetP1Value<int>(9, rowIndex, i - beforeColumn));
+                    cell.SetCellValue(context.GetP1Value<int>(9, rowIndex, i - beforeColumn));
                 }
             }
-            if (_context.GetP1StepState(9, rowIndex))
-            {
-                SetRowValueForP2(2, rowIndex);
-            }
         }
-        private void SetP1S6Value(IRow row, int rowIndex)
+        private void SetP1S6Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 3 + 9;
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
-                cell.CellStyle = styles[7];
-                if (_context.GetP1StepState(10, rowIndex))
+                cell.CellStyle = _styles[7];
+                if (context.GetP1StepState(10, rowIndex))
                 {
-                    cell.SetCellValue(_context.GetP1Value<int>(10, rowIndex, i - beforeColumn));
+                    cell.SetCellValue(context.GetP1Value<int>(10, rowIndex, i - beforeColumn));
                 }
-            }
-            if (_context.GetP1StepState(10, rowIndex))
-            {
-                SetRowValueForP2(3, rowIndex);
             }
         }
 
-        private void SetP1S7Value(IRow row, int rowIndex)
+        private void SetP1S7Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 3 + 12;
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
-                cell.CellStyle = styles[8];
-                if (_context.GetP1StepState(11, rowIndex))
+                cell.CellStyle = _styles[8];
+                if (context.GetP1StepState(11, rowIndex))
                 {
-                    cell.SetCellValue(_context.GetP1Value<int>(11, rowIndex, i - beforeColumn));
+                    cell.SetCellValue(context.GetP1Value<int>(11, rowIndex, i - beforeColumn));
                 }
-            }
-            if (_context.GetP1StepState(11, rowIndex))
-            {
-                SetRowValueForP2(4, rowIndex);
             }
         }
 
-        private void SetP1S8Value(IRow row, int rowIndex)
+        private void SetP1S8Value(IRow row, int rowIndex, ProcessContext context = null)
         {
+            if (context == null)
+            {
+                context = _context;
+            }
             int beforeColumn = StepLength.SourceLength * 3 + 15;
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
-                cell.CellStyle = styles[9];
-                if (_context.GetP1StepState(12, rowIndex))
+                cell.CellStyle = _styles[9];
+                if (context.GetP1StepState(12, rowIndex))
                 {
-                    cell.SetCellValue(_context.GetP1Value<int>(12, rowIndex, i - beforeColumn));
+                    cell.SetCellValue(context.GetP1Value<int>(12, rowIndex, i - beforeColumn));
                 }
-            }
-            if (_context.GetP1StepState(12, rowIndex))
-            {
-                SetRowValueForP2(5, rowIndex);
             }
         }
         #endregion SetP1Value
-
-        private void SetP3Value(IRow row, int rowIndex)
-        {
-            var beforeLenth = StepLength.SourceLength * 3 + 18;
-            var columnWidth = 4;
-            var styleStartIndex = 10;
-            for (int i = 0; i < 12; i++)
-            {
-                for (int j = 0; j < 4; j++)
-                {
-                    var columnIndex = beforeLenth + columnWidth * i + j;
-                    var cell = row.CreateCell(columnIndex);
-                    cell.CellStyle = styles[styleStartIndex + i];
-                    cell.SetCellValue(_context.GetP3Value<int>(i+1, rowIndex, j));
-                }
-            }
-        }
-
-        #region SetP3Value
-
-
-
-        #endregion
 
 
         private void SaveFile(IWorkbook workBook)

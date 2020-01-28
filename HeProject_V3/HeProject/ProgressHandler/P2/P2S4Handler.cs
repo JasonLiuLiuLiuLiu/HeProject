@@ -3,33 +3,31 @@ using HeProject.Model;
 
 namespace HeProject.ProgressHandler.P2
 {
-    public class P2S4Handler:IP2Handler
+    public class P2S4Handler : IP2Handler
     {
         //百位加十位
-        public string Handler(int stage, int row, ProcessContext context)
+        public string Handler(int row, ProcessContext context)
         {
-            var source = context.GetP1RowResult(stage + 7, row).Select(u => (int)u.Value).ToArray();
-
-            if (source[1] % 2 == 1)
+            var source = new int[6][];
+            for (var i = 0; i < 6; i++)
             {
-                if (source[2] % 2 == 1)
+                if (context.GetP1StepState(i + 7, row))
                 {
-                    context.SetP2Value(stage, 4, row, 0, true);
-                }
-                else
-                {
-                    context.SetP2Value(stage, 4, row, 1, true);
+                    source[i] = context.GetP1RowResult(i + 7, row).Select(u => (int)u.Value).ToArray();
                 }
             }
-            else
+
+            for (var i = 0; i < 6; i++)
             {
-                if (source[2] % 2 == 1)
+                if (source[i] == null || source[i].Length != 3) continue;
+
+                if (source[i][1] < 5)
                 {
-                    context.SetP2Value(stage, 4, row, 2, true);
+                    context.SetP2Value(4, row, source[i][2] % 2 == 1 ? 0 : 1, true);
                 }
                 else
                 {
-                    context.SetP2Value(stage, 4, row, 3, true);
+                    context.SetP2Value(4, row, source[i][2] % 2 == 1 ? 2 : 3, true);
                 }
             }
 
