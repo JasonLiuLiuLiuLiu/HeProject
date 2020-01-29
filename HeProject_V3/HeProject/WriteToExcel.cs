@@ -305,7 +305,7 @@ namespace HeProject
                 {
                     var columnIndex = i * columnWidth + j + beforeLength;
                     var cell = row.CreateCell(columnIndex);
-                    cell.CellStyle = _styles[i];
+                    cell.CellStyle = GetStyle(14, i);
                     if (context.GetP2Value<bool>(i + 1, rowIndex, j))
                         cell.SetCellValue(j);
                 }
@@ -323,6 +323,11 @@ namespace HeProject
             }
         }
 
+        private ICellStyle GetStyle(int startIndex, int seed)
+        {
+            return _styles[startIndex + seed % 3];
+        }
+
         #region SetP1Value
 
         private void SetP1S0Value(IRow row, int rowIndex, ProcessContext context = null)
@@ -336,7 +341,7 @@ namespace HeProject
             {
                 var value = context.GetP1Value<bool>(0, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
-                cell.CellStyle = _styles[1];
+                cell.CellStyle = _styles[17];
                 if (value)
                     cell.SetCellValue(i % StepLength.SourceLength);
             }
@@ -353,7 +358,7 @@ namespace HeProject
             {
                 var value = context.GetP1Value<bool>(1, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
-                cell.CellStyle = _styles[2];
+                cell.CellStyle = _styles[18];
                 if (value)
                     cell.SetCellValue(i % StepLength.SourceLength);
             }
@@ -370,7 +375,7 @@ namespace HeProject
             {
                 var value = context.GetP1Value<bool>(2, rowIndex, i - beforeColumn);
                 var cell = row.CreateCell(i);
-                cell.CellStyle = _styles[3];
+                cell.CellStyle = _styles[19];
                 if (value)
                     cell.SetCellValue(i % StepLength.SourceLength);
             }
@@ -386,7 +391,7 @@ namespace HeProject
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
-                cell.CellStyle = _styles[4];
+                cell.CellStyle = _styles[20];
                 if (context.GetP1StepState(7, rowIndex))
                 {
                     cell.SetCellValue(context.GetP1Value<int>(7, rowIndex, i - beforeColumn));
@@ -403,7 +408,7 @@ namespace HeProject
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
-                cell.CellStyle = _styles[5];
+                cell.CellStyle = _styles[21];
                 if (context.GetP1StepState(8, rowIndex))
                 {
                     cell.SetCellValue(context.GetP1Value<int>(8, rowIndex, i - beforeColumn));
@@ -420,7 +425,7 @@ namespace HeProject
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
-                cell.CellStyle = _styles[6];
+                cell.CellStyle = _styles[22];
                 if (context.GetP1StepState(9, rowIndex))
                 {
                     cell.SetCellValue(context.GetP1Value<int>(9, rowIndex, i - beforeColumn));
@@ -437,7 +442,7 @@ namespace HeProject
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
-                cell.CellStyle = _styles[7];
+                cell.CellStyle = _styles[23];
                 if (context.GetP1StepState(10, rowIndex))
                 {
                     cell.SetCellValue(context.GetP1Value<int>(10, rowIndex, i - beforeColumn));
@@ -455,7 +460,7 @@ namespace HeProject
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
-                cell.CellStyle = _styles[8];
+                cell.CellStyle = _styles[24];
                 if (context.GetP1StepState(11, rowIndex))
                 {
                     cell.SetCellValue(context.GetP1Value<int>(11, rowIndex, i - beforeColumn));
@@ -473,7 +478,7 @@ namespace HeProject
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
             {
                 var cell = row.CreateCell(i);
-                cell.CellStyle = _styles[9];
+                cell.CellStyle = _styles[25];
                 if (context.GetP1StepState(12, rowIndex))
                 {
                     cell.SetCellValue(context.GetP1Value<int>(12, rowIndex, i - beforeColumn));
