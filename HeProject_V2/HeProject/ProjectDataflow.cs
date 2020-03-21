@@ -25,7 +25,12 @@ namespace HeProject
             extendIndex = index;
             _executionDataFlowBlockOptions = new ExecutionDataflowBlockOptions()
             {
+#if DEBUG
+                MaxDegreeOfParallelism = 1
+#else
                 MaxDegreeOfParallelism = Environment.ProcessorCount
+#endif
+
             };
         }
         public void Process(string filePath)
@@ -103,6 +108,9 @@ namespace HeProject
             var s29P4Block = CreateP4Block(29);
             var s30P4Block = CreateP4Block(30);
             var s31P4Block = CreateP4Block(31);
+            var s32P4Block = CreateP4Block(32);
+            var s33P4Block = CreateP4Block(33);
+            var s34P4Block = CreateP4Block(34);
 
             currentP4Block.LinkTo(s25P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
             s25P4Block.LinkTo(s26P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
@@ -111,7 +119,10 @@ namespace HeProject
             s28P4Block.LinkTo(s29P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
             s29P4Block.LinkTo(s30P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
             s30P4Block.LinkTo(s31P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
-            var p4EndBlock = s31P4Block;
+            s31P4Block.LinkTo(s32P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s32P4Block.LinkTo(s33P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s33P4Block.LinkTo(s34P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            var p4EndBlock = s34P4Block;
             var finallyP4Block = new ActionBlock<int>(x =>
             {
                 // Console.WriteLine(x);
