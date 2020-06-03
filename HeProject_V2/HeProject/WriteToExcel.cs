@@ -599,7 +599,7 @@ namespace HeProject
 
             for (int i = StepLength.SourceLength * 31 + 16; i < StepLength.SourceLength * 31 + 43; i++)
             {
-                sheet.SetColumnWidth(i, 1000);
+                sheet.SetColumnWidth(i, 670);
             }
         }
 
