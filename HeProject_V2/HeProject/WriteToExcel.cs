@@ -349,6 +349,7 @@ namespace HeProject
                     #endregion
                 }
                 P4S27Finally(sheet1);
+                P4S32Finally(sheet1);
 
                 SaveFile(workbook);
             }
@@ -440,6 +441,11 @@ namespace HeProject
             var s27p4_v4 = row.CreateCell(StepLength.SourceLength * 31 + 22);
             var s27p4_v5 = row.CreateCell(StepLength.SourceLength * 31 + 28);
 
+            var s32p4_v2 = row.CreateCell(StepLength.SourceLength * 31 + 29);
+            var s32p4_v3 = row.CreateCell(StepLength.SourceLength * 31 + 33);
+            var s32p4_v4 = row.CreateCell(StepLength.SourceLength * 31 + 34);
+            var s32p4_v5 = row.CreateCell(StepLength.SourceLength * 31 + 38);
+
             s1p4.SetCellValue("A总");
             s2p4.SetCellValue("B总");
             s3p4.SetCellValue("C总");
@@ -479,6 +485,10 @@ namespace HeProject
             s27p4_v3.SetCellValue("黄");
             s27p4_v4.SetCellValue("新增2");
             s27p4_v5.SetCellValue("蓝");
+            s32p4_v2.SetCellValue("总序");
+            s32p4_v3.SetCellValue("黄");
+            s32p4_v4.SetCellValue("新总序");
+            s32p4_v5.SetCellValue("蓝");
 
             s1p4.CellStyle = _headerStyle;
             s2p4.CellStyle = _headerStyle;
@@ -518,6 +528,10 @@ namespace HeProject
             s27p4_v3.CellStyle = _headerStyle;
             s27p4_v4.CellStyle = _headerStyle;
             s27p4_v5.CellStyle = _headerStyle;
+            s32p4_v2.CellStyle = _headerStyle;
+            s32p4_v3.CellStyle = _headerStyle;
+            s32p4_v4.CellStyle = _headerStyle;
+            s32p4_v5.CellStyle = _headerStyle;
 
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 0, StepLength.SourceLength * 1 - 1));
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 1, StepLength.SourceLength * 2 - 1));
@@ -568,6 +582,9 @@ namespace HeProject
 
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 31 + 15, StepLength.SourceLength * 31 + 20));
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 31 + 22, StepLength.SourceLength * 31 + 27));
+
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 31 + 29, StepLength.SourceLength * 31 + 32));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 31 + 34, StepLength.SourceLength * 31 + 37));
 
 
             for (int i = StepLength.SourceLength * 29 + 2; i < StepLength.SourceLength * 29 + 6; i++)
@@ -1233,7 +1250,7 @@ namespace HeProject
             }
 
             var cellCount = row.CreateCell(StepLength.SourceLength * 31 + 21);
-            cellCount.CellStyle = _yellowStyle;
+            cellCount.CellStyle = _s24P4Style;
             cellCount.SetCellValue(yellowCount);
 
         }
@@ -1289,11 +1306,21 @@ namespace HeProject
             }
         }
 
+        private static int[] P4S32Yellow = new[] { 6, 7, 8 };
+        private static Dictionary<int, int> P4S32YellowDic = new Dictionary<int, int>();
+        private static int[][] P4S32FinallyRowPossible = new int[6][];
+        private static int P4S32FinallyRowIndex = -1;
         private void SetP4S32Value(IRow row, int rowIndex, ProcessContext context = null)
         {
             if (context == null)
             {
                 context = _context;
+            }
+            var finallyRow = rowIndex == (context.Capacity - 1);
+            if (finallyRow)
+            {
+                P4S32FinallyRowIndex++;
+                P4S32FinallyRowPossible[P4S32FinallyRowIndex] = new int[4];
             }
             int beforeColumn = StepLength.SourceLength * 31 + 6;
             var valueDic = rowIndex > 4 ? context.GetP4RowResult(32, rowIndex) : new Dictionary<int, object>() { { 0, 0 }, { 1, 0 }, { 2, 0 } };
@@ -1303,6 +1330,29 @@ namespace HeProject
                 cell.CellStyle = _s22P4Style;
                 cell.SetCellValue((int)valueDic[i - beforeColumn]);
             }
+            for (int i = beforeColumn; i < 2 + beforeColumn; i++)
+            {
+                var cell = row.CreateCell(i + 23);
+                var value = (int)valueDic[i - beforeColumn];
+                var exist = P4S32Yellow.Contains(value);
+                if (exist)
+                {
+                    if (P4S32YellowDic.ContainsKey(rowIndex))
+                    {
+                        P4S32YellowDic[rowIndex] = P4S32YellowDic[rowIndex] + 1;
+                    }
+                    else
+                    {
+                        P4S32YellowDic.Add(rowIndex, 1);
+                    }
+                }
+                if (finallyRow)
+                {
+                    P4S32FinallyRowPossible[P4S32FinallyRowIndex][i - beforeColumn] = value;
+                }
+                cell.CellStyle = exist ? _yellowStyle : _s23P4Style;
+                cell.SetCellValue(value);
+            }
         }
 
         private void SetP4S33Value(IRow row, int rowIndex, ProcessContext context = null)
@@ -1311,6 +1361,7 @@ namespace HeProject
             {
                 context = _context;
             }
+            var finallyRow = rowIndex == (context.Capacity - 1);
             int beforeColumn = StepLength.SourceLength * 31 + 9;
             var valueDic = rowIndex > 4 ? context.GetP4RowResult(33, rowIndex) : new Dictionary<int, object>() { { 0, 0 }, { 1, 0 }, { 2, 0 } };
             for (int i = beforeColumn; i < 3 + beforeColumn; i++)
@@ -1319,6 +1370,32 @@ namespace HeProject
                 cell.CellStyle = _s23P4Style;
                 cell.SetCellValue((int)valueDic[i - beforeColumn]);
             }
+            for (int i = beforeColumn; i < 2 + beforeColumn; i++)
+            {
+                var cell = row.CreateCell(i + 22);
+                var value = (int)valueDic[i - beforeColumn];
+                var exist = P4S32Yellow.Contains(value);
+                if (exist)
+                {
+                    if (P4S32YellowDic.ContainsKey(rowIndex))
+                    {
+                        P4S32YellowDic[rowIndex] = P4S32YellowDic[rowIndex] + 1;
+                    }
+                    else
+                    {
+                        P4S32YellowDic.Add(rowIndex, 1);
+                    }
+                }
+                if (finallyRow)
+                {
+                    P4S32FinallyRowPossible[P4S32FinallyRowIndex][i - beforeColumn + 2] = value;
+                }
+                cell.CellStyle = exist ? _yellowStyle : _s23P4Style;
+                cell.SetCellValue(value);
+            }
+            var cellCount = row.CreateCell(2 + beforeColumn + 22);
+            cellCount.CellStyle = _s24P4Style;
+            cellCount.SetCellValue(P4S32YellowDic.ContainsKey(rowIndex) ? P4S32YellowDic[rowIndex] : 0);
         }
 
         private void SetP4S34Value(IRow row, int rowIndex, ProcessContext context = null)
@@ -1379,7 +1456,7 @@ namespace HeProject
                 }
             }
 
-            var rowIndex=-1;
+            var rowIndex = -1;
             for (int i = 0; i < 6; i++)
             {
                 rowIndex++;
@@ -1390,8 +1467,65 @@ namespace HeProject
                     cell.SetCellValue(P4S27FinallyRowPossible[rowIndex][j]);
                     cell.CellStyle = result[rowIndex][j] ? _blueStyle : _s23P4Style;
                 }
-                var cellCount= row.CreateCell(StepLength.SourceLength * 31 + 28);
-                cellCount.CellStyle = _blueStyle;
+                var cellCount = row.CreateCell(StepLength.SourceLength * 31 + 28);
+                cellCount.CellStyle = _s24P4Style;
+                cellCount.SetCellValue(result[rowIndex].Count(u => u));
+            }
+        }
+
+        private void P4S32Finally(ISheet sheet)
+        {
+            bool[][] result = new bool[6][];
+            for (int i = 0; i < 6; i++)
+            {
+                result[i] = new bool[4];
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                var yellowIndex = new List<int>();
+                for (int j = 0; j < 6; j++)
+                {
+                    if (P4S32Yellow.Contains(P4S32FinallyRowPossible[j][i]))
+                    {
+                        yellowIndex.Add(j);
+                    }
+                }
+
+                if (yellowIndex.Count == 1 || yellowIndex.Count == 2)
+                {
+                    for (int j = 0; j < 6; j++)
+                    {
+                        if (!yellowIndex.Contains(j))
+                        {
+                            result[j][i] = true;
+                        }
+                    }
+                }
+                else if (yellowIndex.Count == 4 || yellowIndex.Count == 5)
+                {
+                    for (int j = 0; j < 6; j++)
+                    {
+                        if (yellowIndex.Contains(j))
+                        {
+                            result[j][i] = true;
+                        }
+                    }
+                }
+            }
+
+            var rowIndex = -1;
+            for (int i = 0; i < 6; i++)
+            {
+                rowIndex++;
+                IRow row = sheet.GetRow(_context.Capacity + 1 + i * 2);
+                for (int j = 0; j < 4; j++)
+                {
+                    var cell = row.CreateCell(StepLength.SourceLength * 31 + 34 + j);
+                    cell.SetCellValue(P4S32FinallyRowPossible[rowIndex][j]);
+                    cell.CellStyle = result[rowIndex][j] ? _blueStyle : _s23P4Style;
+                }
+                var cellCount = row.CreateCell(StepLength.SourceLength * 31 + 38);
+                cellCount.CellStyle = _s24P4Style;
                 cellCount.SetCellValue(result[rowIndex].Count(u => u));
             }
         }
