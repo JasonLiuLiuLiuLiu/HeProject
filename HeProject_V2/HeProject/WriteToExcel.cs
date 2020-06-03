@@ -436,15 +436,15 @@ namespace HeProject
             var s33p4 = row.CreateCell(StepLength.SourceLength * 31 + 9);
             var s34p4 = row.CreateCell(StepLength.SourceLength * 31 + 12);
 
-            var s27p4_v2 = row.CreateCell(StepLength.SourceLength * 31 + 15);
-            var s27p4_v3 = row.CreateCell(StepLength.SourceLength * 31 + 21);
-            var s27p4_v4 = row.CreateCell(StepLength.SourceLength * 31 + 22);
-            var s27p4_v5 = row.CreateCell(StepLength.SourceLength * 31 + 28);
+            var s27p4_v2 = row.CreateCell(StepLength.SourceLength * 31 + 16);
+            var s27p4_v3 = row.CreateCell(StepLength.SourceLength * 31 + 22);
+            var s27p4_v4 = row.CreateCell(StepLength.SourceLength * 31 + 24);
+            var s27p4_v5 = row.CreateCell(StepLength.SourceLength * 31 + 30);
 
-            var s32p4_v2 = row.CreateCell(StepLength.SourceLength * 31 + 29);
-            var s32p4_v3 = row.CreateCell(StepLength.SourceLength * 31 + 33);
-            var s32p4_v4 = row.CreateCell(StepLength.SourceLength * 31 + 34);
-            var s32p4_v5 = row.CreateCell(StepLength.SourceLength * 31 + 38);
+            var s32p4_v2 = row.CreateCell(StepLength.SourceLength * 31 + 32);
+            var s32p4_v3 = row.CreateCell(StepLength.SourceLength * 31 + 36);
+            var s32p4_v4 = row.CreateCell(StepLength.SourceLength * 31 + 38);
+            var s32p4_v5 = row.CreateCell(StepLength.SourceLength * 31 + 42);
 
             s1p4.SetCellValue("A总");
             s2p4.SetCellValue("B总");
@@ -580,11 +580,11 @@ namespace HeProject
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 31 + 9, StepLength.SourceLength * 31 + 11));
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 31 + 12, StepLength.SourceLength * 31 + 14));
 
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 31 + 15, StepLength.SourceLength * 31 + 20));
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 31 + 22, StepLength.SourceLength * 31 + 27));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 31 + 16, StepLength.SourceLength * 31 + 21));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 31 + 24, StepLength.SourceLength * 31 + 29));
 
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 31 + 29, StepLength.SourceLength * 31 + 32));
-            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 31 + 34, StepLength.SourceLength * 31 + 37));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 31 + 32, StepLength.SourceLength * 31 + 35));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 31 + 38, StepLength.SourceLength * 31 + 41));
 
 
             for (int i = StepLength.SourceLength * 29 + 2; i < StepLength.SourceLength * 29 + 6; i++)
@@ -593,6 +593,11 @@ namespace HeProject
             }
 
             for (int i = StepLength.SourceLength * 27; i < StepLength.SourceLength * 27 + 14; i++)
+            {
+                sheet.SetColumnWidth(i, 1000);
+            }
+
+            for (int i = StepLength.SourceLength * 31 + 16; i < StepLength.SourceLength * 31 + 43; i++)
             {
                 sheet.SetColumnWidth(i, 1000);
             }
@@ -1223,7 +1228,7 @@ namespace HeProject
                     cell.SetCellValue(value);
             }
 
-            beforeColumn = StepLength.SourceLength * 31 + 15;
+            beforeColumn = StepLength.SourceLength * 31 + 16;
             var yellowCount = 0;
             var index = -1;
             for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
@@ -1249,7 +1254,7 @@ namespace HeProject
                     cell.SetCellValue(value);
             }
 
-            var cellCount = row.CreateCell(StepLength.SourceLength * 31 + 21);
+            var cellCount = row.CreateCell(StepLength.SourceLength * 31 + 22);
             cellCount.CellStyle = _s24P4Style;
             cellCount.SetCellValue(yellowCount);
 
@@ -1332,7 +1337,7 @@ namespace HeProject
             }
             for (int i = beforeColumn; i < 2 + beforeColumn; i++)
             {
-                var cell = row.CreateCell(i + 23);
+                var cell = row.CreateCell(i + 26);
                 var value = (int)valueDic[i - beforeColumn];
                 var exist = P4S32Yellow.Contains(value);
                 if (exist)
@@ -1372,7 +1377,7 @@ namespace HeProject
             }
             for (int i = beforeColumn; i < 2 + beforeColumn; i++)
             {
-                var cell = row.CreateCell(i + 22);
+                var cell = row.CreateCell(i + 25);
                 var value = (int)valueDic[i - beforeColumn];
                 var exist = P4S32Yellow.Contains(value);
                 if (exist)
@@ -1393,7 +1398,7 @@ namespace HeProject
                 cell.CellStyle = exist ? _yellowStyle : _s23P4Style;
                 cell.SetCellValue(value);
             }
-            var cellCount = row.CreateCell(2 + beforeColumn + 22);
+            var cellCount = row.CreateCell(2 + beforeColumn + 25);
             cellCount.CellStyle = _s24P4Style;
             cellCount.SetCellValue(P4S32YellowDic.ContainsKey(rowIndex) ? P4S32YellowDic[rowIndex] : 0);
         }
@@ -1463,11 +1468,11 @@ namespace HeProject
                 IRow row = sheet.GetRow(_context.Capacity + 1 + i * 2);
                 for (int j = 0; j < 6; j++)
                 {
-                    var cell = row.CreateCell(StepLength.SourceLength * 31 + 22 + j);
+                    var cell = row.CreateCell(StepLength.SourceLength * 31 + 24 + j);
                     cell.SetCellValue(P4S27FinallyRowPossible[rowIndex][j]);
                     cell.CellStyle = result[rowIndex][j] ? _blueStyle : _s23P4Style;
                 }
-                var cellCount = row.CreateCell(StepLength.SourceLength * 31 + 28);
+                var cellCount = row.CreateCell(StepLength.SourceLength * 31 + 30);
                 cellCount.CellStyle = _s24P4Style;
                 cellCount.SetCellValue(result[rowIndex].Count(u => u));
             }
@@ -1520,11 +1525,11 @@ namespace HeProject
                 IRow row = sheet.GetRow(_context.Capacity + 1 + i * 2);
                 for (int j = 0; j < 4; j++)
                 {
-                    var cell = row.CreateCell(StepLength.SourceLength * 31 + 34 + j);
+                    var cell = row.CreateCell(StepLength.SourceLength * 31 + 38 + j);
                     cell.SetCellValue(P4S32FinallyRowPossible[rowIndex][j]);
                     cell.CellStyle = result[rowIndex][j] ? _blueStyle : _s23P4Style;
                 }
-                var cellCount = row.CreateCell(StepLength.SourceLength * 31 + 38);
+                var cellCount = row.CreateCell(StepLength.SourceLength * 31 + 42);
                 cellCount.CellStyle = _s24P4Style;
                 cellCount.SetCellValue(result[rowIndex].Count(u => u));
             }
