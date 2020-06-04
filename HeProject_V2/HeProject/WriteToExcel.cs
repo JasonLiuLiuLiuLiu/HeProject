@@ -1401,6 +1401,10 @@ namespace HeProject
             var cellCount = row.CreateCell(2 + beforeColumn + 25);
             cellCount.CellStyle = _s24P4Style;
             cellCount.SetCellValue(P4S32YellowDic.ContainsKey(rowIndex) ? P4S32YellowDic[rowIndex] : 0);
+            if (finallyRow&& P4S32YellowDic.ContainsKey(rowIndex))
+            {
+                P4S32YellowDic[rowIndex] = 0;
+            }
         }
 
         private void SetP4S34Value(IRow row, int rowIndex, ProcessContext context = null)
