@@ -18,12 +18,19 @@ namespace HeProject
         private readonly ExecutionDataflowBlockOptions _executionDataFlowBlockOptions;
         public ProcessContext ProcessContext;
         private ITargetBlock<string> _startBlock;
+        private int extendIndex = 0;
 
-        public ProjectDataFlow()
+        public ProjectDataFlow(int index)
         {
+            extendIndex = index;
             _executionDataFlowBlockOptions = new ExecutionDataflowBlockOptions()
             {
+#if DEBUG
+                MaxDegreeOfParallelism = 1
+#else
                 MaxDegreeOfParallelism = Environment.ProcessorCount
+#endif
+
             };
         }
         public void Process(string filePath)
@@ -97,10 +104,25 @@ namespace HeProject
             var s25P4Block = CreateP4Block(25);
             var s26P4Block = CreateP4Block(26);
             var s27P4Block = CreateP4Block(27);
+            var s28P4Block = CreateP4Block(28);
+            var s29P4Block = CreateP4Block(29);
+            var s30P4Block = CreateP4Block(30);
+            var s31P4Block = CreateP4Block(31);
+            var s32P4Block = CreateP4Block(32);
+            var s33P4Block = CreateP4Block(33);
+            var s34P4Block = CreateP4Block(34);
+
             currentP4Block.LinkTo(s25P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
             s25P4Block.LinkTo(s26P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
             s26P4Block.LinkTo(s27P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
-            var p4EndBlock = s27P4Block;
+            s27P4Block.LinkTo(s28P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s28P4Block.LinkTo(s29P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s29P4Block.LinkTo(s30P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s30P4Block.LinkTo(s31P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s31P4Block.LinkTo(s32P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s32P4Block.LinkTo(s33P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s33P4Block.LinkTo(s34P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            var p4EndBlock = s34P4Block;
             var finallyP4Block = new ActionBlock<int>(x =>
             {
                 // Console.WriteLine(x);
@@ -129,8 +151,8 @@ namespace HeProject
 
         private void PrintState(ProgressState state)
         {
-            if (state.PNum == 4)
-                Console.WriteLine($"第{state.Step}步执行成功!");
+            //if (state.PNum == 4)
+            //    Console.WriteLine($"第{state.Step}步执行成功!");
             //Task.Run(() =>
             //{
             //    lock (_lock)
@@ -269,7 +291,7 @@ namespace HeProject
                         hssfwb = new XSSFWorkbook(file);
                     }
                     ISheet sheet = hssfwb.GetSheetAt(0);
-                    ProcessContext = new ProcessContext(sheet.LastRowNum + 1);
+                    ProcessContext = new ProcessContext(sheet.LastRowNum + 2);
                     for (int row = 0; row <= sheet.LastRowNum; row++)
                     {
                         if (sheet.GetRow(row) != null) //null is when the row only contains empty cells
@@ -285,6 +307,11 @@ namespace HeProject
                             nextBlock.Post(row);
                         }
                     }
+
+                    var lastRow = sheet.LastRowNum + 1;
+                    ProcessContext.SetP1Value(0, lastRow, extendIndex, true);
+                    ProcessContext.SetP1StepState(0, lastRow, true);
+                    nextBlock.Post(lastRow);
                 }
                 catch (Exception)
                 {

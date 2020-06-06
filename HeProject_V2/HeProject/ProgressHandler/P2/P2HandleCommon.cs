@@ -6,40 +6,44 @@ namespace HeProject.ProgressHandler.P2
 {
     public class P2HandleCommon
     {
+        private static object _lock = new object();
         private int _step;
         public string GetOrder(int step, int row, ProcessContext context)
         {
-            _step = step;
-            List<int> order = new List<int>();
-            bool[] handled = new bool[StepLength.SourceLength];
-            if (row == 0)
+            lock (_lock)
             {
-                for (int i = 0; i < StepLength.SourceLength; i++)
+                _step = step;
+                List<int> order = new List<int>();
+                bool[] handled = new bool[StepLength.SourceLength];
+                if (row == 0)
                 {
-                    if (handled[i])
-                        continue;
-                    order.Add(i);
+                    for (int i = 0; i < StepLength.SourceLength; i++)
+                    {
+                        if (handled[i])
+                            continue;
+                        order.Add(i);
+                    }
                 }
-            }
-            else
-            {
-                Handle(row, context, order, handled);
-            }
+                else
+                {
+                    Handle(row, context, order, handled);
+                }
 
-            var beforePaiXu = context.GetP2RowResult(step - 1, row);
-            if (beforePaiXu == null || beforePaiXu.Count == 0)
+                var beforePaiXu = context.GetP2RowResult(step - 1, row);
+                if (beforePaiXu == null || beforePaiXu.Count == 0)
+                    return null;
+
+                var index = beforePaiXu.FirstOrDefault(u => (bool)u.Value).Key;
+                for (int i = 0; i <= StepLength.SourceLength; i++)
+                {
+                    if (order[i] == index)
+                    {
+                        context.SetP2Value(step, row, i, true);
+                        break;
+                    }
+                }
                 return null;
-
-            var index = beforePaiXu.FirstOrDefault(u => (bool)u.Value).Key;
-            for (int i = 0; i <= StepLength.SourceLength; i++)
-            {
-                if (order[i] == index)
-                {
-                    context.SetP2Value(step, row, i, true);
-                    break;
-                }
             }
-            return null;
         }
 
         private void Handle(int row, ProcessContext context, List<int> order, bool[] handled, int[] columns = null)
