@@ -274,6 +274,7 @@ namespace HeProject
                     SetP4S32Value(row, index);
                     SetP4S33Value(row, index);
                     SetP4S34Value(row, index);
+                    SetP4S3567Value(row, index);
 
                     #endregion
 
@@ -346,6 +347,7 @@ namespace HeProject
                     SetP4S32Value(row, index, context);
                     SetP4S33Value(row, index, context);
                     SetP4S34Value(row, index, context);
+                    SetP4S3567Value(row, index, context);
                     #endregion
                 }
                 P4S27Finally(sheet1);
@@ -445,6 +447,9 @@ namespace HeProject
             var s32p4_v3 = row.CreateCell(StepLength.SourceLength * 31 + 36);
             var s32p4_v4 = row.CreateCell(StepLength.SourceLength * 31 + 38);
             var s32p4_v5 = row.CreateCell(StepLength.SourceLength * 31 + 42);
+            var s35p4 = row.CreateCell(StepLength.SourceLength * 31 + 43);
+            var s36p4 = row.CreateCell(StepLength.SourceLength * 31 + 44);
+            var s37p4 = row.CreateCell(StepLength.SourceLength * 31 + 45);
 
             s1p4.SetCellValue("A总");
             s2p4.SetCellValue("B总");
@@ -489,6 +494,9 @@ namespace HeProject
             s32p4_v3.SetCellValue("黄");
             s32p4_v4.SetCellValue("新总序");
             s32p4_v5.SetCellValue("蓝");
+            s35p4.SetCellValue("总5");
+            s36p4.SetCellValue("序5");
+            s37p4.SetCellValue("序");
 
             s1p4.CellStyle = _headerStyle;
             s2p4.CellStyle = _headerStyle;
@@ -1401,7 +1409,7 @@ namespace HeProject
             var cellCount = row.CreateCell(2 + beforeColumn + 25);
             cellCount.CellStyle = _s24P4Style;
             cellCount.SetCellValue(P4S32YellowDic.ContainsKey(rowIndex) ? P4S32YellowDic[rowIndex] : 0);
-            if (finallyRow&& P4S32YellowDic.ContainsKey(rowIndex))
+            if (finallyRow && P4S32YellowDic.ContainsKey(rowIndex))
             {
                 P4S32YellowDic[rowIndex] = 0;
             }
@@ -1421,6 +1429,27 @@ namespace HeProject
                 cell.CellStyle = _s24P4Style;
                 cell.SetCellValue((int)valueDic[i - beforeColumn]);
             }
+        }
+
+        private void SetP4S3567Value(IRow row, int rowIndex, ProcessContext context = null)
+        {
+            if (context == null)
+            {
+                context = _context;
+            }
+            int beforeColumn = StepLength.SourceLength * 31 + 43;
+            var value = rowIndex > 5 ? (int)context.GetP4RowResult(35, rowIndex)[0] : 0;
+            var cell = row.CreateCell(beforeColumn);
+            cell.CellStyle = _s23P4Style;
+            cell.SetCellValue(value);
+            value = rowIndex > 5 ? (int)context.GetP4RowResult(36, rowIndex)[0] : 0;
+            cell = row.CreateCell(beforeColumn+1);
+            cell.CellStyle = _s22P4Style;
+            cell.SetCellValue(value);
+            value = rowIndex > 5 ? (int)context.GetP4RowResult(37, rowIndex)[0] : 0;
+            cell = row.CreateCell(beforeColumn+2);
+            cell.CellStyle = _s21P4Style;
+            cell.SetCellValue(value);
         }
 
         #endregion

@@ -111,6 +111,9 @@ namespace HeProject
             var s32P4Block = CreateP4Block(32);
             var s33P4Block = CreateP4Block(33);
             var s34P4Block = CreateP4Block(34);
+            var s35P4Block = CreateP4Block(35);
+            var s36P4Block = CreateP4Block(36);
+            var s37P4Block = CreateP4Block(37);
 
             currentP4Block.LinkTo(s25P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
             s25P4Block.LinkTo(s26P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
@@ -122,7 +125,10 @@ namespace HeProject
             s31P4Block.LinkTo(s32P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
             s32P4Block.LinkTo(s33P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
             s33P4Block.LinkTo(s34P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
-            var p4EndBlock = s34P4Block;
+            s34P4Block.LinkTo(s35P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s35P4Block.LinkTo(s36P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s36P4Block.LinkTo(s37P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            var p4EndBlock = s37P4Block;
             var finallyP4Block = new ActionBlock<int>(x =>
             {
                 // Console.WriteLine(x);
