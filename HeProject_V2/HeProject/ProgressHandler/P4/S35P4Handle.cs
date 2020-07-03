@@ -37,7 +37,7 @@ namespace HeProject.ProgressHandler.P4
                         {
                             if (sumHistory[step, rowIndex].ContainsKey(i) && ((int)sumHistory[step, rowIndex][i]) > 0)
                                 break;
-                            if (rowIndex == 6)
+                            if (rowIndex == 5)
                             {
                                 mark++;
                             }
