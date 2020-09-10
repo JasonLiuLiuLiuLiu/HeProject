@@ -56,13 +56,14 @@ namespace HeProject
         private ICellStyle _blueStyle;
         private ICellStyle _yellowStyle;
 
+
         public WriteToExcel(Dictionary<int, ProcessContext> contexts)
         {
             _resultDic = contexts;
             _context = contexts[0];
         }
 
-        public void Write()
+        public IWorkbook ProcessDataflowResult()
         {
             try
             {
@@ -353,12 +354,13 @@ namespace HeProject
                 P4S27Finally(sheet1);
                 P4S32Finally(sheet1);
 
-                SaveFile(workbook);
+                return workbook;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("处理失败!");
                 Console.WriteLine(ex.Message);
+                return null;
             }
         }
 
@@ -609,6 +611,9 @@ namespace HeProject
             {
                 sheet.SetColumnWidth(i, 670);
             }
+            sheet.SetColumnWidth(229, 1000);
+            sheet.SetColumnWidth(230, 1000);
+            sheet.SetColumnWidth(231, 1000);
         }
 
         #region SetP1Value
@@ -1443,11 +1448,11 @@ namespace HeProject
             cell.CellStyle = _s23P4Style;
             cell.SetCellValue(value);
             value = rowIndex > 5 ? (int)context.GetP4RowResult(36, rowIndex)[0] : 0;
-            cell = row.CreateCell(beforeColumn+1);
+            cell = row.CreateCell(beforeColumn + 1);
             cell.CellStyle = _s22P4Style;
             cell.SetCellValue(value);
             value = rowIndex > 5 ? (int)context.GetP4RowResult(37, rowIndex)[0] : 0;
-            cell = row.CreateCell(beforeColumn+2);
+            cell = row.CreateCell(beforeColumn + 2);
             cell.CellStyle = _s21P4Style;
             cell.SetCellValue(value);
         }
@@ -1568,7 +1573,7 @@ namespace HeProject
             }
         }
 
-        private void SaveFile(IWorkbook workBook)
+        public void SaveFile(IWorkbook workBook)
         {
             try
             {

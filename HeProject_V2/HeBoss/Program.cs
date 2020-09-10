@@ -25,7 +25,15 @@ namespace HeBoss
                     resultDic.Add(i, dataflow.ProcessContext);
                 }
                 var writer = new WriteToExcel(resultDic);
-                writer.Write();
+                var workbook = writer.ProcessDataflowResult();
+                if (workbook != null)
+                {
+                    var commonContext = new CommonProcessContext(resultDic, workbook);
+                    var commonFlow=new CommonProcessFlow();
+                    commonFlow.Process(commonContext);
+                    writer.SaveFile(workbook);
+                }
+                
             }
             catch (Exception e)
             {
