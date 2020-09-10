@@ -599,21 +599,21 @@ namespace HeProject
 
             for (int i = StepLength.SourceLength * 29 + 2; i < StepLength.SourceLength * 29 + 6; i++)
             {
-                sheet.SetColumnWidth(i, 1000);
+                sheet.SetColumnWidth(i, 700);
             }
 
             for (int i = StepLength.SourceLength * 27; i < StepLength.SourceLength * 27 + 14; i++)
             {
-                sheet.SetColumnWidth(i, 1000);
+                sheet.SetColumnWidth(i, 700);
             }
 
             for (int i = StepLength.SourceLength * 31 + 16; i < StepLength.SourceLength * 31 + 43; i++)
             {
                 sheet.SetColumnWidth(i, 670);
             }
-            sheet.SetColumnWidth(229, 1000);
-            sheet.SetColumnWidth(230, 1000);
-            sheet.SetColumnWidth(231, 1000);
+            sheet.SetColumnWidth(229, 700);
+            sheet.SetColumnWidth(230, 700);
+            sheet.SetColumnWidth(231, 700);
         }
 
         #region SetP1Value

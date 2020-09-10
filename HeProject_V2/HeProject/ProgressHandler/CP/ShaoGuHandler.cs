@@ -27,6 +27,12 @@ namespace HeProject.ProgressHandler.CP
             guStyle = context.Workbook.CreateCellStyle();
             guStyle.FillForegroundColor = 8;
             guStyle.FillPattern = FillPattern.SolidForeground;
+            var sumStyle = context.Workbook.CreateCellStyle();
+            sumStyle.FillForegroundColor = 22;
+            sumStyle.FillPattern = FillPattern.SolidForeground;
+            var sumStyle2 = context.Workbook.CreateCellStyle();
+            sumStyle2.FillForegroundColor = 43;
+            sumStyle2.FillPattern = FillPattern.SolidForeground;
 
             var lastSixResult = new Dictionary<int, int[]>();
             for (int i = 1; i <= 6; i++)
@@ -217,14 +223,16 @@ namespace HeProject.ProgressHandler.CP
             headerCell.SetCellValue("少");
             headerCell = sheet.GetRow(0).CreateCell(233);
             headerCell.SetCellValue("孤");
-            sheet.SetColumnWidth(232, 1000);
-            sheet.SetColumnWidth(233, 1000);
+            sheet.SetColumnWidth(232, 700);
+            sheet.SetColumnWidth(233, 700);
             for (int i = 1; i <= 6; i++)
             {
                 var valueCell = sheet.GetRow(capacity + i * 2).CreateCell(232);
                 valueCell.SetCellValue(context.Shao[i-1]);
+                valueCell.CellStyle = sumStyle2;
                 valueCell = sheet.GetRow(capacity + i * 2).CreateCell(233);
                 valueCell.SetCellValue(context.Gu[i-1]);
+                valueCell.CellStyle = sumStyle;
             }
             return context;
         }
