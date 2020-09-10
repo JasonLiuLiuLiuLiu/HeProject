@@ -73,8 +73,8 @@ namespace HeProject.ProgressHandler.CP
             lastSixResult = new Dictionary<int, int[]>();
             for (int i = 1; i <= 6; i++)
             {
-                var rowValues = new int[4];
-                var startIndex = 218;
+                var rowValues = new int[3];
+                var startIndex = 192;
                 for (int j = startIndex; j < startIndex + rowValues.Length; j++)
                 {
                     var cell = sheet.GetRow(capacity + i * 2).GetCell(j);
@@ -89,8 +89,8 @@ namespace HeProject.ProgressHandler.CP
                 }
                 lastSixResult.Add(i - 1, rowValues);
             }
-            ProcessShao(218, lastSixResult, context);
-            ProcessGu(218, lastSixResult, context);
+            ProcessShao(192, lastSixResult, context);
+            ProcessGu(192, lastSixResult, context);
             lastSixResult = new Dictionary<int, int[]>();
             for (int i = 1; i <= 6; i++)
             {
@@ -132,11 +132,12 @@ namespace HeProject.ProgressHandler.CP
                 lastSixResult.Add(i - 1, rowValues);
             }
             ProcessShao(198, lastSixResult, context);
+            ProcessGu(198, lastSixResult, context);
             lastSixResult = new Dictionary<int, int[]>();
             for (int i = 1; i <= 6; i++)
             {
                 var rowValues = new int[6];
-                var startIndex = 210;
+                var startIndex = 202;
                 for (int j = startIndex; j < startIndex + rowValues.Length; j++)
                 {
                     var cell = sheet.GetRow(capacity + i * 2).GetCell(j);
@@ -151,7 +152,7 @@ namespace HeProject.ProgressHandler.CP
                 }
                 lastSixResult.Add(i - 1, rowValues);
             }
-            ProcessShao(210, lastSixResult, context);
+            ProcessShao(202, lastSixResult, context);
             lastSixResult = new Dictionary<int, int[]>();
             for (int i = 1; i <= 6; i++)
             {
@@ -218,10 +219,13 @@ namespace HeProject.ProgressHandler.CP
             headerCell.SetCellValue("孤");
             sheet.SetColumnWidth(232, 1000);
             sheet.SetColumnWidth(233, 1000);
-            var valueCell = sheet.GetRow(capacity + 6 * 2).CreateCell(232);
-            valueCell.SetCellValue(context.Shao);
-            valueCell = sheet.GetRow(capacity + 6 * 2).CreateCell(233);
-            valueCell.SetCellValue(context.Gu);
+            for (int i = 1; i <= 6; i++)
+            {
+                var valueCell = sheet.GetRow(capacity + i * 2).CreateCell(232);
+                valueCell.SetCellValue(context.Shao[i-1]);
+                valueCell = sheet.GetRow(capacity + i * 2).CreateCell(233);
+                valueCell.SetCellValue(context.Gu[i-1]);
+            }
             return context;
         }
 
@@ -240,30 +244,31 @@ namespace HeProject.ProgressHandler.CP
 
         private void ProcessShao(int startRowIndex, int columnIndex, int[] values, CommonProcessContext context)
         {
-            var average = values.Sum() / 6;
+            var average = (double)values.Sum() / 6;
             var less = values.Count(u => ((double)u) < average);
             if (less == 2 || less == 1)
             {
-                context.Shao += less;
+                
                 for (int i = 0; i < 6; i++)
                 {
                     var cell = context.Workbook.GetSheetAt(0).GetRow(capacity + (i + 1) * 2).GetCell(startRowIndex + columnIndex);
 
                     if (TryGetIntValue(cell, out int value) && value < average)
                     {
+                        context.Shao[i]++;
                         cell.CellStyle = shaoStyle;
                     }
                 }
             }
             else if (less == 5 || less == 4)
             {
-                context.Shao += 6 - less;
                 for (int i = 0; i < 6; i++)
                 {
                     var cell = context.Workbook.GetSheetAt(0).GetRow(capacity + (i + 1) * 2).GetCell(startRowIndex + columnIndex);
 
                     if (TryGetIntValue(cell, out int value) && value >= average)
                     {
+                        context.Shao[i]++;
                         cell.CellStyle = shaoStyle;
                     }
                 }
@@ -291,7 +296,7 @@ namespace HeProject.ProgressHandler.CP
                 var min = values.Min();
                 if (values.Count(u => u == min) == 1)
                 {
-                    context.Gu++;
+                    
                     var index = 0;
                     for (int i = 0; i < 6; i++)
                     {
@@ -301,7 +306,7 @@ namespace HeProject.ProgressHandler.CP
                             break;
                         }
                     }
-
+                    context.Gu[index]++;
                     var sheet = context.Workbook.GetSheetAt(0);
                     var row = sheet.GetRow(capacity + (index + 1) * 2 + 1);
                     if (row == null)
@@ -324,7 +329,6 @@ namespace HeProject.ProgressHandler.CP
                 var max = values.Max();
                 if (values.Count(u => u == max) == 1)
                 {
-                    context.Gu++;
                     var index = 0;
                     for (int i = 0; i < 6; i++)
                     {
@@ -334,7 +338,7 @@ namespace HeProject.ProgressHandler.CP
                             break;
                         }
                     }
-
+                    context.Gu[index]++;
                     var sheet = context.Workbook.GetSheetAt(0);
                     var row = sheet.GetRow(capacity + (index + 1) * 2 + 1);
                     if (row == null)
@@ -347,7 +351,6 @@ namespace HeProject.ProgressHandler.CP
                     {
                         cell = row.CreateCell(startRowIndex + columnIndex);
                     }
-
                     cell.CellStyle = guStyle;
                 }
             }
@@ -355,12 +358,16 @@ namespace HeProject.ProgressHandler.CP
 
         private bool TryGetIntValue(ICell cell, out int value)
         {
+            value = 0;
             if (cell.CellType == CellType.Numeric)
             {
                 value = (int)cell.NumericCellValue;
                 return true;
             }
-            value = 0;
+            else if (cell.CellType == CellType.Blank)
+            {
+                return true;
+            }
             return false;
         }
 

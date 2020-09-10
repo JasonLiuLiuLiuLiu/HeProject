@@ -11,10 +11,12 @@ namespace HeProject.Model
         {
             this.ResultDic = resultDic;
             this.Workbook = workbook;
+            Shao=new int[6];
+            Gu = new int[6];
         }
         public Dictionary<int, ProcessContext> ResultDic { get; }
         public IWorkbook Workbook { get; }
-        public int Shao { get; set; }
-        public int Gu { get; set; }
+        public int[] Shao { get;  }
+        public int[] Gu { get;  }
     }
 }
