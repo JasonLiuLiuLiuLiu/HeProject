@@ -11,6 +11,8 @@ namespace HeProject
         public CommonProcessContext Process(CommonProcessContext context)
         {
             new ShaoGuHandler().Run(context);
+            new CopyHandler().Run(context);
+            new TenBingAndSmall().Run(context);
             return context;
         }
     }
