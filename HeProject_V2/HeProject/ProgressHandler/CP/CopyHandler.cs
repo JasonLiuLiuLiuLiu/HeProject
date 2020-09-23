@@ -22,9 +22,12 @@ namespace HeProject.ProgressHandler.CP
             cell.SetCellValue("跳1");
             cell = row.CreateCell(239);
             cell.SetCellValue("黄1");
+            cell = row.CreateCell(240);
+            cell.SetCellValue("冷4");
             sheet.SetColumnWidth(234, 700);
             sheet.SetColumnWidth(235, 700);
             sheet.SetColumnWidth(239, 700);
+            sheet.SetColumnWidth(240, 700);
             for (int i = 1; i < context.ResultDic[0].Capacity; i++)
             {
                 row = sheet.GetRow(i);
@@ -37,6 +40,9 @@ namespace HeProject.ProgressHandler.CP
                 cell = row.CreateCell(239);
                 cell.SetCellValue(row.GetCell(208).NumericCellValue);
                 cell.CellStyle = sumStyle2;
+                cell = row.CreateCell(240);
+                cell.SetCellValue(row.GetCell(178).NumericCellValue+ row.GetCell(179).NumericCellValue+ row.GetCell(229).NumericCellValue+ row.GetCell(230).NumericCellValue);
+                cell.CellStyle = sumStyle;
             }
             for (int i = context.ResultDic[0].Capacity+1; i < context.ResultDic[0].Capacity+12; i+=2)
             {
@@ -50,6 +56,9 @@ namespace HeProject.ProgressHandler.CP
                 cell = row.CreateCell(239);
                 cell.SetCellValue(row.GetCell(208).NumericCellValue);
                 cell.CellStyle = sumStyle2;
+                cell = row.CreateCell(240);
+                cell.SetCellValue(row.GetCell(178).NumericCellValue + row.GetCell(179).NumericCellValue + row.GetCell(229).NumericCellValue + row.GetCell(230).NumericCellValue);
+                cell.CellStyle = sumStyle;
             }
             return context;
         }
