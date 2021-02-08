@@ -74,7 +74,7 @@ namespace HeProject.ProgressHandler.CP
                 for (int j = 0; j < 6; j++)
                 {
                     var cell = sheet.GetRow(capacity + (j + 1) * 2).GetCell(i + startIndex);
-                    if (maxIndex.Count + minIndex.Count == 6)
+                    if (maxIndex.Count == 6 || minIndex.Count == 6)
                     {
                         cell.CellStyle = null;
                     }
