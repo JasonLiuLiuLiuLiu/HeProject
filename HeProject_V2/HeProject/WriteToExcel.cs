@@ -52,6 +52,7 @@ namespace HeProject
         private ICellStyle _s22P4Style;
         private ICellStyle _s23P4Style;
         private ICellStyle _s24P4Style;
+        private ICellStyle _redStyle;
 
         private ICellStyle _blueStyle;
         private ICellStyle _yellowStyle;
@@ -112,6 +113,8 @@ namespace HeProject
                 _blueStyle = workbook.CreateCellStyle();
                 _yellowStyle = workbook.CreateCellStyle();
 
+                _redStyle = workbook.CreateCellStyle();
+
                 //https://www.cnblogs.com/love-zf/p/4874098.html
                 _s1P1Style.FillForegroundColor = 13;
                 _s2P1Style.FillForegroundColor = 22;
@@ -159,6 +162,7 @@ namespace HeProject
 
                 _blueStyle.FillForegroundColor = 12;
                 _yellowStyle.FillForegroundColor = 43;
+                _redStyle.FillForegroundColor = 10;
 
                 _s1P1Style.FillPattern = FillPattern.SolidForeground;
                 _s2P1Style.FillPattern = FillPattern.SolidForeground;
@@ -199,6 +203,7 @@ namespace HeProject
 
                 _blueStyle.FillPattern = FillPattern.SolidForeground;
                 _yellowStyle.FillPattern = FillPattern.SolidForeground;
+                _redStyle.FillPattern = FillPattern.SolidForeground;
 
                 #endregion SetStyle
 
@@ -276,7 +281,13 @@ namespace HeProject
                     SetP4S33Value(row, index);
                     SetP4S34Value(row, index);
                     SetP4S3567Value(row, index);
-
+                    SetP4S38Value(row, index);
+                    SetP4S42Value(row, index);
+                    SetP4S46Value(row, index);
+                    SetP4S50Value(row, index);
+                    SetP4S51Value(row, index);
+                    SetP4S52Value(row, index);
+                    SetP4S53Value(row, index);
                     #endregion
 
                 }
@@ -349,6 +360,13 @@ namespace HeProject
                     SetP4S33Value(row, index, context);
                     SetP4S34Value(row, index, context);
                     SetP4S3567Value(row, index, context);
+                    SetP4S38Value(row, index, context);
+                    SetP4S42Value(row, index, context);
+                    SetP4S46Value(row, index, context);
+                    SetP4S50Value(row, index, context);
+                    SetP4S51Value(row, index, context);
+                    SetP4S52Value(row, index, context);
+                    SetP4S53Value(row, index, context);
                     #endregion
                 }
                 P4S27Finally(sheet1);
@@ -452,6 +470,13 @@ namespace HeProject
             var s35p4 = row.CreateCell(StepLength.SourceLength * 31 + 43);
             var s36p4 = row.CreateCell(StepLength.SourceLength * 31 + 44);
             var s37p4 = row.CreateCell(StepLength.SourceLength * 31 + 45);
+            var s38p4 = row.CreateCell(242);
+            var s42p4 = row.CreateCell(249);
+            var s45p4 = row.CreateCell(256);
+            var s50p4 = row.CreateCell(263);
+            var s51p4 = row.CreateCell(264);
+            var s52p4 = row.CreateCell(265);
+            var s53p4 = row.CreateCell(266);
 
             s1p4.SetCellValue("A总");
             s2p4.SetCellValue("B总");
@@ -499,6 +524,14 @@ namespace HeProject
             s35p4.SetCellValue("总5");
             s36p4.SetCellValue("序5");
             s37p4.SetCellValue("序");
+            s38p4.SetCellValue("前表");
+            s42p4.SetCellValue("中表");
+            s45p4.SetCellValue("后表");
+            s50p4.SetCellValue("1");
+            s51p4.SetCellValue("2");
+            s52p4.SetCellValue("3");
+            s53p4.SetCellValue("4");
+
 
             s1p4.CellStyle = _headerStyle;
             s2p4.CellStyle = _headerStyle;
@@ -542,6 +575,13 @@ namespace HeProject
             s32p4_v3.CellStyle = _headerStyle;
             s32p4_v4.CellStyle = _headerStyle;
             s32p4_v5.CellStyle = _headerStyle;
+            s38p4.CellStyle = _headerStyle;
+            s42p4.CellStyle = _headerStyle;
+            s45p4.CellStyle = _headerStyle;
+            s50p4.CellStyle = _headerStyle;
+            s51p4.CellStyle = _headerStyle;
+            s52p4.CellStyle = _headerStyle;
+            s53p4.CellStyle = _headerStyle;
 
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 0, StepLength.SourceLength * 1 - 1));
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 1, StepLength.SourceLength * 2 - 1));
@@ -595,6 +635,9 @@ namespace HeProject
 
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 31 + 32, StepLength.SourceLength * 31 + 35));
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 31 + 38, StepLength.SourceLength * 31 + 41));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 242, 242 + 5));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 249, 249 + 5));
+            sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 256, 256 + 5));
 
 
             for (int i = StepLength.SourceLength * 29 + 2; i < StepLength.SourceLength * 29 + 6; i++)
@@ -1454,6 +1497,117 @@ namespace HeProject
             value = rowIndex > 5 ? (int)context.GetP4RowResult(37, rowIndex)[0] : 0;
             cell = row.CreateCell(beforeColumn + 2);
             cell.CellStyle = _s21P4Style;
+            cell.SetCellValue(value);
+        }
+
+        private void SetP4S38Value(IRow row, int rowIndex, ProcessContext context = null)
+        {
+            if (context == null)
+            {
+                context = _context;
+            }
+            int beforeColumn = 242;
+            for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
+            {
+                var value = context.GetP4Value<int>(38, rowIndex, i - beforeColumn);
+                var cell = row.CreateCell(i);
+                cell.CellStyle = Get38TO46Style(value);
+                cell.SetCellValue(value);
+            }
+        }
+        private void SetP4S42Value(IRow row, int rowIndex, ProcessContext context = null)
+        {
+            if (context == null)
+            {
+                context = _context;
+            }
+            int beforeColumn = 249;
+            for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
+            {
+                var value = context.GetP4Value<int>(42, rowIndex, i - beforeColumn);
+                var cell = row.CreateCell(i);
+                cell.CellStyle = Get38TO46Style(value);
+                cell.SetCellValue(value);
+            }
+        }
+        private void SetP4S46Value(IRow row, int rowIndex, ProcessContext context = null)
+        {
+            if (context == null)
+            {
+                context = _context;
+            }
+            int beforeColumn = 256;
+            for (int i = beforeColumn; i < StepLength.SourceLength + beforeColumn; i++)
+            {
+                var value = context.GetP4Value<int>(46, rowIndex, i - beforeColumn);
+                var cell = row.CreateCell(i);
+                cell.CellStyle = Get38TO46Style(value);
+                cell.SetCellValue(value);
+            }
+        }
+
+        private ICellStyle Get38TO46Style(int value)
+        {
+            if (value == 0)
+            {
+                return _s23P4Style;
+            }
+            if (value == 2)
+            {
+                return _s10P4Style;
+            }
+            if (value >= 3)
+            {
+                return _redStyle;
+            }
+            return null;
+        }
+
+        private void SetP4S50Value(IRow row, int rowIndex, ProcessContext context = null)
+        {
+            if (context == null)
+            {
+                context = _context;
+            }
+            var value = context.GetP4Value<int>(50, rowIndex, 0);
+            var cell = row.CreateCell(263);
+            cell.CellStyle = _s23P4Style;
+            cell.SetCellValue(value);
+        }
+
+        private void SetP4S51Value(IRow row, int rowIndex, ProcessContext context = null)
+        {
+            if (context == null)
+            {
+                context = _context;
+            }
+            var value = context.GetP4Value<int>(51, rowIndex, 0);
+            var cell = row.CreateCell(264);
+            cell.CellStyle = _s21P4Style;
+            cell.SetCellValue(value);
+        }
+
+        private void SetP4S52Value(IRow row, int rowIndex, ProcessContext context = null)
+        {
+            if (context == null)
+            {
+                context = _context;
+            }
+            var value = context.GetP4Value<int>(52, rowIndex, 0);
+            var cell = row.CreateCell(265);
+            cell.CellStyle = _s22P4Style;
+            cell.SetCellValue(value);
+        }
+
+        private void SetP4S53Value(IRow row, int rowIndex, ProcessContext context = null)
+        {
+            if (context == null)
+            {
+                context = _context;
+            }
+            var value = context.GetP4Value<int>(53, rowIndex, 0);
+            var cell = row.CreateCell(266);
+            cell.CellStyle = _s23P4Style;
             cell.SetCellValue(value);
         }
 

@@ -13,6 +13,7 @@ namespace HeProject
             new ShaoGuHandler().Run(context);
             new CopyHandler().Run(context);
             new TenBingAndSmall().Run(context);
+            new BigSmallChangeColor().Run(context);
             return context;
         }
     }

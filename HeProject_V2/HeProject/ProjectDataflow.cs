@@ -114,6 +114,22 @@ namespace HeProject
             var s35P4Block = CreateP4Block(35);
             var s36P4Block = CreateP4Block(36);
             var s37P4Block = CreateP4Block(37);
+            var s38P4Block = CreateP4Block(38);
+            var s39P4Block = CreateP4Block(39);
+            var s40P4Block = CreateP4Block(40);
+            var s41P4Block = CreateP4Block(41);
+            var s42P4Block = CreateP4Block(42);
+            var s43P4Block = CreateP4Block(43);
+            var s44P4Block = CreateP4Block(44);
+            var s45P4Block = CreateP4Block(45);
+            var s46P4Block = CreateP4Block(46);
+            var s47P4Block = CreateP4Block(47);
+            var s48P4Block = CreateP4Block(48);
+            var s49P4Block = CreateP4Block(49);
+            var s50P4Block = CreateP4Block(50);
+            var s51P4Block = CreateP4Block(51);
+            var s52P4Block = CreateP4Block(52);
+            var s53P4Block = CreateP4Block(53);
 
             currentP4Block.LinkTo(s25P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
             s25P4Block.LinkTo(s26P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
@@ -128,7 +144,23 @@ namespace HeProject
             s34P4Block.LinkTo(s35P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
             s35P4Block.LinkTo(s36P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
             s36P4Block.LinkTo(s37P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
-            var p4EndBlock = s37P4Block;
+            s37P4Block.LinkTo(s38P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s38P4Block.LinkTo(s39P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s39P4Block.LinkTo(s40P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s40P4Block.LinkTo(s41P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s41P4Block.LinkTo(s42P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s42P4Block.LinkTo(s43P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s43P4Block.LinkTo(s44P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s44P4Block.LinkTo(s45P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s45P4Block.LinkTo(s46P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s46P4Block.LinkTo(s47P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s47P4Block.LinkTo(s48P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s48P4Block.LinkTo(s49P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s49P4Block.LinkTo(s50P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s50P4Block.LinkTo(s51P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s51P4Block.LinkTo(s52P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            s52P4Block.LinkTo(s53P4Block, new DataflowLinkOptions() { PropagateCompletion = true });
+            var p4EndBlock = s53P4Block;
             var finallyP4Block = new ActionBlock<int>(x =>
             {
                 // Console.WriteLine(x);

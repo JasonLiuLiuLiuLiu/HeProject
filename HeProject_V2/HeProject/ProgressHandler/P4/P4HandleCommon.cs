@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using HeProject.Model;
 
 namespace HeProject.ProgressHandler.P4
@@ -68,10 +67,10 @@ namespace HeProject.ProgressHandler.P4
                                 sum45 += valueCount;
                                 break;
                         }
-                        context.SetP4Value(step+6,row,i,valueCount);
+                        context.SetP4Value(step + 6, row, i, valueCount);
                     }
                 }
-                
+
                 context.SetP4Value(step, row, 0, sum01);
                 context.SetP4Value(step, row, 1, sum23);
                 context.SetP4Value(step, row, 2, sum45);
@@ -126,7 +125,7 @@ namespace HeProject.ProgressHandler.P4
             }
         }
 
-        private List<KeyValuePair<int, KeyValuePair<int,int>>> GetOrder(int row, ProcessContext context, int[] columns = null)
+        private List<KeyValuePair<int, KeyValuePair<int, int>>> GetOrder(int row, ProcessContext context, int[] columns = null)
         {
             Dictionary<int, KeyValuePair<int, int>> distance = new Dictionary<int, KeyValuePair<int, int>>();
             for (int i = 0; i < StepLength.SourceLength; i++)
@@ -165,7 +164,7 @@ namespace HeProject.ProgressHandler.P4
                         distanceLength = row - 1;
 
                 }
-                distance.Add(i, new KeyValuePair<int, int>(distanceLength,valueLength));
+                distance.Add(i, new KeyValuePair<int, int>(distanceLength, valueLength));
             }
             return distance.OrderBy(u => u.Value.Key).ThenByDescending(u => u.Value.Value).ThenBy(u => u.Key).ToList();
         }
