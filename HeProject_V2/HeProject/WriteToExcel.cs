@@ -288,6 +288,8 @@ namespace HeProject
                     SetP4S51Value(row, index);
                     SetP4S52Value(row, index);
                     SetP4S53Value(row, index);
+                    SetP4S54Value(row, index);
+                    SetP4S55Value(row, index);
                     #endregion
 
                 }
@@ -367,6 +369,8 @@ namespace HeProject
                     SetP4S51Value(row, index, context);
                     SetP4S52Value(row, index, context);
                     SetP4S53Value(row, index, context);
+                    SetP4S54Value(row, index, context);
+                    SetP4S55Value(row, index, context);
                     #endregion
                 }
                 P4S27Finally(sheet1);
@@ -477,6 +481,8 @@ namespace HeProject
             var s51p4 = row.CreateCell(264);
             var s52p4 = row.CreateCell(265);
             var s53p4 = row.CreateCell(266);
+            var s54p4 = row.CreateCell(267);
+            var s55p4 = row.CreateCell(268);
 
             s1p4.SetCellValue("A总");
             s2p4.SetCellValue("B总");
@@ -531,6 +537,8 @@ namespace HeProject
             s51p4.SetCellValue("2");
             s52p4.SetCellValue("3");
             s53p4.SetCellValue("4");
+            s54p4.SetCellValue("大");
+            s55p4.SetCellValue("小");
 
 
             s1p4.CellStyle = _headerStyle;
@@ -582,6 +590,8 @@ namespace HeProject
             s51p4.CellStyle = _headerStyle;
             s52p4.CellStyle = _headerStyle;
             s53p4.CellStyle = _headerStyle;
+            s54p4.CellStyle = _headerStyle;
+            s55p4.CellStyle = _headerStyle;
 
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, 0, StepLength.SourceLength * 1 - 1));
             sheet.AddMergedRegion(new CellRangeAddress(headerIndex, headerIndex, StepLength.SourceLength * 1, StepLength.SourceLength * 2 - 1));
@@ -657,6 +667,8 @@ namespace HeProject
             sheet.SetColumnWidth(229, 700);
             sheet.SetColumnWidth(230, 700);
             sheet.SetColumnWidth(231, 700);
+            sheet.SetColumnWidth(267, 700);
+            sheet.SetColumnWidth(268, 700);
         }
 
         #region SetP1Value
@@ -1607,6 +1619,30 @@ namespace HeProject
             }
             var value = context.GetP4Value<int>(53, rowIndex, 0);
             var cell = row.CreateCell(266);
+            cell.CellStyle = _s23P4Style;
+            cell.SetCellValue(value);
+        }
+
+        private void SetP4S54Value(IRow row, int rowIndex, ProcessContext context = null)
+        {
+            if (context == null)
+            {
+                context = _context;
+            }
+            var value = context.GetP4Value<int>(54, rowIndex, 0);
+            var cell = row.CreateCell(267);
+            cell.CellStyle = _s22P4Style;
+            cell.SetCellValue(value);
+        }
+
+        private void SetP4S55Value(IRow row, int rowIndex, ProcessContext context = null)
+        {
+            if (context == null)
+            {
+                context = _context;
+            }
+            var value = context.GetP4Value<int>(55, rowIndex, 0);
+            var cell = row.CreateCell(268);
             cell.CellStyle = _s23P4Style;
             cell.SetCellValue(value);
         }
