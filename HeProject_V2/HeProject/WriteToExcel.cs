@@ -1232,7 +1232,7 @@ namespace HeProject
             }
         }
 
-        private static int[] P4S25Blue = new[] { 5, 6, 7 };
+        private int[] P4S25Blue = new[] { 5, 6, 7 };
         private void SetP4S25Value(IRow row, int rowIndex, ProcessContext context = null)
         {
             if (context == null)
@@ -1251,7 +1251,7 @@ namespace HeProject
             cell2.SetCellValue(value2);
         }
 
-        private static int[] P4S26Blue = new[] { 2, 3, 4 };
+        private int[] P4S26Blue = new[] { 2, 3, 4 };
         private void SetP4S26Value(IRow row, int rowIndex, ProcessContext context = null)
         {
             if (context == null)
@@ -1269,9 +1269,9 @@ namespace HeProject
             }
         }
 
-        private static int[] P4S27Yellow = new[] { 2, 3, 4 };
-        private static int[][] P4S27FinallyRowPossible = new int[6][];
-        private static int P4S27FinallyRowIndex = -1;
+        private int[] P4S27Yellow = new[] { 2, 3, 4 };
+        private int[][] P4S27FinallyRowPossible = new int[6][];
+        private int P4S27FinallyRowIndex = -1;
         private void SetP4S27Value(IRow row, int rowIndex, ProcessContext context = null)
         {
             if (context == null)
@@ -1328,7 +1328,7 @@ namespace HeProject
 
         }
 
-        private static int[] P4S28Blue = new[] { 7, 8, 9 };
+        private int[] P4S28Blue = new[] { 7, 8, 9 };
         private void SetP4S28Value(IRow row, int rowIndex, ProcessContext context = null)
         {
             if (context == null)
@@ -1379,10 +1379,10 @@ namespace HeProject
             }
         }
 
-        private static int[] P4S32Yellow = new[] { 6, 7, 8 };
-        private static Dictionary<int, int> P4S32YellowDic = new Dictionary<int, int>();
-        private static int[][] P4S32FinallyRowPossible = new int[6][];
-        private static int P4S32FinallyRowIndex = -1;
+        private int[] P4S32Yellow = new[] { 6, 7, 8 };
+        private Dictionary<int, int> P4S32YellowDic = new Dictionary<int, int>();
+        private int[][] P4S32FinallyRowPossible = new int[6][];
+        private int P4S32FinallyRowIndex = -1;
         private void SetP4S32Value(IRow row, int rowIndex, ProcessContext context = null)
         {
             if (context == null)
@@ -1763,19 +1763,22 @@ namespace HeProject
             }
         }
 
-        public void SaveFile(IWorkbook workBook)
+        public void SaveFile(IWorkbook workBook, string fullPath)
         {
             try
             {
-                var path = AppDomain.CurrentDomain.BaseDirectory + DateTime.Now.ToString("yyyy-MM-dd");
-                var fullPath = path + "\\" + DateTime.Now.ToString("HH-mm-ss-ffff") + ".xlsx";
-                if (!Directory.Exists(path))//如果不存在就创建file文件夹　　             　　
-                    Directory.CreateDirectory(path);//创建该文件夹　　
-                FileStream sw = File.Create(fullPath);
-                workBook.Write(sw);
-                sw.Close();
+                //var path = AppDomain.CurrentDomain.BaseDirectory + DateTime.Now.ToString("yyyy-MM-dd");
+                //var fullPath = path + "\\" + DateTime.Now.ToString("HH-mm-ss-ffff") + ".xlsx";
+                //if (!Directory.Exists(path))//如果不存在就创建file文件夹　　             　　
+                //    Directory.CreateDirectory(path);//创建该文件夹　　
+                using (FileStream sw = File.Create(fullPath))
+                {
+                    workBook.Write(sw);
+                    sw.Close();
+                }
+
                 // Process.Start("explorer.exe", "/select, \"" + fullPath + "\"");
-                Process.Start(fullPath);
+                // Process.Start(fullPath);
             }
             catch (Exception e)
             {
