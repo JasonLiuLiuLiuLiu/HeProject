@@ -66,7 +66,7 @@ namespace HeBoss
                 daxiaotongji.SetCellValue("大小统计");
                 daxiaotongji.CellStyle = maxWorkbook.CreateCellStyle();
                 daxiaotongji.CellStyle.Alignment = HorizontalAlignment.Center;
-                sheet.AddMergedRegion(new CellRangeAddress(0, 0, 269, 269 + 9));
+                sheet.AddMergedRegion(new CellRangeAddress(0, 0, 269, 269 + 8));
 
                 for (int row = 2; row <= maxFileCount; row++)
                 {
