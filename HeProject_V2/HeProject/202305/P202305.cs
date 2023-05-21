@@ -1,5 +1,7 @@
-﻿using NPOI.SS.Formula.Functions;
+﻿
+using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
+using NPOI.SS.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +44,15 @@ namespace HeProject._202305
             Display12();
             Display13();
             Display14();
+            Display15();
+            Display16();
+            Display17();
+            Display18();
+            Display19();
+            Display20();
+            Display21();
+            Display22();
+            Display23();
         }
 
         private Dictionary<int, List<KeyValuePair<int, bool?>>> _display1 = new Dictionary<int, List<KeyValuePair<int, bool?>>>();
@@ -546,39 +557,290 @@ namespace HeProject._202305
 
         public void Display15()
         {
+            foreach (var rowItem in _history)
+            {
 
+                var rowIndex = rowItem.Key;
+                if (rowIndex > _lastRowIndex && _history[rowIndex].All(u => u == null))
+                    continue;
+                var row = _sheet.GetRow(rowIndex);
+                if (row == null)
+                {
+                    continue;
+                }
+                for (int index = 0; index < 9; index++)
+                {
+                    var sourceCell = row.GetCell(269 + index);
+                    if (sourceCell == null) continue;
+                    var targetCell = row.CreateCell(292 + index);
+                    if (sourceCell.CellStyle?.FillForegroundColor == 10)
+                        targetCell.CellStyle = sourceCell.CellStyle;
+                    targetCell.SetCellValue(sourceCell.NumericCellValue);
+                }
+            }
         }
         public void Display16()
         {
+            foreach (var rowItem in _history)
+            {
 
+                var rowIndex = rowItem.Key;
+                if (rowIndex > _lastRowIndex && _history[rowIndex].All(u => u == null))
+                    continue;
+                var row = _sheet.GetRow(rowIndex);
+                if (row == null)
+                {
+                    continue;
+                }
+                var order = new HandleCommon(GetPreRow).GetOrder(rowIndex, _history, true);
+                var orIndex = 1;
+                foreach (var or in order)
+                {
+                    var cell = row.CreateCell(301 + or);
+                    cell.SetCellValue(orIndex);
+                    orIndex++;
+                }
+            }
         }
         public void Display17()
         {
+            foreach (var rowItem in _history)
+            {
 
+                var rowIndex = rowItem.Key;
+                if (rowIndex > _lastRowIndex && _history[rowIndex].All(u => u == null))
+                    continue;
+                var row = _sheet.GetRow(rowIndex);
+                if (row == null)
+                {
+                    continue;
+                }
+                for (int index = 0; index < 9; index++)
+                {
+                    var sourceCell = row.GetCell(269 + index);
+                    if (sourceCell == null) continue;
+                    var targetCell = row.CreateCell(310 + index);
+                    if (sourceCell.CellStyle?.FillForegroundColor == 40)
+                        targetCell.CellStyle = sourceCell.CellStyle;
+                    targetCell.SetCellValue(sourceCell.NumericCellValue);
+                }
+            }
         }
         public void Display18()
         {
+            foreach (var rowItem in _history)
+            {
 
+                var rowIndex = rowItem.Key;
+                if (rowIndex > _lastRowIndex && _history[rowIndex].All(u => u == null))
+                    continue;
+                var row = _sheet.GetRow(rowIndex);
+                if (row == null)
+                {
+                    continue;
+                }
+                var order = new HandleCommon(GetPreRow).GetOrder(rowIndex, _history, false);
+                var orIndex = 1;
+                foreach (var or in order)
+                {
+                    var cell = row.CreateCell(319 + or);
+                    cell.SetCellValue(orIndex);
+                    orIndex++;
+                }
+            }
         }
         public void Display19()
         {
+            foreach (var rowItem in _history)
+            {
 
+                var rowIndex = rowItem.Key;
+                if (rowIndex > _lastRowIndex && _history[rowIndex].All(u => u == null))
+                    continue;
+                var row = _sheet.GetRow(rowIndex);
+                if (row == null)
+                {
+                    continue;
+                }
+
+                var value = 0;
+                for (int i = 0; i < 3; i++)
+                {
+                    if (_history[rowIndex][i] != null && _history[rowIndex][i].Value)
+                    {
+                        value++;
+                    }
+                }
+                var cell = row.CreateCell(328);
+                cell.CellStyle = _yellowStyle;
+                cell.SetCellValue(value);
+                value = 0;
+                for (int i = 3; i < 6; i++)
+                {
+                    if (_history[rowIndex][i] != null && _history[rowIndex][i].Value)
+                    {
+                        value++;
+                    }
+                }
+                cell = row.CreateCell(329);
+                cell.CellStyle = _yellowStyle;
+                cell.SetCellValue(value);
+                value = 0;
+                for (int i = 6; i < 9; i++)
+                {
+                    if (_history[rowIndex][i] != null && _history[rowIndex][i].Value)
+                    {
+                        value++;
+                    }
+                }
+                cell = row.CreateCell(330);
+                cell.CellStyle = _yellowStyle;
+                cell.SetCellValue(value);
+            }
         }
         public void Display20()
         {
+            foreach (var rowItem in _history)
+            {
 
+                var rowIndex = rowItem.Key;
+                if (rowIndex > _lastRowIndex && _history[rowIndex].All(u => u == null))
+                    continue;
+                var row = _sheet.GetRow(rowIndex);
+                if (row == null)
+                {
+                    continue;
+                }
+
+                var value = 0;
+                for (int i = 0; i < 3; i++)
+                {
+                    if (_history[rowIndex][i] != null && !_history[rowIndex][i].Value)
+                    {
+                        value++;
+                    }
+                }
+                var cell = row.CreateCell(331);
+                cell.CellStyle = _yellowStyle;
+                cell.SetCellValue(value);
+                value = 0;
+                for (int i = 3; i < 6; i++)
+                {
+                    if (_history[rowIndex][i] != null && !_history[rowIndex][i].Value)
+                    {
+                        value++;
+                    }
+                }
+                cell = row.CreateCell(332);
+                cell.CellStyle = _yellowStyle;
+                cell.SetCellValue(value);
+                value = 0;
+                for (int i = 6; i < 9; i++)
+                {
+                    if (_history[rowIndex][i] != null && !_history[rowIndex][i].Value)
+                    {
+                        value++;
+                    }
+                }
+                cell = row.CreateCell(333);
+                cell.CellStyle = _yellowStyle;
+                cell.SetCellValue(value);
+            }
         }
         public void Display21()
         {
+            foreach (var rowItem in _history)
+            {
 
+                var rowIndex = rowItem.Key;
+                if (rowIndex > _lastRowIndex && _history[rowIndex].All(u => u == null))
+                    continue;
+                var row = _sheet.GetRow(rowIndex);
+                if (row == null)
+                {
+                    continue;
+                }
+                for (int index = 0; index < 9; index++)
+                {
+                    var sourceCell = row.GetCell(269 + index);
+                    if (sourceCell == null) continue;
+                    var targetCell = row.CreateCell(334 + index);
+                    targetCell.CellStyle = sourceCell.CellStyle;
+                    targetCell.SetCellValue(sourceCell.NumericCellValue);
+                }
+            }
         }
         public void Display22()
         {
+            foreach (var rowItem in _history)
+            {
 
+                var rowIndex = rowItem.Key;
+                if (rowIndex > _lastRowIndex && _history[rowIndex].All(u => u == null))
+                    continue;
+                var row = _sheet.GetRow(rowIndex);
+                if (row == null)
+                {
+                    continue;
+                }
+                var order = new HandleCommon(GetPreRow).GetOrder(rowIndex, _history, null);
+                var orIndex = 1;
+                foreach (var or in order)
+                {
+                    var cell = row.CreateCell(343 + or);
+                    cell.SetCellValue(orIndex);
+                    orIndex++;
+                }
+            }
         }
         public void Display23()
         {
+            foreach (var rowItem in _history)
+            {
 
+                var rowIndex = rowItem.Key;
+                if (rowIndex > _lastRowIndex && _history[rowIndex].All(u => u == null))
+                    continue;
+                var row = _sheet.GetRow(rowIndex);
+                if (row == null)
+                {
+                    continue;
+                }
+
+                var value = 0;
+                for (int i = 0; i < 3; i++)
+                {
+                    if (_history[rowIndex][i].HasValue)
+                    {
+                        value++;
+                    }
+                }
+                var cell = row.CreateCell(352);
+                cell.CellStyle = _yellowStyle;
+                cell.SetCellValue(value);
+                value = 0;
+                for (int i = 3; i < 6; i++)
+                {
+                    if (_history[rowIndex][i].HasValue)
+                    {
+                        value++;
+                    }
+                }
+                cell = row.CreateCell(353);
+                cell.CellStyle = _yellowStyle;
+                cell.SetCellValue(value);
+                value = 0;
+                for (int i = 6; i < 9; i++)
+                {
+                    if (_history[rowIndex][i].HasValue)
+                    {
+                        value++;
+                    }
+                }
+                cell = row.CreateCell(354);
+                cell.CellStyle = _yellowStyle;
+                cell.SetCellValue(value);
+            }
         }
 
 
@@ -608,12 +870,58 @@ namespace HeProject._202305
         {
 
             var headerRow = _sheet.GetRow(0);
-            for (int i = 0; i < 23; i++)
+            for (int i = 0; i < 14; i++)
             {
                 var cell = headerRow.CreateCell(i + 278);
                 cell.SetCellValue(i + 1);
                 _sheet.SetColumnWidth(i + 278, 700);
             }
+
+            var daxiaotongji = _sheet.GetRow(0).CreateCell(292);
+            daxiaotongji.SetCellValue("大统计");
+            daxiaotongji.CellStyle = _workBook.CreateCellStyle();
+            daxiaotongji.CellStyle.Alignment = HorizontalAlignment.Center;
+            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 292, 292 + 8));
+            daxiaotongji = _sheet.GetRow(0).CreateCell(301);
+            daxiaotongji.SetCellValue("大排序");
+            daxiaotongji.CellStyle = _workBook.CreateCellStyle();
+            daxiaotongji.CellStyle.Alignment = HorizontalAlignment.Center;
+            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 301, 301 + 8));
+            daxiaotongji = _sheet.GetRow(0).CreateCell(310);
+            daxiaotongji.SetCellValue("小统计");
+            daxiaotongji.CellStyle = _workBook.CreateCellStyle();
+            daxiaotongji.CellStyle.Alignment = HorizontalAlignment.Center;
+            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 310, 310 + 8));
+            daxiaotongji = _sheet.GetRow(0).CreateCell(319);
+            daxiaotongji.SetCellValue("小排序");
+            daxiaotongji.CellStyle = _workBook.CreateCellStyle();
+            daxiaotongji.CellStyle.Alignment = HorizontalAlignment.Center;
+            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 319, 319 + 8));
+            daxiaotongji = _sheet.GetRow(0).CreateCell(328);
+            daxiaotongji.SetCellValue("大分布");
+            daxiaotongji.CellStyle = _workBook.CreateCellStyle();
+            daxiaotongji.CellStyle.Alignment = HorizontalAlignment.Center;
+            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 328, 328 + 2));
+            daxiaotongji = _sheet.GetRow(0).CreateCell(331);
+            daxiaotongji.SetCellValue("小分布");
+            daxiaotongji.CellStyle = _workBook.CreateCellStyle();
+            daxiaotongji.CellStyle.Alignment = HorizontalAlignment.Center;
+            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 331, 331 + 2));
+            daxiaotongji = _sheet.GetRow(0).CreateCell(334);
+            daxiaotongji.SetCellValue("大小统计");
+            daxiaotongji.CellStyle = _workBook.CreateCellStyle();
+            daxiaotongji.CellStyle.Alignment = HorizontalAlignment.Center;
+            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 334, 334 + 8));
+            daxiaotongji = _sheet.GetRow(0).CreateCell(343);
+            daxiaotongji.SetCellValue("大小排序");
+            daxiaotongji.CellStyle = _workBook.CreateCellStyle();
+            daxiaotongji.CellStyle.Alignment = HorizontalAlignment.Center;
+            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 343, 343 + 8));
+            daxiaotongji = _sheet.GetRow(0).CreateCell(352);
+            daxiaotongji.SetCellValue("大小分布");
+            daxiaotongji.CellStyle = _workBook.CreateCellStyle();
+            daxiaotongji.CellStyle.Alignment = HorizontalAlignment.Center;
+            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 352, 352 + 2));
         }
 
         private Dictionary<int, bool?[]> CalculateHistory()
