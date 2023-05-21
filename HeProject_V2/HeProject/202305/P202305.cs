@@ -263,7 +263,7 @@ namespace HeProject._202305
                     continue;
                 }
                 var value1 = row?.GetCell(278)?.NumericCellValue??0;
-                var value5 = row?.GetCell(281)?.NumericCellValue??0;
+                var value5 = row?.GetCell(282)?.NumericCellValue??0;
                 var value3 = row?.GetCell(280)?.NumericCellValue??0;
                 var cell = row?.CreateCell(284);
                 var value = value1 + value5 - value3;
@@ -529,7 +529,7 @@ namespace HeProject._202305
                     continue;
                 }
                 var value1 = row.GetCell(285)?.NumericCellValue ?? 0;
-                var value5 = row.GetCell(288)?.NumericCellValue ?? 0;
+                var value5 = row.GetCell(289)?.NumericCellValue ?? 0;
                 var value3 = row.GetCell(287)?.NumericCellValue ?? 0;
                 var cell = row?.CreateCell(291);
                 var value = value1 + value5 - value3;
