@@ -13,12 +13,17 @@ namespace HeProject._202305
         private ISheet _sheet;
         private int _lastRowIndex;
         private Dictionary<int, bool?[]> _history;
+
+        private ICellStyle _yellowStyle;
         public P202305(IWorkbook workbook)
         {
             _workBook = workbook;
             _sheet = _workBook.GetSheetAt(0);
             _lastRowIndex = _sheet.LastRowNum - 1 - 12;
             _history = CalculateHistory();
+            _yellowStyle = workbook.CreateCellStyle();
+            _yellowStyle.FillForegroundColor = 43;
+            _yellowStyle.FillPattern = FillPattern.SolidForeground;
         }
         public void Start()
         {
@@ -262,12 +267,13 @@ namespace HeProject._202305
                 {
                     continue;
                 }
-                var value1 = row?.GetCell(278)?.NumericCellValue??0;
-                var value5 = row?.GetCell(282)?.NumericCellValue??0;
-                var value3 = row?.GetCell(280)?.NumericCellValue??0;
+                var value1 = row?.GetCell(278)?.NumericCellValue ?? 0;
+                var value5 = row?.GetCell(282)?.NumericCellValue ?? 0;
+                var value3 = row?.GetCell(280)?.NumericCellValue ?? 0;
                 var cell = row?.CreateCell(284);
                 var value = value1 + value5 - value3;
                 cell?.SetCellValue(value);
+                cell.CellStyle = _yellowStyle;
             }
         }
         private Dictionary<int, List<KeyValuePair<int, bool?>>> _display7 = new Dictionary<int, List<KeyValuePair<int, bool?>>>();
@@ -473,7 +479,7 @@ namespace HeProject._202305
                 var cell = _sheet.GetRow(rowItem.Key)?.CreateCell(289);
                 cell?.SetCellValue(value);
             }
-           
+
         }
 
         public void Display13()
@@ -534,8 +540,47 @@ namespace HeProject._202305
                 var cell = row?.CreateCell(291);
                 var value = value1 + value5 - value3;
                 cell?.SetCellValue(value);
+                cell.CellStyle = _yellowStyle;
             }
         }
+
+        public void Display15()
+        {
+
+        }
+        public void Display16()
+        {
+
+        }
+        public void Display17()
+        {
+
+        }
+        public void Display18()
+        {
+
+        }
+        public void Display19()
+        {
+
+        }
+        public void Display20()
+        {
+
+        }
+        public void Display21()
+        {
+
+        }
+        public void Display22()
+        {
+
+        }
+        public void Display23()
+        {
+
+        }
+
 
         private int GetPreRow(int row)
         {
