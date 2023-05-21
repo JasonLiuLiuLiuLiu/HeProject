@@ -35,6 +35,8 @@ namespace HeProject._202305
             Display10();
             Display11();
             Display12();
+            Display13();
+            Display14();
         }
 
         private Dictionary<int, List<KeyValuePair<int, bool?>>> _display1 = new Dictionary<int, List<KeyValuePair<int, bool?>>>();
@@ -247,8 +249,29 @@ namespace HeProject._202305
             }
         }
 
-        private Dictionary<int, List<KeyValuePair<int, bool?>>> _display7 = new Dictionary<int, List<KeyValuePair<int, bool?>>>();
         public void Display7()
+        {
+            foreach (var rowItem in _history)
+            {
+
+                var rowIndex = rowItem.Key;
+                if (rowIndex > _lastRowIndex && _history[rowIndex].All(u => u == null))
+                    continue;
+                var row = _sheet.GetRow(rowIndex);
+                if (row == null)
+                {
+                    continue;
+                }
+                var value1 = row?.GetCell(278)?.NumericCellValue??0;
+                var value5 = row?.GetCell(281)?.NumericCellValue??0;
+                var value3 = row?.GetCell(280)?.NumericCellValue??0;
+                var cell = row?.CreateCell(284);
+                var value = value1 + value5 - value3;
+                cell?.SetCellValue(value);
+            }
+        }
+        private Dictionary<int, List<KeyValuePair<int, bool?>>> _display7 = new Dictionary<int, List<KeyValuePair<int, bool?>>>();
+        public void Display8()
         {
             foreach (var rowItem in _history)
             {
@@ -281,7 +304,7 @@ namespace HeProject._202305
                     }
                 }
 
-                var cell = _sheet.GetRow(rowItem.Key)?.CreateCell(284);
+                var cell = _sheet.GetRow(rowItem.Key)?.CreateCell(285);
                 cell?.SetCellValue(value);
 
                 if (value != 0)
@@ -291,7 +314,7 @@ namespace HeProject._202305
             }
         }
 
-        public void Display8()
+        public void Display9()
         {
             foreach (var rowItem in _history)
             {
@@ -325,12 +348,12 @@ namespace HeProject._202305
                     }
                 }
 
-                var cell = _sheet.GetRow(rowItem.Key)?.CreateCell(285);
+                var cell = _sheet.GetRow(rowItem.Key)?.CreateCell(286);
                 cell?.SetCellValue(value);
             }
         }
 
-        public void Display9()
+        public void Display10()
         {
             foreach (var rowItem in _history)
             {
@@ -364,13 +387,13 @@ namespace HeProject._202305
                     }
                 }
 
-                var cell = _sheet.GetRow(rowItem.Key)?.CreateCell(286);
+                var cell = _sheet.GetRow(rowItem.Key)?.CreateCell(287);
                 cell?.SetCellValue(value);
             }
         }
 
         private Dictionary<int, List<KeyValuePair<int, bool?>>> _display10 = new Dictionary<int, List<KeyValuePair<int, bool?>>>();
-        public void Display10()
+        public void Display11()
         {
             foreach (var rowItem in _history)
             {
@@ -403,52 +426,13 @@ namespace HeProject._202305
                     }
                 }
 
-                var cell = _sheet.GetRow(rowItem.Key)?.CreateCell(287);
+                var cell = _sheet.GetRow(rowItem.Key)?.CreateCell(288);
                 cell?.SetCellValue(value);
 
                 if (value != 0)
                 {
                     _display10.Add(rowItem.Key, hitColumns);
                 }
-            }
-        }
-
-        public void Display11()
-        {
-            foreach (var rowItem in _history)
-            {
-
-                var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && _history[rowIndex].All(u => u == null))
-                    continue;
-
-                var value = 0;
-                if (_history.ContainsKey(rowIndex))
-                {
-                    for (var i = 0; i < 9; i++)
-                    {
-                        if (!_display10.ContainsKey(rowIndex) || !_display10[rowIndex].Select(u => u.Key).Contains(i))
-                            continue;
-
-                        var value1 = _history[rowIndex][i];
-                        if (value1 != null)
-                        {
-                            var value2 = PreValue(GetPreRow(rowIndex), i);
-                            if (value2 != null)
-                            {
-                                value2 = PreValue(GetPreRow(value2.Value.Key), i);
-                                if (value1.Value != value2?.Value)
-                                {
-                                    value++;
-                                }
-                            }
-
-                        }
-                    }
-                }
-
-                var cell = _sheet.GetRow(rowItem.Key)?.CreateCell(288);
-                cell?.SetCellValue(value);
             }
         }
 
@@ -489,6 +473,68 @@ namespace HeProject._202305
                 var cell = _sheet.GetRow(rowItem.Key)?.CreateCell(289);
                 cell?.SetCellValue(value);
             }
+           
+        }
+
+        public void Display13()
+        {
+            foreach (var rowItem in _history)
+            {
+
+                var rowIndex = rowItem.Key;
+                if (rowIndex > _lastRowIndex && _history[rowIndex].All(u => u == null))
+                    continue;
+
+                var value = 0;
+                if (_history.ContainsKey(rowIndex))
+                {
+                    for (var i = 0; i < 9; i++)
+                    {
+                        if (!_display10.ContainsKey(rowIndex) || !_display10[rowIndex].Select(u => u.Key).Contains(i))
+                            continue;
+
+                        var value1 = _history[rowIndex][i];
+                        if (value1 != null)
+                        {
+                            var value2 = PreValue(GetPreRow(rowIndex), i);
+                            if (value2 != null)
+                            {
+                                value2 = PreValue(GetPreRow(value2.Value.Key), i);
+                                if (value1.Value != value2?.Value)
+                                {
+                                    value++;
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+                var cell = _sheet.GetRow(rowItem.Key)?.CreateCell(290);
+                cell?.SetCellValue(value);
+            }
+        }
+
+        public void Display14()
+        {
+            foreach (var rowItem in _history)
+            {
+
+                var rowIndex = rowItem.Key;
+                if (rowIndex > _lastRowIndex && _history[rowIndex].All(u => u == null))
+                    continue;
+                var row = _sheet.GetRow(rowIndex);
+                if (row == null)
+                {
+                    continue;
+                }
+                var value1 = row.GetCell(285)?.NumericCellValue ?? 0;
+                var value5 = row.GetCell(288)?.NumericCellValue ?? 0;
+                var value3 = row.GetCell(287)?.NumericCellValue ?? 0;
+                var cell = row?.CreateCell(291);
+                var value = value1 + value5 - value3;
+                cell?.SetCellValue(value);
+            }
         }
 
         private int GetPreRow(int row)
@@ -517,7 +563,7 @@ namespace HeProject._202305
         {
 
             var headerRow = _sheet.GetRow(0);
-            for (int i = 0; i < 21; i++)
+            for (int i = 0; i < 23; i++)
             {
                 var cell = headerRow.CreateCell(i + 278);
                 cell.SetCellValue(i + 1);
