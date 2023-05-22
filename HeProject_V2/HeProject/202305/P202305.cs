@@ -17,6 +17,7 @@ namespace HeProject._202305
         private Dictionary<int, bool?[]> _history;
 
         private ICellStyle _yellowStyle;
+        private ICellStyle _greyStyle;
         public P202305(IWorkbook workbook)
         {
             _workBook = workbook;
@@ -26,6 +27,10 @@ namespace HeProject._202305
             _yellowStyle = workbook.CreateCellStyle();
             _yellowStyle.FillForegroundColor = 43;
             _yellowStyle.FillPattern = FillPattern.SolidForeground;
+
+            _greyStyle = workbook.CreateCellStyle();
+            _greyStyle.FillForegroundColor = 22;
+            _greyStyle.FillPattern = FillPattern.SolidForeground;
         }
         public void Start()
         {
@@ -87,7 +92,8 @@ namespace HeProject._202305
                 }
 
                 var cell = _sheet.GetRow(rowItem.Key)?.CreateCell(278);
-                cell?.SetCellValue(value);
+                cell.SetCellValue(value);
+                cell.CellStyle = _greyStyle;
 
                 if (value != 0)
                 {
@@ -192,7 +198,8 @@ namespace HeProject._202305
                 }
 
                 var cell = _sheet.GetRow(rowItem.Key)?.CreateCell(281);
-                cell?.SetCellValue(value);
+                cell.SetCellValue(value);
+                cell.CellStyle = _greyStyle;
 
                 if (value != 0)
                 {
@@ -322,7 +329,8 @@ namespace HeProject._202305
                 }
 
                 var cell = _sheet.GetRow(rowItem.Key)?.CreateCell(285);
-                cell?.SetCellValue(value);
+                cell.SetCellValue(value);
+                cell.CellStyle = _greyStyle;
 
                 if (value != 0)
                 {
@@ -444,7 +452,8 @@ namespace HeProject._202305
                 }
 
                 var cell = _sheet.GetRow(rowItem.Key)?.CreateCell(288);
-                cell?.SetCellValue(value);
+                cell.SetCellValue(value);
+                cell.CellStyle = _greyStyle;
 
                 if (value != 0)
                 {
@@ -572,7 +581,7 @@ namespace HeProject._202305
                 {
                     var sourceCell = row.GetCell(269 + index);
                     if (sourceCell == null) continue;
-                    var targetCell = row.CreateCell(292 + index);
+                    var targetCell = row.CreateCell(293 + index);
                     if (sourceCell.CellStyle?.FillForegroundColor == 10)
                         targetCell.CellStyle = sourceCell.CellStyle;
                     targetCell.SetCellValue(sourceCell.NumericCellValue);
@@ -596,7 +605,7 @@ namespace HeProject._202305
                 var orIndex = 1;
                 foreach (var or in order)
                 {
-                    var cell = row.CreateCell(301 + or);
+                    var cell = row.CreateCell(303 + or);
                     cell.SetCellValue(orIndex);
                     orIndex++;
                 }
@@ -619,7 +628,7 @@ namespace HeProject._202305
                 {
                     var sourceCell = row.GetCell(269 + index);
                     if (sourceCell == null) continue;
-                    var targetCell = row.CreateCell(310 + index);
+                    var targetCell = row.CreateCell(323 + index);
                     if (sourceCell.CellStyle?.FillForegroundColor == 40)
                         targetCell.CellStyle = sourceCell.CellStyle;
                     targetCell.SetCellValue(sourceCell.NumericCellValue);
@@ -643,7 +652,7 @@ namespace HeProject._202305
                 var orIndex = 1;
                 foreach (var or in order)
                 {
-                    var cell = row.CreateCell(319 + or);
+                    var cell = row.CreateCell(333 + or);
                     cell.SetCellValue(orIndex);
                     orIndex++;
                 }
@@ -671,7 +680,7 @@ namespace HeProject._202305
                         value++;
                     }
                 }
-                var cell = row.CreateCell(328);
+                var cell = row.CreateCell(353);
                 cell.CellStyle = _yellowStyle;
                 cell.SetCellValue(value);
                 value = 0;
@@ -682,7 +691,7 @@ namespace HeProject._202305
                         value++;
                     }
                 }
-                cell = row.CreateCell(329);
+                cell = row.CreateCell(354);
                 cell.CellStyle = _yellowStyle;
                 cell.SetCellValue(value);
                 value = 0;
@@ -693,7 +702,7 @@ namespace HeProject._202305
                         value++;
                     }
                 }
-                cell = row.CreateCell(330);
+                cell = row.CreateCell(355);
                 cell.CellStyle = _yellowStyle;
                 cell.SetCellValue(value);
             }
@@ -720,7 +729,7 @@ namespace HeProject._202305
                         value++;
                     }
                 }
-                var cell = row.CreateCell(331);
+                var cell = row.CreateCell(357);
                 cell.CellStyle = _yellowStyle;
                 cell.SetCellValue(value);
                 value = 0;
@@ -731,7 +740,7 @@ namespace HeProject._202305
                         value++;
                     }
                 }
-                cell = row.CreateCell(332);
+                cell = row.CreateCell(358);
                 cell.CellStyle = _yellowStyle;
                 cell.SetCellValue(value);
                 value = 0;
@@ -742,7 +751,7 @@ namespace HeProject._202305
                         value++;
                     }
                 }
-                cell = row.CreateCell(333);
+                cell = row.CreateCell(359);
                 cell.CellStyle = _yellowStyle;
                 cell.SetCellValue(value);
             }
@@ -764,7 +773,7 @@ namespace HeProject._202305
                 {
                     var sourceCell = row.GetCell(269 + index);
                     if (sourceCell == null) continue;
-                    var targetCell = row.CreateCell(334 + index);
+                    var targetCell = row.CreateCell(361 + index);
                     targetCell.CellStyle = sourceCell.CellStyle;
                     targetCell.SetCellValue(sourceCell.NumericCellValue);
                 }
@@ -787,7 +796,7 @@ namespace HeProject._202305
                 var orIndex = 1;
                 foreach (var or in order)
                 {
-                    var cell = row.CreateCell(343 + or);
+                    var cell = row.CreateCell(371 + or);
                     cell.SetCellValue(orIndex);
                     orIndex++;
                 }
@@ -815,7 +824,7 @@ namespace HeProject._202305
                         value++;
                     }
                 }
-                var cell = row.CreateCell(352);
+                var cell = row.CreateCell(391);
                 cell.CellStyle = _yellowStyle;
                 cell.SetCellValue(value);
                 value = 0;
@@ -826,7 +835,7 @@ namespace HeProject._202305
                         value++;
                     }
                 }
-                cell = row.CreateCell(353);
+                cell = row.CreateCell(392);
                 cell.CellStyle = _yellowStyle;
                 cell.SetCellValue(value);
                 value = 0;
@@ -837,7 +846,7 @@ namespace HeProject._202305
                         value++;
                     }
                 }
-                cell = row.CreateCell(354);
+                cell = row.CreateCell(393);
                 cell.CellStyle = _yellowStyle;
                 cell.SetCellValue(value);
             }
@@ -877,51 +886,51 @@ namespace HeProject._202305
                 _sheet.SetColumnWidth(i + 278, 700);
             }
 
-            var daxiaotongji = _sheet.GetRow(0).CreateCell(292);
+            var daxiaotongji = _sheet.GetRow(0).CreateCell(293);
             daxiaotongji.SetCellValue("大统计");
             daxiaotongji.CellStyle = _workBook.CreateCellStyle();
             daxiaotongji.CellStyle.Alignment = HorizontalAlignment.Center;
-            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 292, 292 + 8));
-            daxiaotongji = _sheet.GetRow(0).CreateCell(301);
+            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 293, 293 + 8));
+            daxiaotongji = _sheet.GetRow(0).CreateCell(303);
             daxiaotongji.SetCellValue("大排序");
             daxiaotongji.CellStyle = _workBook.CreateCellStyle();
             daxiaotongji.CellStyle.Alignment = HorizontalAlignment.Center;
-            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 301, 301 + 8));
-            daxiaotongji = _sheet.GetRow(0).CreateCell(310);
+            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 303, 303 + 8));
+            daxiaotongji = _sheet.GetRow(0).CreateCell(323);
             daxiaotongji.SetCellValue("小统计");
             daxiaotongji.CellStyle = _workBook.CreateCellStyle();
             daxiaotongji.CellStyle.Alignment = HorizontalAlignment.Center;
-            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 310, 310 + 8));
-            daxiaotongji = _sheet.GetRow(0).CreateCell(319);
+            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 323, 323 + 8));
+            daxiaotongji = _sheet.GetRow(0).CreateCell(333);
             daxiaotongji.SetCellValue("小排序");
             daxiaotongji.CellStyle = _workBook.CreateCellStyle();
             daxiaotongji.CellStyle.Alignment = HorizontalAlignment.Center;
-            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 319, 319 + 8));
-            daxiaotongji = _sheet.GetRow(0).CreateCell(328);
+            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 333, 333 + 8));
+            daxiaotongji = _sheet.GetRow(0).CreateCell(353);
             daxiaotongji.SetCellValue("大分布");
             daxiaotongji.CellStyle = _workBook.CreateCellStyle();
             daxiaotongji.CellStyle.Alignment = HorizontalAlignment.Center;
-            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 328, 328 + 2));
-            daxiaotongji = _sheet.GetRow(0).CreateCell(331);
+            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 353, 353 + 2));
+            daxiaotongji = _sheet.GetRow(0).CreateCell(357);
             daxiaotongji.SetCellValue("小分布");
             daxiaotongji.CellStyle = _workBook.CreateCellStyle();
             daxiaotongji.CellStyle.Alignment = HorizontalAlignment.Center;
-            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 331, 331 + 2));
-            daxiaotongji = _sheet.GetRow(0).CreateCell(334);
+            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 357, 357 + 2));
+            daxiaotongji = _sheet.GetRow(0).CreateCell(361);
             daxiaotongji.SetCellValue("大小统计");
             daxiaotongji.CellStyle = _workBook.CreateCellStyle();
             daxiaotongji.CellStyle.Alignment = HorizontalAlignment.Center;
-            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 334, 334 + 8));
-            daxiaotongji = _sheet.GetRow(0).CreateCell(343);
+            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 361, 361 + 8));
+            daxiaotongji = _sheet.GetRow(0).CreateCell(371);
             daxiaotongji.SetCellValue("大小排序");
             daxiaotongji.CellStyle = _workBook.CreateCellStyle();
             daxiaotongji.CellStyle.Alignment = HorizontalAlignment.Center;
-            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 343, 343 + 8));
-            daxiaotongji = _sheet.GetRow(0).CreateCell(352);
+            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 371, 371 + 8));
+            daxiaotongji = _sheet.GetRow(0).CreateCell(391);
             daxiaotongji.SetCellValue("大小分布");
             daxiaotongji.CellStyle = _workBook.CreateCellStyle();
             daxiaotongji.CellStyle.Alignment = HorizontalAlignment.Center;
-            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 352, 352 + 2));
+            _sheet.AddMergedRegion(new CellRangeAddress(0, 0, 391, 391 + 2));
         }
 
         private Dictionary<int, bool?[]> CalculateHistory()

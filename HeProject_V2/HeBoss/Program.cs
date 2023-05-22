@@ -33,90 +33,111 @@ namespace HeBoss
                     Console.WriteLine("输入文件至少5行");
                     return;
                 }
-                //var width = maxFileCount.ToString().Length;
-                //var workbooks = new IWorkbook[maxFileCount + 1];
-                //for (int index = 0; index <= maxFileCount; index++)
-                //{
-                //    Console.WriteLine($"开始处理第{(index + 1).ToString().PadRight(width)}行数据,请不要删减或打开{tempDir}文件夹中的任何文件，以免影响程序运行....");
-                //    var resultDic = new Dictionary<int, ProcessContext>(11);
-                //    var sourcePath = tempDir + "/" + index + ".xlsx";
-
-                //    for (int i = 0; i < 6; i++)
-                //    {
-                //        var dataflow = new ProjectDataFlow(i);
-                //        var pipeline = dataflow.CreatePipeLine();
-                //        dataflow.Process(sourcePath);
-                //        pipeline.Wait();
-                //        resultDic.Add(i, dataflow.ProcessContext);
-                //    }
-                //    var writer = new WriteToExcel(resultDic);
-                //    var workbook = writer.ProcessDataflowResult();
-                //    if (workbook != null)
-                //    {
-                //        var commonContext = new CommonProcessContext(resultDic, workbook);
-                //        var commonFlow = new CommonProcessFlow();
-                //        commonFlow.Process(commonContext);
-                //        var resultPath = tempDir + "/out" + index + ".xlsx";
-                //        writer.SaveFile(workbook, resultPath);
-                //        workbooks[index] = workbook;
-                //    }
-                //}
-                //var maxWorkbook = workbooks[maxFileCount];
-                //var sheet = maxWorkbook.GetSheetAt(0);
-                //var daxiaotongji = sheet.GetRow(0).CreateCell(269);
-                //daxiaotongji.SetCellValue("大小统计");
-                //daxiaotongji.CellStyle = maxWorkbook.CreateCellStyle();
-                //daxiaotongji.CellStyle.Alignment = HorizontalAlignment.Center;
-                //sheet.AddMergedRegion(new CellRangeAddress(0, 0, 269, 269 + 8));
-
-                //for (int row = 2; row <= maxFileCount; row++)
-                //{
-                //    var rowIndex = (seeds[row] + 1) * 2 + row;
-                //    for (int index = 0; index < 9; index++)
-                //    {
-                //        var sourceCell = workbooks[row - 1].GetSheetAt(0).GetRow(rowIndex).GetCell(232 + index);
-                //        var targetCell = sheet.GetRow(row + 1).CreateCell(269 + index);
-                //        var style = maxWorkbook.CreateCellStyle();
-                //        style.FillForegroundColor = sourceCell.CellStyle.FillForegroundColor;
-                //        if (style.FillForegroundColor != 64)
-                //        {
-                //            style.FillPattern = FillPattern.SolidForeground;
-                //        }
-                //        targetCell.CellStyle = style;
-                //        targetCell.SetCellValue(sourceCell.NumericCellValue);
-                //    }
-                //}
-
-                //for (int row = 0; row < 6; row++)
-                //{
-                //    var rowIndex = (row + 1) * 2 + maxFileCount;
-                //    for (int index = 0; index < 9; index++)
-                //    {
-                //        var sourceCell = sheet.GetRow(rowIndex + 1).GetCell(232 + index);
-                //        var targetCell = sheet.GetRow(rowIndex + 1).CreateCell(269 + index);
-                //        targetCell.CellStyle = sourceCell.CellStyle;
-                //        targetCell.SetCellValue(sourceCell.NumericCellValue);
-                //    }
-                //}
-
-                //using (FileStream sw = File.Create("result.xlsx"))
-                //{
-                //    maxWorkbook.Write(sw);
-                //    sw.Close();
-                //}
-
-                XSSFWorkbook maxWorkbook;
-                using (FileStream file = new FileStream("result.xlsx", FileMode.Open, FileAccess.Read))
+                var width = maxFileCount.ToString().Length;
+                var workbooks = new IWorkbook[maxFileCount + 1];
+                for (int index = 0; index <= maxFileCount; index++)
                 {
-                    maxWorkbook = new XSSFWorkbook(file);
-                }
-                var p202305 = new P202305(maxWorkbook);
-                p202305.Start();
+                    Console.WriteLine($"开始处理第{(index + 1).ToString().PadRight(width)}行数据,请不要删减或打开{tempDir}文件夹中的任何文件，以免影响程序运行....");
+                    var resultDic = new Dictionary<int, ProcessContext>(11);
+                    var sourcePath = tempDir + "/" + index + ".xlsx";
 
-                using (FileStream sw = File.Create("result_2.xlsx"))
+                    for (int i = 0; i < 6; i++)
+                    {
+                        var dataflow = new ProjectDataFlow(i);
+                        var pipeline = dataflow.CreatePipeLine();
+                        dataflow.Process(sourcePath);
+                        pipeline.Wait();
+                        resultDic.Add(i, dataflow.ProcessContext);
+                    }
+                    var writer = new WriteToExcel(resultDic);
+                    var workbook = writer.ProcessDataflowResult();
+                    if (workbook != null)
+                    {
+                        var commonContext = new CommonProcessContext(resultDic, workbook);
+                        var commonFlow = new CommonProcessFlow();
+                        commonFlow.Process(commonContext);
+                        var resultPath = tempDir + "/out" + index + ".xlsx";
+                        writer.SaveFile(workbook, resultPath);
+                        workbooks[index] = workbook;
+                    }
+                }
+                var maxWorkbook = workbooks[maxFileCount];
+                var sheet = maxWorkbook.GetSheetAt(0);
+                var daxiaotongji = sheet.GetRow(0).CreateCell(269);
+                daxiaotongji.SetCellValue("大小统计");
+                daxiaotongji.CellStyle = maxWorkbook.CreateCellStyle();
+                daxiaotongji.CellStyle.Alignment = HorizontalAlignment.Center;
+                sheet.AddMergedRegion(new CellRangeAddress(0, 0, 269, 269 + 8));
+
+                for (int row = 2; row <= maxFileCount; row++)
+                {
+                    var rowIndex = (seeds[row] + 1) * 2 + row;
+                    for (int index = 0; index < 9; index++)
+                    {
+                        var sourceCell = workbooks[row - 1].GetSheetAt(0).GetRow(rowIndex).GetCell(232 + index);
+                        var targetCell = sheet.GetRow(row + 1).CreateCell(269 + index);
+                        var style = maxWorkbook.CreateCellStyle();
+                        style.FillForegroundColor = sourceCell.CellStyle.FillForegroundColor;
+                        if (style.FillForegroundColor != 64)
+                        {
+                            style.FillPattern = FillPattern.SolidForeground;
+                        }
+                        targetCell.CellStyle = style;
+                        targetCell.SetCellValue(sourceCell.NumericCellValue);
+                    }
+                }
+
+                for (int row = 0; row < 6; row++)
+                {
+                    var rowIndex = (row + 1) * 2 + maxFileCount;
+                    for (int index = 0; index < 9; index++)
+                    {
+                        var sourceCell = sheet.GetRow(rowIndex + 1).GetCell(232 + index);
+                        var targetCell = sheet.GetRow(rowIndex + 1).CreateCell(269 + index);
+                        targetCell.CellStyle = sourceCell.CellStyle;
+                        targetCell.SetCellValue(sourceCell.NumericCellValue);
+                    }
+                }
+
+                using (FileStream sw = File.Create("result.xlsx"))
                 {
                     maxWorkbook.Write(sw);
                     sw.Close();
+                }
+
+                //XSSFWorkbook maxWorkbook;
+                //using (FileStream file = new FileStream("result.xlsx", FileMode.Open, FileAccess.Read))
+                //{
+                //    maxWorkbook = new XSSFWorkbook(file);
+                //}
+                var p202305 = new P202305(maxWorkbook);
+                p202305.Start();
+
+                try
+                {
+                    var path = AppDomain.CurrentDomain.BaseDirectory + DateTime.Now.ToString("yyyy-MM-dd");
+                    var fullPath = path + "\\" + DateTime.Now.ToString("HH-mm-ss-ffff") + ".xlsx";
+                    if (!Directory.Exists(path))//如果不存在就创建file文件夹　　             　　
+                        Directory.CreateDirectory(path);//创建该文件夹　　
+                    using (FileStream sw = File.Create(fullPath))
+                    {
+                        maxWorkbook.Write(sw);
+                        sw.Close();
+                    }
+
+                    Process.Start("explorer.exe", "/select, \"" + fullPath + "\"");
+                    Process.Start(fullPath);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    Console.ReadKey();
+                    throw;
+                }
+
+                if (Directory.Exists("temp"))
+                {
+                    Directory.Delete(tempDir, true);
                 }
             }
             catch (Exception e)
