@@ -72,7 +72,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
 
                 var value = 0;
@@ -113,7 +113,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
 
                 var value = 0;
@@ -145,7 +145,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
 
                 var value = 0;
@@ -178,7 +178,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
 
                 var value = 0;
@@ -219,7 +219,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
 
                 var value = 0;
@@ -251,7 +251,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
 
                 var value = 0;
@@ -283,7 +283,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
                 var row = _sheet.GetRow(rowIndex);
                 if (row == null)
@@ -306,7 +306,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
 
                 var value = 0;
@@ -350,7 +350,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
 
                 var value = 0;
@@ -389,7 +389,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
 
                 var value = 0;
@@ -429,7 +429,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
 
                 var value = 0;
@@ -473,7 +473,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
 
                 var value = 0;
@@ -513,7 +513,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
 
                 var value = 0;
@@ -552,7 +552,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
                 var row = _sheet.GetRow(rowIndex);
                 if (row == null)
@@ -575,7 +575,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
                 var row = _sheet.GetRow(rowIndex);
                 if (row == null)
@@ -599,7 +599,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
                 var row = _sheet.GetRow(rowIndex);
                 if (row == null)
@@ -641,7 +641,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
                 var row = _sheet.GetRow(rowIndex);
                 if (row == null)
@@ -665,7 +665,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
                 var row = _sheet.GetRow(rowIndex);
                 if (row == null)
@@ -707,7 +707,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
                 var row = _sheet.GetRow(rowIndex);
                 if (row == null)
@@ -718,7 +718,8 @@ namespace HeProject._202305
                 var value = 0;
                 for (int i = 0; i < 3; i++)
                 {
-                    if (_history[rowIndex][i] != null && _history[rowIndex][i].Value)
+                    var originalCell = row.GetCell(313 + i);
+                    if (originalCell != null && originalCell.CellType == CellType.Numeric && originalCell.NumericCellValue == i + 1)
                     {
                         value++;
                     }
@@ -729,7 +730,8 @@ namespace HeProject._202305
                 value = 0;
                 for (int i = 3; i < 6; i++)
                 {
-                    if (_history[rowIndex][i] != null && _history[rowIndex][i].Value)
+                    var originalCell = row.GetCell(313 + i);
+                    if (originalCell != null && originalCell.CellType == CellType.Numeric && originalCell.NumericCellValue == i + 1)
                     {
                         value++;
                     }
@@ -740,7 +742,8 @@ namespace HeProject._202305
                 value = 0;
                 for (int i = 6; i < 9; i++)
                 {
-                    if (_history[rowIndex][i] != null && _history[rowIndex][i].Value)
+                    var originalCell = row.GetCell(313 + i);
+                    if (originalCell != null && originalCell.CellType == CellType.Numeric && originalCell.NumericCellValue == i + 1)
                     {
                         value++;
                     }
@@ -756,7 +759,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
                 var row = _sheet.GetRow(rowIndex);
                 if (row == null)
@@ -767,7 +770,8 @@ namespace HeProject._202305
                 var value = 0;
                 for (int i = 0; i < 3; i++)
                 {
-                    if (_history[rowIndex][i] != null && !_history[rowIndex][i].Value)
+                    var originalCell = row.GetCell(343 + i);
+                    if (originalCell != null && originalCell.CellType == CellType.Numeric && originalCell.NumericCellValue == i + 1)
                     {
                         value++;
                     }
@@ -778,7 +782,8 @@ namespace HeProject._202305
                 value = 0;
                 for (int i = 3; i < 6; i++)
                 {
-                    if (_history[rowIndex][i] != null && !_history[rowIndex][i].Value)
+                    var originalCell = row.GetCell(343 + i);
+                    if (originalCell != null && originalCell.CellType == CellType.Numeric && originalCell.NumericCellValue == i + 1)
                     {
                         value++;
                     }
@@ -789,7 +794,8 @@ namespace HeProject._202305
                 value = 0;
                 for (int i = 6; i < 9; i++)
                 {
-                    if (_history[rowIndex][i] != null && !_history[rowIndex][i].Value)
+                    var originalCell = row.GetCell(343 + i);
+                    if (originalCell != null && originalCell.CellType == CellType.Numeric && originalCell.NumericCellValue == i + 1)
                     {
                         value++;
                     }
@@ -805,7 +811,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
                 var row = _sheet.GetRow(rowIndex);
                 if (row == null)
@@ -828,7 +834,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
                 var row = _sheet.GetRow(rowIndex);
                 if (row == null)
@@ -870,7 +876,7 @@ namespace HeProject._202305
             {
 
                 var rowIndex = rowItem.Key;
-                if (rowIndex > _lastRowIndex && (rowIndex-_lastRowIndex)%2==1)
+                if (rowIndex > _lastRowIndex && (rowIndex - _lastRowIndex) % 2 == 1)
                     continue;
                 var row = _sheet.GetRow(rowIndex);
                 if (row == null)
@@ -881,7 +887,8 @@ namespace HeProject._202305
                 var value = 0;
                 for (int i = 0; i < 3; i++)
                 {
-                    if (_history[rowIndex][i].HasValue)
+                    var originalCell = row.GetCell(381 + i);
+                    if (originalCell != null && originalCell.CellType == CellType.Numeric && originalCell.NumericCellValue == i + 1)
                     {
                         value++;
                     }
@@ -892,7 +899,8 @@ namespace HeProject._202305
                 value = 0;
                 for (int i = 3; i < 6; i++)
                 {
-                    if (_history[rowIndex][i].HasValue)
+                    var originalCell = row.GetCell(381 + i);
+                    if (originalCell != null && originalCell.CellType == CellType.Numeric && originalCell.NumericCellValue == i + 1)
                     {
                         value++;
                     }
@@ -903,7 +911,8 @@ namespace HeProject._202305
                 value = 0;
                 for (int i = 6; i < 9; i++)
                 {
-                    if (_history[rowIndex][i].HasValue)
+                    var originalCell = row.GetCell(381 + i);
+                    if (originalCell != null && originalCell.CellType == CellType.Numeric && originalCell.NumericCellValue == i + 1)
                     {
                         value++;
                     }
