@@ -113,6 +113,12 @@ namespace HeBoss
                 var p202305 = new P202305(maxWorkbook);
                 p202305.Start();
 
+                //using (FileStream sw = File.Create("result_2.xlsx"))
+                //{
+                //    maxWorkbook.Write(sw);
+                //    sw.Close();
+                //}
+
                 try
                 {
                     var path = AppDomain.CurrentDomain.BaseDirectory + DateTime.Now.ToString("yyyy-MM-dd");
