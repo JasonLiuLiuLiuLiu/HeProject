@@ -23,7 +23,23 @@ namespace HeProject._202305
         {
             _workBook = workbook;
             _sheet = _workBook.GetSheetAt(0);
-            _lastRowIndex = _sheet.LastRowNum - 1 - 12;
+            //_lastRowIndex = _sheet.LastRowNum - 1 - 12;
+            _lastRowIndex = 1;
+            while (true)
+            {
+                var row = _sheet.GetRow(_lastRowIndex);
+                if (row == null)
+                {
+                    _lastRowIndex--;
+                    break;
+                }
+                if (row.GetCell(0)==null&& row.GetCell(1) == null && row.GetCell(2) == null && row.GetCell(3) == null && row.GetCell(4) == null && row.GetCell(4) == null)
+                {
+                    _lastRowIndex--;
+                    break;
+                }
+                _lastRowIndex++;
+            }
             _history = CalculateHistory();
             _yellowStyle = workbook.CreateCellStyle();
             _yellowStyle.FillForegroundColor = 43;
